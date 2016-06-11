@@ -1,6 +1,6 @@
 # express-template
 
-An [Express](http://expressjs.com) web application template using [Hogan](http://twitter.github.io/hogan.js/) as the view engine.
+An [Express](http://expressjs.com) web application template using [Nunjucks](https://mozilla.github.io/nunjucks/) as the view engine.
 
 ### Install
 
