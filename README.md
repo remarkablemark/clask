@@ -5,6 +5,8 @@ An [Express](http://expressjs.com) web application template using [Nunjucks](htt
 ### Install
 
 ```sh
+$ git clone https://github.com/remarkablemark/express-template.git
+$ cd express-template
 $ npm install
 ```
 

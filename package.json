@@ -8,6 +8,17 @@
     "start": "NODE_ENV=production node ./bin/www",
     "dev": "NODE_ENV=development DEBUG=express-template:* nodemon ./bin/www"
   },
+  "main": "bin/www",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/remarkablemark/express-template"
+  },
+  "bugs": {
+    "url": "https://github.com/remarkablemark/express-template/issues"
+  },
+  "keywords": [
+    "express template"
+  ],
   "dependencies": {
     "body-parser": "1.13.2",
     "cookie-parser": "1.3.5",
