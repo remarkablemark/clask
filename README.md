@@ -1,6 +1,9 @@
 # express-template
 
-An [Express](http://expressjs.com) web application template using [Nunjucks](https://mozilla.github.io/nunjucks/) as the view engine.
+A [Node.js](https://nodejs.org) web application with the following stack:
+- [Express](http://expressjs.com) as the web framework,
+- [Nunjucks](https://mozilla.github.io/nunjucks/) as the view engine,
+- [Socket.IO](http://socket.io) as the real-time bidirectional event-based communication.
 
 ### Install
 
