@@ -31,10 +31,12 @@
     "react": "15.4.1",
     "react-dom": "15.4.1",
     "serve-favicon": "2.3.2",
-    "socket.io": "1.7.1"
+    "socket.io": "1.7.1",
+    "webpack": "1.14.0"
   },
   "devDependencies": {
-    "nodemon": "1.11.0"
+    "nodemon": "1.11.0",
+    "webpack-dev-server": "1.16.2"
   },
   "license": "MIT"
 }
