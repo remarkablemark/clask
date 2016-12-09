@@ -3,10 +3,11 @@
 /**
  * Module dependencies.
  */
+require('dotenv').config();
 var path = require('path');
 var webpack = require('webpack');
 
-var PORT = 3001;
+var PORT = process.env.WDS_PORT;
 var HOST = process.env.IP || 'localhost';
 var URL = 'http://' + HOST + ':' + PORT;
 
