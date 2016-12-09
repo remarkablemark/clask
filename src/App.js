@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 import React from 'react';
+import { render } from 'react-dom';
 
 const style = {
     padding: 50,
@@ -25,4 +26,4 @@ class App extends React.Component {
     }
 }
 
-export default App;
+render(<App />, document.getElementById('root'));

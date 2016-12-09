@@ -1,10 +1,5 @@
 <script>
     window.__EXPRESS_TEMPLATE__ = {{ public | dump | safe }};
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.min.js"></script>
 <script src="{{ public.publicPath }}/bundle.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.6/socket.io.js"></script>
-<script>
-    (function(io){
-        var socket = io.connect();
-    })(window.io);
-</script>
