@@ -5,10 +5,10 @@
   "author": "Mark <mark@remarkablemark.org>",
   "private": true,
   "scripts": {
-    "start": "npm run build && NODE_ENV=production node ./bin/www",
+    "start": "npm run build && NODE_ENV=production node bin/www",
     "build": "webpack --config webpack/production.config.js",
     "dev": "npm-run-all --parallel development:*",
-    "development:server": "NODE_ENV=development DEBUG=express-template:* nodemon ./bin/www",
+    "development:server": "DEBUG=express-template:* nodemon --ignore src --ignore build bin/www",
     "development:wds": "webpack-dev-server --config webpack/development.config.js"
   },
   "main": "bin/www",
