@@ -2,12 +2,4 @@
 
 {% block content %}
     <div id="root"></div>
-
-    <script src="{{ publicPath }}/bundle.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.6/socket.io.js"></script>
-    <script>
-        (function(io){
-            var socket = io.connect();
-        })(window.io);
-    </script>
 {% endblock %}

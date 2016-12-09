@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset='utf-8' />
+        <meta charset="utf-8" />
         <title>{{ title }}</title>
     </head>
     <body>
         {% block content %}
         {% endblock %}
+        {% include 'scripts.html' %}
     </body>
 </html>
