@@ -22,4 +22,4 @@ $ npm run dev # development
 
 ### License
 
-MIT
+[MIT](https://github.com/remarkablemark/express-template/blob/master/LICENSE)
