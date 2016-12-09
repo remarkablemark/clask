@@ -37,7 +37,10 @@ app.use(express.static(path.join(__dirname, 'build')));
 
 // app locals
 if (!isProduction) {
-    app.locals.publicPath = require('./webpack/development.config').output.publicPath;
+    app.locals.public = {
+        isProduction: isProduction,
+        publicPath: require('./webpack/development.config').output.publicPath
+    };
 }
 
 /**
