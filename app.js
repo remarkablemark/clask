@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var express = require('express');
 var logger = require('morgan');
 var path = require('path');
+var pkg = require('./package');
 
 /**
  * Express app.
@@ -35,13 +36,18 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(require('cookie-parser')());
 app.use(express.static(path.join(__dirname, 'build')));
 
-// app locals
-if (!isProduction) {
-    app.locals.public = {
-        isProduction: isProduction,
-        publicPath: require('./webpack/development.config').output.publicPath
-    };
-}
+/**
+ * App locals.
+ */
+app.locals.public = {
+    isProduction: isProduction,
+    publicPath: isProduction ? '' : require('./webpack/development.config').output.publicPath,
+    versions: {
+        'socket.io': pkg.dependencies['socket.io'],
+        'react': pkg.dependencies['react'],
+        'react-dom': pkg.dependencies['react-dom']
+    }
+};
 
 /**
  * Routes.
