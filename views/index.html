@@ -1,10 +1,10 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <h1>{{ title }}</h1>
-    <p>Welcome to {{ title }}</p>
+    <div id="root"></div>
 
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.6/socket.io.js'></script>
+    <script src="{{ publicPath }}/bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.6/socket.io.js"></script>
     <script>
         (function(io){
             var socket = io.connect();
