@@ -38,6 +38,16 @@ module.exports = {
             sourceMap: false,
             output: { comments: false },
             compress: { warnings: false }
+        }),
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: '"production"'
+            }
         })
-    ]
+    ],
+
+    externals: {
+        'react': 'React',
+        'react-dom': 'ReactDOM'
+    }
 };
