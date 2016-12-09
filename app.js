@@ -3,44 +3,51 @@
 /**
  * Module dependencies.
  */
-var express = require('express');
-var path = require('path');
-//var favicon = require('serve-favicon');
-var logger = require('morgan');
 var bodyParser = require('body-parser');
+var express = require('express');
+var logger = require('morgan');
+var path = require('path');
 
 /**
- * Initialize Express app.
+ * Express app.
  */
 var app = express();
-var isDevelopment = process.env.NODE_ENV === 'development';
+var isProduction = process.env.NODE_ENV === 'production';
 
 /**
- * View engine setup.
+ * View engine.
  */
 app.set('views', path.join(__dirname, 'views'));
 require('nunjucks').configure('views', {
     autoescape: true,
     express: app,
-    noCache: isDevelopment ? true : false
+    noCache: !isProduction ? true : false
 });
 
 /**
  * Middleware.
  */
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+//app.use(require('serve-favicon')(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(require('cookie-parser')());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'build')));
+
+// app locals
+if (!isProduction) {
+    app.locals.publicPath = require('./webpack/development.config').output.publicPath;
+}
 
 /**
  * Routes.
  */
 app.use('/', require('./routes/index'));
 
+/**
+ * 404.
+ */
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
@@ -49,10 +56,10 @@ app.use(function(req, res, next) {
 });
 
 /**
- * Error middleware.
+ * Error.
  */
 // development error handler will print stacktrace
-if (isDevelopment) {
+if (!isProduction) {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
         res.render('error.html', {
@@ -72,6 +79,6 @@ app.use(function(err, req, res, next) {
 });
 
 /**
- * Export Express app.
+ * Export app.
  */
 module.exports = app;
