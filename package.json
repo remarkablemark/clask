@@ -6,9 +6,10 @@
   "private": true,
   "scripts": {
     "start": "npm run build && NODE_ENV=production node ./bin/www",
-    "dev": "NODE_ENV=development DEBUG=express-template:* nodemon ./bin/www",
     "build": "webpack --config webpack/production.config.js",
-    "wds": "webpack-dev-server --config webpack/development.config.js"
+    "dev": "npm-run-all --parallel development:*",
+    "development:server": "NODE_ENV=development DEBUG=express-template:* nodemon ./bin/www",
+    "development:wds": "webpack-dev-server --config webpack/development.config.js"
   },
   "main": "bin/www",
   "repository": {
@@ -43,6 +44,7 @@
   "devDependencies": {
     "babel-preset-react-hmre": "1.1.1",
     "nodemon": "1.11.0",
+    "npm-run-all": "3.1.2",
     "webpack-dev-server": "1.16.2"
   },
   "license": "MIT"
