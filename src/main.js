@@ -34,11 +34,11 @@ if (isProduction) {
         window.React = React;
         window.ReactDOM = ReactDOM;
         const socket = io.connect();
-        require('./App');
+        require('./routes');
     });
 } else {
     requirejs(['socket'], (io) => {
         const socket = io.connect();
-        require('./App');
+        require('./routes');
     });
 }
