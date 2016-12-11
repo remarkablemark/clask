@@ -43,9 +43,10 @@ app.locals.public = {
     isProduction: isProduction,
     publicPath: isProduction ? '' : require('./webpack/development.config').output.publicPath,
     versions: {
-        'socket.io': pkg.dependencies['socket.io'],
         'react': pkg.dependencies['react'],
-        'react-dom': pkg.dependencies['react-dom']
+        'react-dom': pkg.dependencies['react-dom'],
+        'react-router': pkg.dependencies['react-router'],
+        'socket.io': pkg.dependencies['socket.io']
     }
 };
 

@@ -19,6 +19,9 @@ if (requirejs) {
             'react-dom': [
                 `//cdnjs.cloudflare.com/ajax/libs/react/${versions['react-dom']}/react-dom.min`
             ],
+            'react-router': [
+                `//cdnjs.cloudflare.com/ajax/libs/react-router/${versions['react-router']}/ReactRouter.min`
+            ],
             'socket': [
                 `//cdnjs.cloudflare.com/ajax/libs/socket.io/${versions['socket.io']}/socket.io.min`
             ]
@@ -30,9 +33,12 @@ if (requirejs) {
  * Load app.
  */
 if (isProduction) {
-    requirejs(['react', 'react-dom', 'socket'], (React, ReactDOM, io) => {
+    requirejs([
+        'react', 'react-dom', 'react-router', 'socket'
+    ], (React, ReactDOM, ReactRouter, io) => {
         window.React = React;
         window.ReactDOM = ReactDOM;
+        window.ReactRouter = ReactRouter;
         const socket = io.connect();
         require('./routes');
     });
