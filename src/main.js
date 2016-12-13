@@ -40,11 +40,11 @@ if (isProduction) {
         window.ReactDOM = ReactDOM;
         window.ReactRouter = ReactRouter;
         const socket = io.connect();
-        require('./routes');
+        require('./app/App');
     });
 } else {
     requirejs(['socket'], (io) => {
         const socket = io.connect();
-        require('./routes');
+        require('./app/App');
     });
 }
