@@ -46,6 +46,8 @@ app.locals.public = {
         'react': pkg.dependencies['react'],
         'react-dom': pkg.dependencies['react-dom'],
         'react-router': pkg.dependencies['react-router'],
+        'react-redux': pkg.dependencies['react-redux'],
+        'redux': pkg.dependencies['redux'],
         'socket.io': pkg.dependencies['socket.io']
     }
 };
