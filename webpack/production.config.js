@@ -3,8 +3,8 @@
 /**
  * Module dependencies.
  */
-var path = require('path');
-var webpack = require('webpack');
+const path = require('path');
+const webpack = require('webpack');
 
 /**
  * Production webpack.

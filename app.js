@@ -3,17 +3,17 @@
 /**
  * Module dependencies.
  */
-var bodyParser = require('body-parser');
-var express = require('express');
-var logger = require('morgan');
-var path = require('path');
-var pkg = require('./package');
+const bodyParser = require('body-parser');
+const express = require('express');
+const logger = require('morgan');
+const path = require('path');
+const pkg = require('./package');
 
 /**
  * Express app.
  */
-var app = express();
-var isProduction = process.env.NODE_ENV === 'production';
+const app = express();
+const isProduction = process.env.NODE_ENV === 'production';
 
 /**
  * View engine.
@@ -61,8 +61,8 @@ app.use('/', require('./routes/index'));
  * 404.
  */
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-    var err = new Error('Not Found');
+app.use((req, res, next) => {
+    const err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
@@ -72,7 +72,7 @@ app.use(function(req, res, next) {
  */
 // development error handler will print stacktrace
 if (!isProduction) {
-    app.use(function(err, req, res, next) {
+    app.use((err, req, res, next) => {
         res.status(err.status || 500);
         res.render('error.html', {
             message: err.message,
@@ -82,7 +82,7 @@ if (!isProduction) {
 }
 
 // production error handler will not leak stacktraces to user
-app.use(function(err, req, res, next) {
+app.use((err, req, res, next) => {
     res.status(err.status || 500);
     res.render('error.html', {
         message: err.message,

@@ -4,12 +4,12 @@
  * Module dependencies.
  */
 require('dotenv').config();
-var path = require('path');
-var webpack = require('webpack');
+const path = require('path');
+const webpack = require('webpack');
 
-var PORT = process.env.WDS_PORT;
-var HOST = process.env.IP || 'localhost';
-var URL = 'http://' + HOST + ':' + PORT;
+const port = process.env.WDS_PORT;
+const host = process.env.IP || 'localhost';
+const url = `http://${host}:${port}`;
 
 /**
  * Development webpack.
@@ -18,13 +18,13 @@ module.exports = {
     entry: [
         path.join(__dirname, '../src/main.js'),
         'webpack/hot/only-dev-server',
-        'webpack-dev-server/client?' + URL
+        'webpack-dev-server/client?' + url
     ],
 
     output: {
         path: path.join(__dirname, '../build/'),
         filename: 'bundle.js',
-        publicPath: URL + '/build'
+        publicPath: url + '/build'
     },
 
     debug: true,
@@ -53,7 +53,7 @@ module.exports = {
         quiet: true,
         inline: true,
         hot: true,
-        host: HOST,
-        port: PORT
+        host: host,
+        port: port
     }
 };

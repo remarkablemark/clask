@@ -3,14 +3,16 @@
 /**
  * Module dependencies.
  */
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
 /**
  * GET index page.
  */
-router.get('/', function(req, res, next) {
-    res.render('index.html', { title: 'Express' });
+router.get('/', (req, res, next) => {
+    res.render('index.html', {
+        title: 'Express-Template'
+    });
 });
 
 /**
