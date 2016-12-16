@@ -17,3 +17,7 @@ export default function Layout(props) {
         </MuiThemeProvider>
     );
 }
+
+Layout.propTypes = {
+    children: React.PropTypes.node
+};

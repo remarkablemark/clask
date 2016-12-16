@@ -57,12 +57,12 @@ if (isProduction) {
         window.ReactRouter = ReactRouter;
         window.Redux = Redux;
         window.ReactRedux = ReactRedux;
-        const socket = io.connect();
+        io.connect();
         require('./app/App');
     });
 } else {
     requirejs(['socket'], (io) => {
-        const socket = io.connect();
+        io.connect();
         require('./app/App');
     });
 }
