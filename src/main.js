@@ -3,7 +3,7 @@
 /**
  * Constants.
  */
-const { requirejs } = window;
+const { requirejs, define } = window;
 const data = window.__EXPRESS_TEMPLATE__;
 const { isProduction, versions } = data;
 
@@ -28,7 +28,7 @@ if (requirejs) {
             'redux': [
                 `//cdnjs.cloudflare.com/ajax/libs/redux/${versions['redux']}/redux.min`
             ],
-            'socket': [
+            'io': [
                 `//cdnjs.cloudflare.com/ajax/libs/socket.io/${versions['socket.io']}/socket.io.min`
             ]
         },
@@ -45,24 +45,26 @@ if (requirejs) {
     });
 }
 
+define('socket', ['io'], (io) => {
+    return io.connect();
+});
+
 /**
  * Load app.
  */
 if (isProduction) {
     requirejs([
         'react', 'react-dom', 'react-router', 'redux', 'react-redux', 'socket'
-    ], (React, ReactDOM, ReactRouter, Redux, ReactRedux, io) => {
+    ], (React, ReactDOM, ReactRouter, Redux, ReactRedux, socket) => {
         window.React = React;
         window.ReactDOM = ReactDOM;
         window.ReactRouter = ReactRouter;
         window.Redux = Redux;
         window.ReactRedux = ReactRedux;
-        io.connect();
         require('./app/App');
     });
 } else {
-    requirejs(['socket'], (io) => {
-        io.connect();
+    requirejs(['socket'], (socket) => {
         require('./app/App');
     });
 }
