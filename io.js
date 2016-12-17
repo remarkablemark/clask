@@ -3,21 +3,30 @@
 /**
  * Module dependencies.
  */
-var socket = require('socket.io');
-var debug = require('debug')('express-template:socket');
+const socket = require('socket.io');
+const debug = require('debug')('express-template:socket');
 
 /**
- * Export Socket.IO.
+ * Socket.IO middleware.
+ *
+ * @param {Object} server - The server.
  */
-module.exports = function(server) {
-    var io = socket(server);
+function io(server) {
+    const io = socket(server);
 
     // client connected
-    io.on('connection', function(socket) {
-        debug('Connected');
+    io.on('connection', (socket) => {
+        debug('[status]', 'connected');
 
-        socket.on('disconnect', function() {
-            debug('Disconnected');
+        socket.on('chat:message', (message) => {
+            debug('[chat:message]', message);
+            io.emit('chat:message', message);
+        });
+
+        socket.on('disconnect', () => {
+            debug('[status]', 'disconnected');
         });
     });
-};
+}
+
+module.exports = io;
