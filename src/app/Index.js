@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 import React from 'react';
+import Chat from '../chat/Chat';
 
 const style = {
     padding: 50,
@@ -19,6 +20,7 @@ export default function Index() {
         <div style={style}>
             <h1>Express-Template</h1>
             <p>Welcome to Express-Template</p>
+            <Chat />
         </div>
     );
 }
