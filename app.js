@@ -8,6 +8,7 @@ const express = require('express');
 const logger = require('morgan');
 const path = require('path');
 const pkg = require('./package');
+require('./connection');
 
 /**
  * Express app.
