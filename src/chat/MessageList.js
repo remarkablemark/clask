@@ -47,7 +47,14 @@ export default class MessageList extends React.Component {
             <div>
                 <List style={styles.container}>
                     {messages.map((message, index) => {
-                        return <Message key={index} message={message} />;
+                        const { text, time } = message;
+                        return (
+                            <Message
+                                text={text}
+                                time={time}
+                                key={index}
+                            />
+                        );
                     })}
                 </List>
             </div>
