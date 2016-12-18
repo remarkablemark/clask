@@ -4,7 +4,8 @@
  * Module dependencies.
  */
 const socket = require('socket.io');
-const debug = require('debug')('express-template:socket');
+const packageName = require('./package').name;
+const debug = require('debug')(packageName + ':socket');
 
 /**
  * Socket.IO middleware.
@@ -16,7 +17,7 @@ function io(server) {
 
     // client connected
     io.on('connection', (socket) => {
-        debug('[status]', 'connected');
+        debug('client connected');
 
         socket.on('chat:message', (message) => {
             debug('[chat:message]', message);
@@ -24,7 +25,7 @@ function io(server) {
         });
 
         socket.on('disconnect', () => {
-            debug('[status]', 'disconnected');
+            debug('client disconnected');
         });
     });
 }

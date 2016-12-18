@@ -7,8 +7,8 @@
  */
 require('dotenv').config();
 const app = require('../app');
-const pkg = require('../package');
-const debug = require('debug')(pkg.name + ':server');
+const packageName = require('../package').name;
+const debug = require('debug')(packageName + ':server');
 const http = require('http');
 
 /**
@@ -21,7 +21,7 @@ app.set('port', port);
  * Create HTTP server.
  */
 const server = http.createServer(app);
-require('../io')(server);
+require('../socket-io')(server);
 
 /**
  * Listen on provided port, on all network interfaces.
