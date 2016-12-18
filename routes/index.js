@@ -3,8 +3,7 @@
 /**
  * Module dependencies.
  */
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
 
 /**
  * GET index page.
