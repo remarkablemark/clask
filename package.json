@@ -8,7 +8,7 @@
     "start": "npm run build && NODE_ENV=production node bin/www",
     "build": "webpack --config webpack/production.config.js",
     "dev": "npm-run-all --parallel development:*",
-    "development:server": "DEBUG=express-template:* nodemon --ignore src --ignore build bin/www",
+    "development:server": "source .env && DEBUG=\"$APP_NAME:*\" nodemon --ignore src --ignore build bin/www",
     "development:wds": "webpack-dev-server --config webpack/development.config.js",
     "lint": "eslint --ignore-path .gitignore ."
   },

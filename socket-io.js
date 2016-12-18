@@ -3,9 +3,8 @@
 /**
  * Module dependencies.
  */
+const debug = require('debug')(process.env.APP_NAME + ':socket');
 const socket = require('socket.io');
-const packageName = require('./package').name;
-const debug = require('debug')(packageName + ':socket');
 const Message = require('./models/message');
 
 /**

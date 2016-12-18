@@ -3,9 +3,8 @@
 /**
  * Module dependencies.
  */
+const debug = require('debug')(process.env.APP_NAME + ':db');
 const mongoose = require('mongoose');
-const packageName = require('./package').name;
-const debug = require('debug')(packageName + ':db');
 
 // fix warning: mpromise (mongoose's default promise library) is deprecated
 // http://mongoosejs.com/docs/promises.html#plugging-in-your-own-promises-library

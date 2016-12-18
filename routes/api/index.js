@@ -3,8 +3,7 @@
 /**
  * Module dependencies.
  */
-const packageName = require('../../package').name;
-const debug = require('debug')(packageName + ':db');
+const debug = require('debug')(process.env.APP_NAME + ':db');
 const router = require('express').Router();
 const Message = require('../../models/message');
 
