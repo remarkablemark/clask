@@ -8,10 +8,8 @@ import Divider from 'material-ui/Divider';
 import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
 
-// constants
-const buttonWidth = 48;
-
 // styles
+import { inputHeight } from './styles';
 const styles = {
     container: {
         position: 'fixed',
@@ -20,20 +18,20 @@ const styles = {
         left: 0,
         margin: '0 auto',
         width: '100%',
-        height: buttonWidth * 2
+        height: inputHeight * 2
     },
     line: {
-        marginBottom: buttonWidth / 2
+        marginBottom: inputHeight / 2
     },
     button: {
         position: 'absolute',
         left: 0,
-        width: buttonWidth
+        width: inputHeight
     },
     input: {
         position: 'absolute',
         right: 0,
-        left: buttonWidth
+        left: inputHeight
     }
 };
 
