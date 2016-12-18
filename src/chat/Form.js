@@ -9,29 +9,33 @@ import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
 
 // styles
-import { inputHeight } from './styles';
+import { buttonWidth, formHeight, gutter } from './styles';
 const styles = {
-    container: {
+    form: {
         position: 'fixed',
         right: 0,
         bottom: 0,
         left: 0,
         margin: '0 auto',
         width: '100%',
-        height: inputHeight * 2
+        height: formHeight
     },
     line: {
-        marginBottom: inputHeight / 2
+        marginBottom: gutter
+    },
+    container: {
+        position: 'relative',
+        margin: `0 ${gutter}px`
     },
     button: {
+        // width is 48px
         position: 'absolute',
-        left: 0,
-        width: inputHeight
+        left: 0
     },
     input: {
         position: 'absolute',
         right: 0,
-        left: inputHeight
+        left: buttonWidth
     }
 };
 
@@ -66,23 +70,27 @@ export default class Form extends React.Component {
 
     render() {
         return (
-            <form onSubmit={this._handleSubmit} style={styles.container}>
+            <form onSubmit={this._handleSubmit} style={styles.form}>
                 <Divider style={styles.line} />
-                <div style={styles.button}>
-                    <IconButton iconClassName='material-icons' type='submit'>
-                        add
-                    </IconButton>
-                </div>
-                <div style={styles.input}>
-                    <TextField
-                        autoComplete='off'
-                        autoCorrect='off'
-                        fullWidth={true}
-                        hintText='Message'
-                        onChange={this._handleChange}
-                        spellCheck='true'
-                        value={this.state.value}
-                    />
+                <div style={styles.container}>
+                    <div style={styles.button}>
+                        <IconButton
+                            iconClassName='material-icons'
+                            type='submit'>
+                            add
+                        </IconButton>
+                    </div>
+                    <div style={styles.input}>
+                        <TextField
+                            autoComplete='off'
+                            autoCorrect='off'
+                            fullWidth={true}
+                            hintText='Message'
+                            onChange={this._handleChange}
+                            spellCheck='true'
+                            value={this.state.value}
+                        />
+                    </div>
                 </div>
             </form>
         );
