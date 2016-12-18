@@ -7,6 +7,19 @@ import React from 'react';
 import Message from './Message';
 import Form from './Form';
 
+// styles
+import { formHeight, gutter } from './styles';
+const styles = {
+    container: {
+        position: 'absolute',
+        right: 0,
+        bottom: formHeight,
+        left: 0,
+        margin: gutter,
+        overflowY: 'auto'
+    }
+};
+
 /**
  * Chat component.
  */
@@ -32,9 +45,11 @@ export default class Chat extends React.Component {
         const { messages } = this.state;
         return (
             <div>
-                {messages.map((message, index) => {
-                    return <Message key={index} message={message} />;
-                })}
+                <div style={styles.container}>
+                    {messages.map((message, index) => {
+                        return <Message key={index} message={message} />;
+                    })}
+                </div>
                 <Form />
             </div>
         );
