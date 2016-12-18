@@ -39,6 +39,13 @@ const styles = {
     }
 };
 
+// shim for getting UTC timestamp in milliseconds
+const getTime = (
+    typeof Date.now === 'function' ?
+    Date.now :
+    new Date().getTime
+);
+
 /**
  * Form component.
  */
@@ -61,7 +68,10 @@ export default class Form extends React.Component {
     _handleSubmit(event) {
         event.preventDefault();
         window.requirejs(['socket'], (socket) => {
-            socket.emit('chat:message', this.state.value);
+            socket.emit('chat:message', {
+                text: this.state.value,
+                time: getTime()
+            });
             this.setState({
                 value: ''
             });
