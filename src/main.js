@@ -13,6 +13,9 @@ const { isProduction, versions } = data;
 if (requirejs) {
     requirejs.config({
         paths: {
+            'io': [
+                `//cdnjs.cloudflare.com/ajax/libs/socket.io/${versions['socket.io']}/socket.io.min`
+            ],
             'react': [
                 `//cdnjs.cloudflare.com/ajax/libs/react/${versions['react']}/react.min`
             ],
@@ -28,8 +31,8 @@ if (requirejs) {
             'redux': [
                 `//cdnjs.cloudflare.com/ajax/libs/redux/${versions['redux']}/redux.min`
             ],
-            'io': [
-                `//cdnjs.cloudflare.com/ajax/libs/socket.io/${versions['socket.io']}/socket.io.min`
+            'superagent': [
+                '//cdnjs.cloudflare.com/ajax/libs/superagent/3.3.1/superagent.min'
             ]
         },
         shim: {
@@ -54,8 +57,8 @@ define('socket', ['io'], (io) => {
  */
 if (isProduction) {
     requirejs([
-        'react', 'react-dom', 'react-router', 'redux', 'react-redux', 'socket'
-    ], (React, ReactDOM, ReactRouter, Redux, ReactRedux, socket) => {
+        'react', 'react-dom', 'react-router', 'redux', 'react-redux'
+    ], (React, ReactDOM, ReactRouter, Redux, ReactRedux) => {
         window.React = React;
         window.ReactDOM = ReactDOM;
         window.ReactRouter = ReactRouter;
@@ -64,7 +67,5 @@ if (isProduction) {
         require('./app/App');
     });
 } else {
-    requirejs(['socket'], (socket) => {
-        require('./app/App');
-    });
+    require('./app/App');
 }
