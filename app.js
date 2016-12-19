@@ -8,13 +8,14 @@ const express = require('express');
 const logger = require('morgan');
 const path = require('path');
 const pkg = require('./package');
+const config = require('./config/');
+const isProduction = config.isProduction;
 require('./connection');
 
 /**
  * Express app.
  */
 const app = express();
-const isProduction = process.env.NODE_ENV === 'production';
 
 /**
  * View engine.

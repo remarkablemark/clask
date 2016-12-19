@@ -5,6 +5,7 @@
  */
 const debug = require('debug')(process.env.APP_NAME + ':db');
 const mongoose = require('mongoose');
+const config = require('./config/');
 
 // fix warning: mpromise (mongoose's default promise library) is deprecated
 // http://mongoosejs.com/docs/promises.html#plugging-in-your-own-promises-library
@@ -35,20 +36,14 @@ function closeConnection() {
     });
 }
 
+// graceful exit
 // close connection when process is interrupted or terminated
 process.on('SIGINT', closeConnection);
 process.on('SIGTERM', closeConnection);
 
 // attempt to connect to database
 debug('connecting to database...');
-mongoose
-    .connect(process.env.MONGODB_CONNECTION_URI)
-    .then(() => {
-        debug('connected to database with mongoose');
-    })
-    .catch((error) => {
-        debug('failed to connect to database with mongoose');
-    });
+mongoose.connect(config.mongodbConnectionUri);
 
 /**
  * Export mongoose connection.
