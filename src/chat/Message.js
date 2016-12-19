@@ -68,5 +68,13 @@ export default function Message(props) {
 
 Message.propTypes = {
     text: React.PropTypes.string,
-    time: React.PropTypes.number
+    // check that time can be parsed into a valid date
+    time: (props, propName, componentName) => {
+        if (isNaN(new Date(props[propName]).getTime())) {
+            return new Error(
+                'Invalid prop `' + propName + '` supplied to `' +
+                componentName + '`. Validation failed.'
+            );
+        }
+    }
 };
