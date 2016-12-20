@@ -57,8 +57,8 @@ app.locals.public = {
 /**
  * Routes.
  */
-app.use('/', require('./routes/index'));
 app.use('/api', require('./routes/api/'));
+app.use('/', require('./routes/index'));
 
 /**
  * 404.
