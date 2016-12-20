@@ -3,16 +3,13 @@
     <head>
         <meta charset="utf-8" />
         <title>{{ title }}</title>
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet" />
-        <style>
-            body { font-family: Roboto, sans-serif; }
-        </style>
+        {% block styles %}
+        {% endblock %}
     </head>
     <body>
         {% block content %}
         {% endblock %}
-        {% include 'scripts.html' %}
+        {% block scripts %}
+        {% endblock %}
     </body>
 </html>
