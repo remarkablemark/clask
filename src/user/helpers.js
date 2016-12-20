@@ -3,50 +3,49 @@
 /**
  * Validates form input values and sets state.
  *
- * @param  {String} field - The input field.
- * @param  {String} value - The input value.
- * @param  {String} key   - The state key to set.
- * @return {Number}       - The truth value.
+ * @param  {String}  field - The input field.
+ * @param  {String}  value - The input value.
+ * @return {Boolean}       - The truth value.
  */
-export function isValid(field, value, key) {
-    key = key || field + 'Error';
-    let isValid = 1;
+export function isValid(field, value) {
+    const key = field + 'Error';
+    let errorText = '';
 
     switch (field) {
         case 'username':
             // character error
             if (!/^\w+$/.test(value)) {
-                this.setState({
-                    [key]: 'Characters must be alphanumeric.'
-                });
-                isValid = 0;
+                errorText = 'Characters must be alphanumeric.';
             }
             break;
 
         case 'password':
             // length too short
             if (value.length < 6) {
-                this.setState({
-                    [key]: 'Length too short.'
-                });
-                isValid = 0;
+                errorText = 'Length too short.';
             }
             break;
 
         // rest of the fields are required (name, email)
         default:
             if (value === '') {
-                this.setState({
-                    [key]: 'Must not be blank.'
-                });
-                isValid = 0;
+                errorText = 'Must not be blank.';
             }
     }
+
+    // no text means valid
+    const isValid = !errorText;
 
     // no error
     if (isValid && this.state[key]) {
         this.setState({
             [key]: ''
+        });
+
+    // error
+    } else if (!isValid && this.state[key] !== errorText) {
+        this.setState({
+            [key]: errorText
         });
     }
 
