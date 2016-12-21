@@ -34,6 +34,11 @@ export default class SignUp extends React.Component {
         this._handleSubmit = this._handleSubmit.bind(this);
     }
 
+    /**
+     * Handles the submit event for the form.
+     *
+     * @param {Object} event - The event.
+     */
     _handleSubmit(event) {
         event.preventDefault();
 
@@ -45,6 +50,39 @@ export default class SignUp extends React.Component {
             }
         });
         if (hasError) return false;
+
+        // make POST request
+        window.requirejs(['superagent'], (request) => {
+            const { name, username, email, password } = this.state;
+            request
+                .post('/api/users')
+                .send({
+                    name,
+                    username,
+                    email,
+                    password
+                })
+                .end((err, response) => {
+                    if (err|| !response.ok) {
+                        console.log(err, response); // eslint-disable-line no-console
+                    }
+
+                    const { success, message, error } = response.body;
+
+                    // success: redirect to main
+                    if (success) {
+                        setTimeout(() => {
+                            location.replace('/');
+                        }, 2000);
+
+                    // error: display error text
+                    } else if (error) {
+                        this.setState({
+                            [error.field + 'Error']: error.text
+                        });
+                    }
+                });
+        });
     }
 
     /**
