@@ -35,10 +35,10 @@ export default class SignUp extends React.Component {
         event.preventDefault();
 
         // validate all form inputs (email has HTML5 validation)
-        let hasError = 0;
+        let hasError = false;
         this._inputFields.forEach((field) => {
             if (!isValid.call(this, field, this.state[field])) {
-                hasError = 1;
+                hasError = true;
             }
         });
         if (hasError) return false;

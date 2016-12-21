@@ -28,9 +28,31 @@ export function isValid(field, value) {
 
         // rest of the fields are required (name, email)
         default:
-            if (value === '') {
+            // blank
+            if (!value) {
                 errorText = 'Must not be blank.';
             }
+    }
+
+    // validate `username` and `email` over the server for duplicates
+    if (value && (field === 'username' || field === 'email')) {
+        serverValidation(field, value, (error, response) => {
+            if (error || !response.ok) {
+                console.log(error, response); // eslint-disable-line no-console
+                return;
+            }
+
+            // key found
+            if (response.body.length) {
+                this.setState({
+                    [key]: (
+                        field === 'username' ?
+                        'Name is taken.' :
+                        'Email already exists.'
+                    )
+                });
+            }
+        });
     }
 
     // no text means valid
@@ -51,3 +73,32 @@ export function isValid(field, value) {
 
     return isValid;
 }
+
+/**
+ * Validates the field value over the server.
+ * For inputs `username` and `email`.
+ *
+ * @param {String}             field    - The input field.
+ * @param {String}             value    - The input value.
+ * @param {serverValidationCb} callback - The callback.
+ */
+function serverValidation(field, value, callback) {
+    window.requirejs(['superagent'], (request) => {
+        request
+            .get('/api/users')
+            .query({ [field]: value })
+            .end((error, response) => {
+                if (typeof callback === 'function') {
+                    callback(error, response);
+                }
+            });
+    });
+}
+
+/**
+ * Callback for server validation.
+ *
+ * @callback serverValidationCb
+ * @param {Object} error    - The error.
+ * @param {Object} response - The response.
+ */
