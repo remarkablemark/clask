@@ -6,6 +6,7 @@
 import React from 'react';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import Snackbar from 'material-ui/Snackbar';
 import Form from './Form';
 import {
     isValid,
@@ -19,7 +20,9 @@ export default class SignUp extends React.Component {
     constructor(props) {
         super(props);
         const state = {
-            isFormDisabled: false
+            isFormDisabled: false,
+            isSnackbarOpen: false,
+            snackbarMessage: ''
         };
         const inputFields = [
             'name',
@@ -78,6 +81,10 @@ export default class SignUp extends React.Component {
 
                     // success: redirect to main
                     if (success) {
+                        this.setState({
+                            snackbarMessage: message,
+                            isSnackbarOpen: true
+                        });
                         setTimeout(() => {
                             location.replace('/');
                         }, 2000);
@@ -92,6 +99,8 @@ export default class SignUp extends React.Component {
                     // other: server error or message
                     } else if (message) {
                         this.setState({
+                            snackbarMessage: message,
+                            isSnackbarOpen: true,
                             isFormDisabled: false
                         });
                     }
@@ -146,7 +155,9 @@ export default class SignUp extends React.Component {
             usernameError,
             emailError,
             passwordError,
-            isFormDisabled
+            isFormDisabled,
+            isSnackbarOpen,
+            snackbarMessage
         } = this.state;
 
         return (
@@ -211,6 +222,11 @@ export default class SignUp extends React.Component {
                 />
                 <br />
                 <br />
+
+                <Snackbar
+                    open={isSnackbarOpen}
+                    message={snackbarMessage}
+                />
             </Form>
         );
     }
