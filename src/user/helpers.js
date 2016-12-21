@@ -74,6 +74,10 @@ export function isValid(field, value) {
     return isValid;
 }
 
+/** Global debounce timer and delay used in `serverValidation()`. */
+let timer = null;
+const delay = 300; // milliseconds
+
 /**
  * Validates the field value over the server.
  * For inputs `username` and `email`.
@@ -83,16 +87,20 @@ export function isValid(field, value) {
  * @param {serverValidationCb} callback - The callback.
  */
 function serverValidation(field, value, callback) {
-    window.requirejs(['superagent'], (request) => {
-        request
-            .get('/api/users')
-            .query({ [field]: value })
-            .end((error, response) => {
-                if (typeof callback === 'function') {
-                    callback(error, response);
-                }
-            });
-    });
+    // debounce the GET request
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+        window.requirejs(['superagent'], (request) => {
+            request
+                .get('/api/users')
+                .query({ [field]: value })
+                .end((error, response) => {
+                    if (typeof callback === 'function') {
+                        callback(error, response);
+                    }
+                });
+        });
+    }, delay);
 }
 
 /**
