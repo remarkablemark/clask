@@ -10,6 +10,7 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import Layout from './Layout';
 import Index from './Index';
 import SignUp from '../user/SignUp';
+import SignIn from '../user/SignIn';
 
 /**
  * Routes.
@@ -19,6 +20,7 @@ export default (
         <Route path='/' component={Layout}>
             <IndexRoute component={Index} />
             <Route path='/signup' component={SignUp} />
+            <Route path='/signin' component={SignIn} />
         </Route>
     </Router>
 );
