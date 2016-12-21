@@ -7,7 +7,10 @@ import React from 'react';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Form from './Form';
-import { isValid } from './helpers';
+import {
+    isValid,
+    validateOnServer
+} from './helpers';
 
 /**
  * SignUp component.
@@ -55,7 +58,30 @@ export default class SignUp extends React.Component {
         this.setState({
             [field]: value
         });
+
+        // client-side validation
         isValid.call(this, field, value);
+
+        // server-side validation
+        // for `username` and `email`
+        if (value && (field === 'username' || field === 'email')) {
+            validateOnServer(field, value, (error, response) => {
+                if (error || !response.ok) {
+                    return console.log(error, response); // eslint-disable-line no-console
+                }
+
+                // key found
+                if (response.body.length) {
+                    this.setState({
+                        [field + 'Error']: (
+                            field === 'username' ?
+                            'Name is taken.' :
+                            'Email already exists.'
+                        )
+                    });
+                }
+            });
+        }
     }
 
     render() {

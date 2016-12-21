@@ -34,27 +34,6 @@ export function isValid(field, value) {
             }
     }
 
-    // validate `username` and `email` over the server for duplicates
-    if (value && (field === 'username' || field === 'email')) {
-        serverValidation(field, value, (error, response) => {
-            if (error || !response.ok) {
-                console.log(error, response); // eslint-disable-line no-console
-                return;
-            }
-
-            // key found
-            if (response.body.length) {
-                this.setState({
-                    [key]: (
-                        field === 'username' ?
-                        'Name is taken.' :
-                        'Email already exists.'
-                    )
-                });
-            }
-        });
-    }
-
     // no text means valid
     const isValid = !errorText;
 
@@ -79,14 +58,14 @@ let timer = null;
 const delay = 300; // milliseconds
 
 /**
- * Validates the field value over the server.
+ * Validates the field value on the server.
  * For inputs `username` and `email`.
  *
  * @param {String}             field    - The input field.
  * @param {String}             value    - The input value.
- * @param {serverValidationCb} callback - The callback.
+ * @param {validateOnServerCb} callback - The callback.
  */
-function serverValidation(field, value, callback) {
+export function validateOnServer(field, value, callback) {
     // debounce the GET request
     clearTimeout(timer);
     timer = setTimeout(() => {
@@ -104,9 +83,9 @@ function serverValidation(field, value, callback) {
 }
 
 /**
- * Callback for server validation.
+ * Callback for `validateOnServer`.
  *
- * @callback serverValidationCb
+ * @callback validateOnServerCb
  * @param {Object} error    - The error.
  * @param {Object} response - The response.
  */
