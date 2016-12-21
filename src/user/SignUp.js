@@ -18,7 +18,9 @@ import {
 export default class SignUp extends React.Component {
     constructor(props) {
         super(props);
-        const state = {};
+        const state = {
+            isFormDisabled: false
+        };
         const inputFields = [
             'name',
             'username',
@@ -51,6 +53,11 @@ export default class SignUp extends React.Component {
         });
         if (hasError) return false;
 
+        // disable form inputs
+        this.setState({
+            isFormDisabled: true
+        });
+
         // make POST request
         window.requirejs(['superagent'], (request) => {
             const { name, username, email, password } = this.state;
@@ -78,7 +85,14 @@ export default class SignUp extends React.Component {
                     // error: display error text
                     } else if (error) {
                         this.setState({
-                            [error.field + 'Error']: error.text
+                            [error.field + 'Error']: error.text,
+                            isFormDisabled: false
+                        });
+
+                    // other: server error or message
+                    } else if (message) {
+                        this.setState({
+                            isFormDisabled: false
                         });
                     }
                 });
@@ -131,7 +145,8 @@ export default class SignUp extends React.Component {
             nameError,
             usernameError,
             emailError,
-            passwordError
+            passwordError,
+            isFormDisabled
         } = this.state;
 
         return (
@@ -143,6 +158,7 @@ export default class SignUp extends React.Component {
                     value={name}
                     onChange={this._handleChange.bind(this, 'name')}
                     errorText={nameError}
+                    disabled={isFormDisabled}
                     autoFocus
                     autoCorrect={false}
                     spellCheck={false}
@@ -156,6 +172,7 @@ export default class SignUp extends React.Component {
                     value={username}
                     onChange={this._handleChange.bind(this, 'username')}
                     errorText={usernameError}
+                    disabled={isFormDisabled}
                     autoCorrect={false}
                     spellCheck={false}
                 />
@@ -169,6 +186,7 @@ export default class SignUp extends React.Component {
                     value={email}
                     onChange={this._handleChange.bind(this, 'email')}
                     errorText={emailError}
+                    disabled={isFormDisabled}
                 />
                 <br />
 
@@ -180,6 +198,7 @@ export default class SignUp extends React.Component {
                     value={password}
                     onChange={this._handleChange.bind(this, 'password')}
                     errorText={passwordError}
+                    disabled={isFormDisabled}
                 />
                 <br />
                 <br />
@@ -188,6 +207,7 @@ export default class SignUp extends React.Component {
                     type='submit'
                     label='Sign Up'
                     primary={true}
+                    disabled={isFormDisabled}
                 />
                 <br />
                 <br />
