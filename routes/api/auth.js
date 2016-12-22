@@ -67,6 +67,16 @@ router.post('/auth', (req, res, next) => {
 });
 
 /**
+ * DELETE: /api/auth
+ */
+router.delete('/auth', (req, res, next) => {
+    req.session.destroy();
+    res.json({
+        message: 'Logged out.'
+    });
+});
+
+/**
  * Export router.
  */
 module.exports = router;

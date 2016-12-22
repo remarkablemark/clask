@@ -21,6 +21,7 @@ export default (
             <IndexRoute component={Index} />
             <Route path='/signup' component={SignUp} />
             <Route path='/signin' component={SignIn} />
+            <Route path='/signout' component={SignIn} />
         </Route>
     </Router>
 );

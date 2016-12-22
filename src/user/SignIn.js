@@ -24,6 +24,37 @@ export default class SignIn extends React.Component {
         this._handleSubmit = this._handleSubmit.bind(this);
     }
 
+    /**
+     * Log out (destroy session) if route path is `/signout`.
+     */
+    componentDidMount() {
+        const { route } = this.props;
+        if (route.path === '/signout') {
+            window.requirejs(['superagent'], (request) => {
+                request
+                    .delete('/api/auth')
+                    .end((error, response) => {
+                        // server error
+                        if (error || !response.ok) {
+                            return this.setState({
+                                snackbarMessage: 'Server error, please try again.',
+                                isSnackbarOpen: true
+                            });
+                        }
+
+                        // success
+                        this.setState({
+                            snackbarMessage: response.body.message,
+                            isSnackbarOpen: true
+                        });
+                    });
+            });
+        }
+    }
+
+    /**
+     * Submit form data to `/api/auth` to create authenticated session.
+     */
     _handleSubmit(event) {
         event.preventDefault();
 
@@ -115,3 +146,9 @@ export default class SignIn extends React.Component {
         );
     }
 }
+
+SignIn.propTypes = {
+    route: React.PropTypes.shape({
+        path: React.PropTypes.string
+    })
+};
