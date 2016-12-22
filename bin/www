@@ -7,20 +7,28 @@
  */
 require('dotenv').config();
 const app = require('../app');
-const packageName = require('../package').name;
-const debug = require('debug')(packageName + ':server');
+const debug = require('debug')(process.env.APP_NAME + ':server');
 const http = require('http');
+
+/**
+ * Connect to database.
+ */
+require('../db/connection');
 
 /**
  * Get port from environment and store in Express.
  */
-const port = normalizePort(process.env.PORT);
+const port = normalizePort(process.env.PORT || 8080);
 app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 const server = http.createServer(app);
+
+/**
+ * Create Socket.IO instance.
+ */
 require('../socket-io')(server);
 
 /**

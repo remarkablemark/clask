@@ -5,7 +5,7 @@
  */
 const debug = require('debug')(process.env.APP_NAME + ':db');
 const mongoose = require('mongoose');
-const config = require('./config/');
+const config = require('../config/');
 
 // fix warning: mpromise (mongoose's default promise library) is deprecated
 // http://mongoosejs.com/docs/promises.html#plugging-in-your-own-promises-library

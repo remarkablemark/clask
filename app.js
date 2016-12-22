@@ -13,7 +13,7 @@ const MongoStore = require('connect-mongo')(session);
 const pkg = require('./package');
 const config = require('./config/');
 const isProduction = config.isProduction;
-const connection = require('./connection');
+const connection = require('./db/connection');
 
 /**
  * Express app.
