@@ -7,10 +7,13 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const logger = require('morgan');
 const path = require('path');
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
+
 const pkg = require('./package');
 const config = require('./config/');
 const isProduction = config.isProduction;
-require('./connection');
+const connection = require('./connection');
 
 /**
  * Express app.
@@ -30,18 +33,31 @@ require('nunjucks').configure('views', {
 /**
  * Middleware.
  */
-// uncomment after placing your favicon in /public
+// uncomment after placing your favicon in /build
 //app.use(require('serve-favicon')(path.join(__dirname, 'public', 'favicon.ico')));
+
+// logger
 app.use(logger('dev'));
+
+// body parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+// cookie (must come before session)
 app.use(require('cookie-parser')());
-app.use(require('express-session')({
+
+// session
+app.use(session({
     name: 'sid',
     secret: config.sessionSecret,
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    store: new MongoStore({
+        mongooseConnection: connection
+    })
 }));
+
+// static
 app.use(express.static(path.join(__dirname, 'build')));
 
 /**
