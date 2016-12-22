@@ -4,7 +4,13 @@
  * Module dependencies.
  */
 import React from 'react';
-import { Router, Route, IndexRoute, browserHistory } from 'react-router';
+import {
+    browserHistory,
+    IndexRoute,
+    Redirect,
+    Route,
+    Router,
+} from 'react-router';
 
 // components
 import Layout from './Layout';
@@ -22,6 +28,8 @@ export default (
             <Route path='/signup' component={SignUp} />
             <Route path='/signin' component={SignIn} />
             <Route path='/signout' component={SignIn} />
+            <Redirect from='/login' to='signin' />
+            <Redirect from='/logout' to='signout' />
         </Route>
     </Router>
 );
