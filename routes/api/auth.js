@@ -32,26 +32,35 @@ router.post('/auth', (req, res, next) => {
         } else {
             const { _id, name, username, email } = user;
 
-            // authentication success
-            if (password === user.password) {
-                res.json({
-                    success: true,
-                    message: 'Authentication successful.',
-                    user: {
-                        _id,
-                        name,
-                        username,
-                        email
-                    }
-                });
+            // authentication
+            if (user.validatePassword(password, (error, isMatch) => {
+                // server error
+                if (error) {
+                    debug('unable to validate password', error);
+                    return res.status(500).json({});
+                }
 
-            // authentication failure
-            } else {
-                res.json({
-                    success: false,
-                    message: 'Sorry, you entered an incorrect email address or password.'
-                });
-            }
+                // success
+                if (isMatch) {
+                    res.json({
+                        success: true,
+                        message: 'Authentication successful.',
+                        user: {
+                            _id,
+                            name,
+                            username,
+                            email
+                        }
+                    });
+
+                // failure
+                } else {
+                    res.json({
+                        success: false,
+                        message: 'Sorry, you entered an incorrect email address or password.'
+                    });
+                }
+            }));
         }
     });
 });
