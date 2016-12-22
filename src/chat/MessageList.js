@@ -38,6 +38,13 @@ export default class MessageList extends React.Component {
                     messages: this.state.messages.concat([message])
                 });
             });
+
+            socket.on('user:auth', (isAuthenticated) => {
+                if (!isAuthenticated) {
+                    socket.disconnect();
+                    location.replace('/signin');
+                }
+            });
         });
     }
 
