@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 import React from 'react';
+import { browserHistory } from 'react-router';
 import List from 'material-ui/List/List';
 import Message from './Message';
 
@@ -42,7 +43,7 @@ export default class MessageList extends React.Component {
             socket.on('user:auth', (isAuthenticated) => {
                 if (!isAuthenticated) {
                     socket.disconnect();
-                    location.replace('/signin');
+                    browserHistory.push('/signin');
                 }
             });
         });

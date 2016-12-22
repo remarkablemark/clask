@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 import React from 'react';
+import { browserHistory } from 'react-router';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
@@ -54,7 +55,7 @@ export default class SignIn extends React.Component {
 
                     // success
                     if (success) {
-                        location.replace('/');
+                        browserHistory.push('/');
 
                     // error
                     } else if (message) {
