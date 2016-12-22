@@ -7,13 +7,10 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const logger = require('morgan');
 const path = require('path');
-const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
 
 const pkg = require('./package');
 const config = require('./config/');
 const isProduction = config.isProduction;
-const connection = require('./db/connection');
 
 /**
  * Express app.
@@ -47,15 +44,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(require('cookie-parser')());
 
 // session
-app.use(session({
-    name: 'sid',
-    secret: config.sessionSecret,
-    resave: false,
-    saveUninitialized: true,
-    store: new MongoStore({
-        mongooseConnection: connection
-    })
-}));
+app.use(require('./session'));
 
 // static
 app.use(express.static(path.join(__dirname, 'build')));
