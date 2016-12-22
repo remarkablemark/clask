@@ -54,10 +54,7 @@ export default class SignIn extends React.Component {
 
                     // success
                     if (success) {
-                        this.setState({
-                            snackbarMessage: message,
-                            isSnackbarOpen: true
-                        });
+                        location.replace('/');
 
                     // error
                     } else if (message) {
