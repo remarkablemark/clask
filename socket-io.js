@@ -5,7 +5,7 @@
  */
 const debug = require('debug')(process.env.APP_NAME + ':socket');
 const socket = require('socket.io');
-const session = require('./session');
+const session = require('./middleware/session');
 const Message = require('./models/message');
 
 /**

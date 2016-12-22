@@ -44,7 +44,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(require('cookie-parser')());
 
 // session
-app.use(require('./session'));
+app.use(require('./middleware/session'));
 
 // static
 app.use(express.static(path.join(__dirname, 'build')));

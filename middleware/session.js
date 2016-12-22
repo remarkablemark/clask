@@ -13,10 +13,10 @@ const MongoStore = require('connect-mongo')(session);
  */
 module.exports = session({
     name: 'sid',
-    secret: require('./config/').sessionSecret,
+    secret: require('../config/').sessionSecret,
     resave: false,
     saveUninitialized: true,
     store: new MongoStore({
-        mongooseConnection: require('./db/connection')
+        mongooseConnection: require('../db/connection')
     })
 });
