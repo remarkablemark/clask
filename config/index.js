@@ -18,6 +18,11 @@ const config = {
     mongodbConnectionUri: (
         process.env.MONGODB_CONNECTION_URI ||
         `mongodb://localhost/${process.env.APP_NAME}`
+    ),
+
+    sessionSecret: (
+        process.env.SESSION_SECRET ||
+        require('crypto').randomBytes(32).toString('hex')
     )
 };
 

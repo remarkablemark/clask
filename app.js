@@ -36,6 +36,12 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(require('cookie-parser')());
+app.use(require('express-session')({
+    name: 'sid',
+    secret: config.sessionSecret,
+    resave: false,
+    saveUninitialized: true
+}));
 app.use(express.static(path.join(__dirname, 'build')));
 
 /**
