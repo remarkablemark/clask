@@ -35,8 +35,7 @@ router.get('/', (req, res, next) => {
  */
 router.post('/', (req, res, next) => {
     // try to save user
-    const user = new User(req.body);
-    user.save((err, user) => {
+    new User(req.body).save((err, user) => {
         if (err) {
             // duplicate key error
             if (err.code === 11000) {
@@ -75,7 +74,14 @@ router.post('/', (req, res, next) => {
         req.session.isAuthenticated = true;
         res.json({
             success: true,
-            message: 'Account created!'
+            message: 'Account created!',
+            user: {
+                _id: user._id,
+                email: user.email,
+                name: user.name,
+                username: user.username,
+                isAuthenticated: req.session.isAuthenticated
+            }
         });
     });
 });

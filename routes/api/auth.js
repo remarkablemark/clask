@@ -50,7 +50,8 @@ router.post('/auth', (req, res, next) => {
                             _id,
                             name,
                             username,
-                            email
+                            email,
+                            isAuthenticated: req.session.isAuthenticated
                         }
                     });
 
