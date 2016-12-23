@@ -6,6 +6,7 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 import Form from './Form';
+import Redirect from '../shared/Redirect';
 import {
     isValid,
     validateOnServer
@@ -44,15 +45,6 @@ class SignUp extends React.Component {
         this._inputFields = inputFields;
         this.state = state;
         this._handleSubmit = this._handleSubmit.bind(this);
-    }
-
-    /**
-     * If user is already logged in, then redirect to `/`.
-     */
-    componentDidMount() {
-        if (this.props.isAuthenticated) {
-            browserHistory.push('/');
-        }
     }
 
     /**
@@ -178,87 +170,82 @@ class SignUp extends React.Component {
         } = this.state;
 
         return (
-            <Form heading='Create Account' onSubmit={this._handleSubmit}>
-                {/* name */}
-                <TextField
-                    floatingLabelText='Name'
-                    hintText='Full Name'
-                    value={name}
-                    onChange={this._handleChange.bind(this, 'name')}
-                    errorText={nameError}
-                    disabled={isFormDisabled}
-                    autoFocus
-                    autoCorrect={false}
-                    spellCheck={false}
-                />
-                <br />
+            <Redirect authenticatedTo='/'>
+                <Form heading='Create Account' onSubmit={this._handleSubmit}>
+                    {/* name */}
+                    <TextField
+                        floatingLabelText='Name'
+                        hintText='Full Name'
+                        value={name}
+                        onChange={this._handleChange.bind(this, 'name')}
+                        errorText={nameError}
+                        disabled={isFormDisabled}
+                        autoFocus
+                        autoCorrect={false}
+                        spellCheck={false}
+                    />
+                    <br />
 
-                {/* username */}
-                <TextField
-                    floatingLabelText='Username'
-                    hintText='Displayed to others'
-                    value={username}
-                    onChange={this._handleChange.bind(this, 'username')}
-                    errorText={usernameError}
-                    disabled={isFormDisabled}
-                    autoCorrect={false}
-                    spellCheck={false}
-                />
-                <br />
+                    {/* username */}
+                    <TextField
+                        floatingLabelText='Username'
+                        hintText='Displayed to others'
+                        value={username}
+                        onChange={this._handleChange.bind(this, 'username')}
+                        errorText={usernameError}
+                        disabled={isFormDisabled}
+                        autoCorrect={false}
+                        spellCheck={false}
+                    />
+                    <br />
 
-                {/* email */}
-                <TextField
-                    type='email'
-                    floatingLabelText='Email'
-                    hintText='you@domain.com'
-                    value={email}
-                    onChange={this._handleChange.bind(this, 'email')}
-                    errorText={emailError}
-                    disabled={isFormDisabled}
-                />
-                <br />
+                    {/* email */}
+                    <TextField
+                        type='email'
+                        floatingLabelText='Email'
+                        hintText='you@domain.com'
+                        value={email}
+                        onChange={this._handleChange.bind(this, 'email')}
+                        errorText={emailError}
+                        disabled={isFormDisabled}
+                    />
+                    <br />
 
-                {/* password */}
-                <TextField
-                    type='password'
-                    floatingLabelText='Password'
-                    hintText='Minimum 6 characters'
-                    value={password}
-                    onChange={this._handleChange.bind(this, 'password')}
-                    errorText={passwordError}
-                    disabled={isFormDisabled}
-                />
-                <br />
-                <br />
+                    {/* password */}
+                    <TextField
+                        type='password'
+                        floatingLabelText='Password'
+                        hintText='Minimum 6 characters'
+                        value={password}
+                        onChange={this._handleChange.bind(this, 'password')}
+                        errorText={passwordError}
+                        disabled={isFormDisabled}
+                    />
+                    <br />
+                    <br />
 
-                <RaisedButton
-                    type='submit'
-                    label='Sign Up'
-                    primary={true}
-                    disabled={isFormDisabled}
-                />
-                <br />
-                <br />
+                    <RaisedButton
+                        type='submit'
+                        label='Sign Up'
+                        primary={true}
+                        disabled={isFormDisabled}
+                    />
+                    <br />
+                    <br />
 
-                <Snackbar
-                    open={isSnackbarOpen}
-                    message={snackbarMessage}
-                />
-            </Form>
+                    <Snackbar
+                        open={isSnackbarOpen}
+                        message={snackbarMessage}
+                    />
+                </Form>
+            </Redirect>
         );
     }
 }
 
 SignUp.propTypes = {
-    isAuthenticated: React.PropTypes.bool,
     _setUser: React.PropTypes.func
 };
-
-function mapStateToProps(state) {
-    return {
-        isAuthenticated: state.user.isAuthenticated
-    };
-}
 
 function mapDispatchToProps(dispatch) {
     return {
@@ -269,6 +256,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(
-    mapStateToProps,
+    null,
     mapDispatchToProps
 )(SignUp);
