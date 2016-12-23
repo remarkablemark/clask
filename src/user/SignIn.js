@@ -4,16 +4,18 @@
  * Module dependencies.
  */
 import React from 'react';
+import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
 import Form from './Form';
+import { setAuthentication } from './actions';
 
 /**
  * SignIn component.
  */
-export default class SignIn extends React.Component {
+class SignIn extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -25,11 +27,20 @@ export default class SignIn extends React.Component {
     }
 
     /**
-     * Log out (destroy session) if route path is `/signout`.
+     * If user is already logged in, then redirect to `/`.
+     * If path is `/signout`, then log out.
      */
     componentDidMount() {
-        const { route } = this.props;
-        if (route.path === '/signout') {
+        const {
+            route,
+            isAuthenticated,
+            _setUserAuthentication
+        } = this.props;
+
+        if (isAuthenticated && route.path === '/signin') {
+            browserHistory.push('/');
+
+        } else if (route.path === '/signout') {
             window.requirejs(['superagent'], (request) => {
                 request
                     .delete('/api/auth')
@@ -43,6 +54,7 @@ export default class SignIn extends React.Component {
                         }
 
                         // success
+                        _setUserAuthentication(false);
                         this.setState({
                             snackbarMessage: response.body.message,
                             isSnackbarOpen: true
@@ -86,6 +98,7 @@ export default class SignIn extends React.Component {
 
                     // success
                     if (success) {
+                        this.props._setUserAuthentication(success);
                         browserHistory.push('/');
 
                     // error
@@ -150,5 +163,26 @@ export default class SignIn extends React.Component {
 SignIn.propTypes = {
     route: React.PropTypes.shape({
         path: React.PropTypes.string
-    })
+    }),
+    isAuthenticated: React.PropTypes.bool,
+    _setUserAuthentication: React.PropTypes.func
 };
+
+function mapStateToProps(state) {
+    return {
+        isAuthenticated: state.user.isAuthenticated
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        _setUserAuthentication: (isAuthenticated) => {
+            dispatch(setAuthentication(isAuthenticated));
+        }
+    };
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(SignIn);
