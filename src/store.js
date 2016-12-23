@@ -3,14 +3,15 @@
 /**
  * Module dependencies.
  */
-import { createStore } from 'redux';
+import { combineReducers, createStore } from 'redux';
+import userReducer from './user/reducer';
 
 /**
  * Reducer.
  */
-function reducer(state, action) {
-    return state;
-}
+const reducer = combineReducers({
+    user: userReducer
+});
 
 /**
  * Export store.
