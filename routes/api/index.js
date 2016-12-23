@@ -21,6 +21,15 @@ router.use(require('./messages'));
 router.use(require('./users'));
 
 /**
+ * Route: /api/*
+ */
+router.use('*', (req, res, next) => {
+    res.status(404).json({
+        message: 'Not found.'
+    });
+});
+
+/**
  * Export router.
  */
 module.exports = router;
