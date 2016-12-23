@@ -101,13 +101,11 @@ class SignIn extends React.Component {
                         });
                     }
 
-                    const { success, message } = response.body;
+                    const { success, message, user } = response.body;
 
                     // success
                     if (success) {
-                        this.props._setUser({
-                            isAuthenticated: success
-                        });
+                        this.props._setUser(user);
                         browserHistory.push('/');
 
                     // error

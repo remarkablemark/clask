@@ -93,13 +93,11 @@ class SignUp extends React.Component {
                         console.log(err, response); // eslint-disable-line no-console
                     }
 
-                    const { success, message, error } = response.body;
+                    const { success, message, user, error } = response.body;
 
                     // success: redirect to main
                     if (success) {
-                        this.props._setUser({
-                            isAuthenticated: success
-                        });
+                        this.props._setUser(user);
                         this.setState({
                             snackbarMessage: message,
                             isSnackbarOpen: true
