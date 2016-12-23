@@ -4,13 +4,20 @@
  * Module dependencies.
  */
 import React from 'react';
-import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
+import Form from './Form';
+
+// material-ui
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
-import Form from './Form';
-import { setAuthentication } from './actions';
+
+// redux
+import { connect } from 'react-redux';
+import {
+    setAuthentication,
+    removeUser
+} from './actions';
 
 /**
  * SignIn component.
@@ -34,7 +41,7 @@ class SignIn extends React.Component {
         const {
             route,
             isAuthenticated,
-            _setUserAuthentication
+            _removeUser
         } = this.props;
 
         if (isAuthenticated && route.path === '/signin') {
@@ -54,7 +61,7 @@ class SignIn extends React.Component {
                         }
 
                         // success
-                        _setUserAuthentication(false);
+                        _removeUser();
                         this.setState({
                             snackbarMessage: response.body.message,
                             isSnackbarOpen: true
@@ -165,7 +172,8 @@ SignIn.propTypes = {
         path: React.PropTypes.string
     }),
     isAuthenticated: React.PropTypes.bool,
-    _setUserAuthentication: React.PropTypes.func
+    _setUserAuthentication: React.PropTypes.func,
+    _removeUser: React.PropTypes.func
 };
 
 function mapStateToProps(state) {
@@ -178,6 +186,9 @@ function mapDispatchToProps(dispatch) {
     return {
         _setUserAuthentication: (isAuthenticated) => {
             dispatch(setAuthentication(isAuthenticated));
+        },
+        _removeUser: () => {
+            dispatch(removeUser());
         }
     };
 }

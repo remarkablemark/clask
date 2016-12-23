@@ -8,6 +8,10 @@ import { browserHistory } from 'react-router';
 import List from 'material-ui/List/List';
 import Message from './Message';
 
+// redux
+import { connect } from 'react-redux';
+import { removeUser } from '../user/actions';
+
 // styles
 import { formHeight, gutter } from './styles';
 const styles = {
@@ -24,7 +28,7 @@ const styles = {
 /**
  * MessageList component.
  */
-export default class MessageList extends React.Component {
+class MessageList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -42,6 +46,7 @@ export default class MessageList extends React.Component {
 
             socket.on('user:auth', (isAuthenticated) => {
                 if (!isAuthenticated) {
+                    this.props._removeUser();
                     socket.disconnect();
                     browserHistory.push('/signin');
                 }
@@ -71,5 +76,19 @@ export default class MessageList extends React.Component {
 }
 
 MessageList.propTypes = {
-    messages: React.PropTypes.array
+    messages: React.PropTypes.array,
+    _removeUser: React.PropTypes.func
 };
+
+function mapDispatchToProps(dispatch) {
+    return {
+        _removeUser: (user) => {
+            dispatch(removeUser(user));
+        }
+    };
+}
+
+export default connect(
+    null,
+    mapDispatchToProps
+)(MessageList);
