@@ -15,7 +15,7 @@ import Snackbar from 'material-ui/Snackbar';
 // redux
 import { connect } from 'react-redux';
 import {
-    setAuthentication,
+    setUser,
     removeUser
 } from './actions';
 
@@ -105,7 +105,9 @@ class SignIn extends React.Component {
 
                     // success
                     if (success) {
-                        this.props._setUserAuthentication(success);
+                        this.props._setUser({
+                            isAuthenticated: success
+                        });
                         browserHistory.push('/');
 
                     // error
@@ -172,7 +174,7 @@ SignIn.propTypes = {
         path: React.PropTypes.string
     }),
     isAuthenticated: React.PropTypes.bool,
-    _setUserAuthentication: React.PropTypes.func,
+    _setUser: React.PropTypes.func,
     _removeUser: React.PropTypes.func
 };
 
@@ -184,8 +186,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        _setUserAuthentication: (isAuthenticated) => {
-            dispatch(setAuthentication(isAuthenticated));
+        _setUser: (user) => {
+            dispatch(setUser(user));
         },
         _removeUser: () => {
             dispatch(removeUser());

@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 import {
-    SET_AUTHENTICATION,
+    SET_USER,
     REMOVE_USER
 } from './actions';
 
@@ -14,6 +14,10 @@ const {
 
 const initialState = {
     isAuthenticated
+    // _id
+    // username
+    // name
+    // email
 };
 
 /**
@@ -25,11 +29,9 @@ const initialState = {
  */
 export default function reducer(state = initialState, action) {
     switch (action.type) {
-        // set authentication
-        case SET_AUTHENTICATION:
-            return Object.assign({}, state, {
-                isAuthenticated: action.isAuthenticated
-            });
+        // set user
+        case SET_USER:
+            return Object.assign({}, state, action.user);
 
         // remove user
         case REMOVE_USER:

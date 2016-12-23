@@ -5,16 +5,20 @@
  */
 import React from 'react';
 import { browserHistory } from 'react-router';
-import { connect } from 'react-redux';
-import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
-import Snackbar from 'material-ui/Snackbar';
 import Form from './Form';
 import {
     isValid,
     validateOnServer
 } from './helpers';
-import { setAuthentication } from './actions';
+
+// material-ui
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+import Snackbar from 'material-ui/Snackbar';
+
+// redux
+import { connect } from 'react-redux';
+import { setUser } from './actions';
 
 /**
  * SignUp component.
@@ -93,11 +97,13 @@ class SignUp extends React.Component {
 
                     // success: redirect to main
                     if (success) {
+                        this.props._setUser({
+                            isAuthenticated: success
+                        });
                         this.setState({
                             snackbarMessage: message,
                             isSnackbarOpen: true
                         });
-                        this.props._setUserAuthentication(success);
                         setTimeout(() => {
                             browserHistory.push('/');
                         }, 1000);
@@ -247,7 +253,7 @@ class SignUp extends React.Component {
 
 SignUp.propTypes = {
     isAuthenticated: React.PropTypes.bool,
-    _setUserAuthentication: React.PropTypes.func
+    _setUser: React.PropTypes.func
 };
 
 function mapStateToProps(state) {
@@ -258,8 +264,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        _setUserAuthentication: (isAuthenticated) => {
-            dispatch(setAuthentication(isAuthenticated));
+        _setUser: (user) => {
+            dispatch(setUser(user));
         }
     };
 }

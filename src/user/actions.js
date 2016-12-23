@@ -3,7 +3,7 @@
 /**
  * Action types.
  */
-export const SET_AUTHENTICATION = 'SET_AUTHENTICATION';
+export const SET_USER = 'SET_USER';
 export const REMOVE_USER = 'REMOVE_USER';
 
 /**
@@ -11,15 +11,15 @@ export const REMOVE_USER = 'REMOVE_USER';
  */
 
 /**
- * Sets the user authentication value.
+ * Sets user data.
  *
- * @param  {Boolean} isAuthenticated - The authentication value.
- * @return {Object}                  - The dispatch action.
+ * @param  {Object} user - The user data.
+ * @return {Object}      - The dispatch action.
  */
-export function setAuthentication(isAuthenticated) {
+export function setUser(user) {
     return {
-        type: SET_AUTHENTICATION,
-        isAuthenticated
+        type: SET_USER,
+        user
     };
 }
 
