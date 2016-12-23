@@ -5,6 +5,7 @@
  */
 import React from 'react';
 import { browserHistory } from 'react-router';
+import { connect } from 'react-redux';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
@@ -13,11 +14,12 @@ import {
     isValid,
     validateOnServer
 } from './helpers';
+import { setAuthentication } from './actions';
 
 /**
  * SignUp component.
  */
-export default class SignUp extends React.Component {
+class SignUp extends React.Component {
     constructor(props) {
         super(props);
         const state = {
@@ -38,6 +40,15 @@ export default class SignUp extends React.Component {
         this._inputFields = inputFields;
         this.state = state;
         this._handleSubmit = this._handleSubmit.bind(this);
+    }
+
+    /**
+     * If user is already logged in, then redirect to `/`.
+     */
+    componentDidMount() {
+        if (this.props.isAuthenticated) {
+            browserHistory.push('/');
+        }
     }
 
     /**
@@ -86,6 +97,7 @@ export default class SignUp extends React.Component {
                             snackbarMessage: message,
                             isSnackbarOpen: true
                         });
+                        this.props._setUserAuthentication(success);
                         setTimeout(() => {
                             browserHistory.push('/');
                         }, 1000);
@@ -232,3 +244,27 @@ export default class SignUp extends React.Component {
         );
     }
 }
+
+SignUp.propTypes = {
+    isAuthenticated: React.PropTypes.bool,
+    _setUserAuthentication: React.PropTypes.func
+};
+
+function mapStateToProps(state) {
+    return {
+        isAuthenticated: state.user.isAuthenticated
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        _setUserAuthentication: (isAuthenticated) => {
+            dispatch(setAuthentication(isAuthenticated));
+        }
+    };
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(SignUp);
