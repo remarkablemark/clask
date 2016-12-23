@@ -14,10 +14,7 @@ import Snackbar from 'material-ui/Snackbar';
 
 // redux
 import { connect } from 'react-redux';
-import {
-    setUser,
-    removeUser
-} from './actions';
+import { setUser } from './actions';
 
 /**
  * SignIn component.
@@ -34,44 +31,6 @@ class SignIn extends React.Component {
     }
 
     /**
-     * If user is already logged in, then redirect to `/`.
-     * If path is `/signout`, then log out.
-     */
-    componentDidMount() {
-        const {
-            route,
-            isAuthenticated,
-            _removeUser
-        } = this.props;
-
-        if (isAuthenticated && route.path === '/signin') {
-            browserHistory.push('/');
-
-        } else if (route.path === '/signout') {
-            window.requirejs(['superagent'], (request) => {
-                request
-                    .delete('/api/auth')
-                    .end((error, response) => {
-                        // server error
-                        if (error || !response.ok) {
-                            return this.setState({
-                                snackbarMessage: 'Server error, please try again.',
-                                isSnackbarOpen: true
-                            });
-                        }
-
-                        // success
-                        _removeUser();
-                        this.setState({
-                            snackbarMessage: response.body.message,
-                            isSnackbarOpen: true
-                        });
-                    });
-            });
-        }
-    }
-
-    /**
      * Submit form data to `/api/auth` to create authenticated session.
      */
     _handleSubmit(event) {
@@ -85,38 +44,36 @@ class SignIn extends React.Component {
         });
 
         window.requirejs(['superagent'], (request) => {
-            request
-                .post('/api/auth')
-                .send({
-                    email,
-                    password
-                })
-                .end((error, response) => {
-                    // server error
-                    if (error || !response.ok) {
-                        return this.setState({
-                            snackbarMessage: 'Server error, please try again.',
-                            isSnackbarOpen: true,
-                            isFormDisabled: false
-                        });
-                    }
+            request.post('/api/auth').send({
+                email,
+                password
+            })
+            .end((error, response) => {
+                // server error
+                if (error || !response.ok) {
+                    return this.setState({
+                        snackbarMessage: 'Server error, please try again.',
+                        isSnackbarOpen: true,
+                        isFormDisabled: false
+                    });
+                }
 
-                    const { success, message, user } = response.body;
+                const { success, message, user } = response.body;
 
-                    // success
-                    if (success) {
-                        this.props._setUser(user);
-                        browserHistory.push('/');
+                // success
+                if (success) {
+                    this.props._setUser(user);
+                    browserHistory.push('/');
 
-                    // error
-                    } else if (message) {
-                        this.setState({
-                            snackbarMessage: message,
-                            isSnackbarOpen: true,
-                            isFormDisabled: false
-                        });
-                    }
-                });
+                // error
+                } else if (message) {
+                    this.setState({
+                        snackbarMessage: message,
+                        isSnackbarOpen: true,
+                        isFormDisabled: false
+                    });
+                }
+            });
         });
     }
 
@@ -168,32 +125,18 @@ class SignIn extends React.Component {
 }
 
 SignIn.propTypes = {
-    route: React.PropTypes.shape({
-        path: React.PropTypes.string
-    }),
-    isAuthenticated: React.PropTypes.bool,
-    _setUser: React.PropTypes.func,
-    _removeUser: React.PropTypes.func
+    _setUser: React.PropTypes.func
 };
-
-function mapStateToProps(state) {
-    return {
-        isAuthenticated: state.user.isAuthenticated
-    };
-}
 
 function mapDispatchToProps(dispatch) {
     return {
         _setUser: (user) => {
             dispatch(setUser(user));
-        },
-        _removeUser: () => {
-            dispatch(removeUser());
         }
     };
 }
 
 export default connect(
-    mapStateToProps,
+    null,
     mapDispatchToProps
 )(SignIn);
