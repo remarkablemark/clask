@@ -10,7 +10,7 @@ const User = require('../../models/user');
 /**
  * GET: /api/users
  */
-router.get('/users', (req, res, next) => {
+router.get('/', (req, res, next) => {
     const { _id, email, username } = req.query;
     const query = {};
     if (_id) query._id = _id;
@@ -33,7 +33,7 @@ router.get('/users', (req, res, next) => {
 /**
  * POST: /api/users
  */
-router.post('/users', (req, res, next) => {
+router.post('/', (req, res, next) => {
     // try to save user
     const user = new User(req.body);
     user.save((err, user) => {

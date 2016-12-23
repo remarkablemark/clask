@@ -10,7 +10,7 @@ const Message = require('../../models/message');
 /**
  * GET: /api/messages
  */
-router.get('/messages', (req, res, next) => {
+router.get('/', (req, res, next) => {
     Message.find({}, {
         _id: 0,
         text: 1,
