@@ -7,7 +7,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import routes from './routes';
+import routes from '../routes';
 
 function reducer(state, action) {
     return state;

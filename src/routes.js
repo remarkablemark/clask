@@ -13,10 +13,10 @@ import {
 } from 'react-router';
 
 // components
-import Layout from './Layout';
-import Index from './Index';
-import SignUp from '../user/SignUp';
-import SignIn from '../user/SignIn';
+import Layout from './app/Layout';
+import Index from './app/Index';
+import SignUp from './user/SignUp';
+import SignIn from './user/SignIn';
 
 /**
  * Routes.
