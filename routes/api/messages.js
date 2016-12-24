@@ -13,8 +13,7 @@ const Message = require('../../models/message');
 router.get('/', (req, res, next) => {
     Message.find({}, {
         _id: 0,
-        text: 1,
-        time: 1
+        __v: 0
     }, (error, messages) => {
         if (error) {
             debug('error find message', error);

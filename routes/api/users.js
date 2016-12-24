@@ -18,7 +18,6 @@ router.get('/', (req, res, next) => {
     else if (username) query.username = username;
 
     User.find(query, {
-        _id: 0,
         name: 1,
         username: 1,
     }, (error, user) => {
