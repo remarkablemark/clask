@@ -93,6 +93,7 @@ class SignIn extends React.Component {
                     floatingLabelText='Email'
                     hintText='you@domain.com'
                     disabled={isFormDisabled}
+                    autoFocus
                 />
                 <br />
 

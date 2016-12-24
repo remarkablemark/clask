@@ -105,6 +105,7 @@ class Form extends React.Component {
                             onChange={this._handleChange}
                             spellCheck='true'
                             value={this.state.value}
+                            autoFocus
                         />
                     </div>
                 </div>
