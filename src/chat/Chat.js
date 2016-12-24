@@ -14,7 +14,7 @@ export default class Chat extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoaded: false,
+            isLoaded: 0,
             messages: props.messages
         };
     }
@@ -27,18 +27,39 @@ export default class Chat extends React.Component {
                 }
                 this.setState({
                     messages: response.body,
-                    isLoaded: true
+                    isLoaded: this.state.isLoaded + 1
+                });
+            });
+
+            request.get('/api/users', (error, response) => {
+                if (error || !response.ok) {
+                    return console.log(error, response); // eslint-disable-line no-console
+                }
+
+                // reformat collection into hash
+                const users = {};
+                response.body.forEach((user) => {
+                    const { _id, username } = user;
+                    users[_id] = {
+                        username
+                    };
+                });
+
+                this.setState({
+                    users,
+                    isLoaded: this.state.isLoaded + 1
                 });
             });
         });
     }
 
     render() {
-        const { isLoaded, messages } = this.state;
-        if (!isLoaded) return null;
+        const { isLoaded, messages, users } = this.state;
+        if (isLoaded < 2) return null;
+
         return (
             <div>
-                <MessageList messages={messages} />
+                <MessageList messages={messages} users={users} />
                 <Form />
             </div>
         );
@@ -46,9 +67,11 @@ export default class Chat extends React.Component {
 }
 
 Chat.propTypes = {
-    messages: React.PropTypes.array
+    messages: React.PropTypes.array,
+    users: React.PropTypes.object
 };
 
 Chat.defaultProps = {
-    messages: []
+    messages: [],
+    users: {}
 };

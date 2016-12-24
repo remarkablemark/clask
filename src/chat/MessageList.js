@@ -55,14 +55,16 @@ class MessageList extends React.Component {
     }
 
     render() {
+        const { users } = this.props;
         const { messages } = this.state;
         return (
             <div>
                 <List style={styles.container}>
                     {messages.map((message, index) => {
-                        const { text, time } = message;
+                        const { user_id, time, text } = message;
                         return (
                             <Message
+                                user={users[user_id]}
                                 text={text}
                                 time={time}
                                 key={index}
@@ -77,6 +79,7 @@ class MessageList extends React.Component {
 
 MessageList.propTypes = {
     messages: React.PropTypes.array,
+    users: React.PropTypes.object,
     _removeUser: React.PropTypes.func
 };
 

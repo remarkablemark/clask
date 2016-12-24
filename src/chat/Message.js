@@ -16,6 +16,9 @@ const styles = {
         paddingTop: messagePadding,
         paddingBottom: messagePadding
     },
+    username: {
+        marginRight: 8
+    },
     time: {
         fontSize: 12,
         color: grey500
@@ -32,7 +35,7 @@ const styles = {
  * Message component.
  */
 export default function Message(props) {
-    const { text, time } = props;
+    const { user, time, text } = props;
     const date = new Date(time);
     const hours = date.getHours();
     const minutes = date.getMinutes();
@@ -46,6 +49,7 @@ export default function Message(props) {
         <ListItem
             primaryText={
                 <div>
+                    <strong style={styles.username}>{user.username}</strong>
                     <span style={styles.time}>{formattedTime}</span>
                     <div style={styles.text}>{text}</div>
                 </div>
@@ -67,6 +71,9 @@ export default function Message(props) {
 }
 
 Message.propTypes = {
+    user: React.PropTypes.shape({
+        username: React.PropTypes.string
+    }),
     text: React.PropTypes.string,
     // check that time can be parsed into a valid date
     time: (props, propName, componentName) => {
