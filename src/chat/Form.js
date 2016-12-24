@@ -14,15 +14,20 @@ import TextField from 'material-ui/TextField';
 import { connect } from 'react-redux';
 
 // styles
-import { buttonWidth, formHeight, gutter } from './styles';
+import {
+    buttonWidth,
+    formHeight,
+    gutter,
+    leftNavWidth
+} from './styles';
+
 const styles = {
     form: {
         position: 'fixed',
         right: 0,
         bottom: 0,
         left: 0,
-        margin: '0 auto',
-        width: '100%',
+        marginLeft: leftNavWidth,
         height: formHeight
     },
     line: {

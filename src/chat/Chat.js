@@ -4,8 +4,22 @@
  * Module dependencies.
  */
 import React from 'react';
+import LeftNav from './LeftNav';
 import MessageList from './MessageList';
 import Form from './Form';
+
+// styles
+import { leftNavWidth } from './styles';
+const styles = {
+    container: {
+        height: '100%'
+    },
+    content: {
+        position: 'relative',
+        marginLeft: leftNavWidth,
+        height: '100%'
+    }
+};
 
 /**
  * Chat component.
@@ -58,9 +72,12 @@ export default class Chat extends React.Component {
         if (isLoaded < 2) return null;
 
         return (
-            <div>
-                <MessageList messages={messages} users={users} />
-                <Form />
+            <div style={styles.container}>
+                <LeftNav />
+                <div style={styles.content}>
+                    <MessageList messages={messages} users={users} />
+                    <Form />
+                </div>
             </div>
         );
     }
