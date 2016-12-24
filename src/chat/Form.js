@@ -4,9 +4,14 @@
  * Module dependencies.
  */
 import React from 'react';
+
+// material-ui
 import Divider from 'material-ui/Divider';
 import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
+
+// redux
+import { connect } from 'react-redux';
 
 // styles
 import { buttonWidth, formHeight, gutter } from './styles';
@@ -49,7 +54,7 @@ const getTime = (
 /**
  * Form component.
  */
-export default class Form extends React.Component {
+class Form extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -70,7 +75,8 @@ export default class Form extends React.Component {
         window.requirejs(['socket'], (socket) => {
             socket.emit('chat:message', {
                 text: this.state.value,
-                time: getTime()
+                time: getTime(),
+                user_id: this.props.userId
             });
             this.setState({
                 value: ''
@@ -106,3 +112,17 @@ export default class Form extends React.Component {
         );
     }
 }
+
+Form.propTypes = {
+    userId: React.PropTypes.string
+};
+
+function mapStateToProps(state) {
+    return {
+        userId: state.user._id
+    };
+}
+
+export default connect(
+    mapStateToProps
+)(Form);
