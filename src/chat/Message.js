@@ -17,6 +17,7 @@ const styles = {
         paddingBottom: messagePadding
     },
     username: {
+        fontWeight: 'bold',
         marginRight: 8
     },
     time: {

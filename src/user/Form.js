@@ -12,7 +12,9 @@ import { grey700 } from 'material-ui/styles/colors';
 import { gutter } from '../chat/styles';
 const styles = {
     heading: {
-        color: grey700
+        color: grey700,
+        fontSize: '1.75em',
+        marginBottom: '1em'
     },
     container: {
         margin: '0 auto',
