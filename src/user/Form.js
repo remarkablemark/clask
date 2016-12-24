@@ -5,7 +5,7 @@
  */
 import React from 'react';
 import Paper from 'material-ui/Paper';
-import Center from './Center';
+import Center from '../shared/Center';
 
 // styles
 import { grey700 } from 'material-ui/styles/colors';
