@@ -72,6 +72,7 @@ router.post('/', (req, res, next) => {
 
         // user successfully saved
         req.session.isAuthenticated = true;
+        req.session._id = user._id;
         res.json({
             success: true,
             message: 'Account created!',

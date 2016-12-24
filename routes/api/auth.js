@@ -43,6 +43,7 @@ router.post('/auth', (req, res, next) => {
                 // success
                 if (isMatch) {
                     req.session.isAuthenticated = true;
+                    req.session._id = _id;
                     res.json({
                         success: true,
                         message: 'Authentication successful.',

@@ -9,10 +9,14 @@ const router = require('express').Router();
  * GET: *
  */
 router.get('*', (req, res, next) => {
+    const { _id, isAuthenticated } = req.session;
     res.render('index.html', {
         title: 'Express-Template',
         public: Object.assign({}, req.app.locals.public, {
-            isAuthenticated: req.session.isAuthenticated
+            user: {
+                _id,
+                isAuthenticated
+            }
         })
     });
 });

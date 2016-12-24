@@ -8,17 +8,7 @@ import {
     REMOVE_USER
 } from './actions';
 
-const {
-    isAuthenticated
-} = window.__EXPRESS_TEMPLATE__;
-
-const initialState = {
-    isAuthenticated
-    // _id
-    // username
-    // name
-    // email
-};
+const initialState = window.__EXPRESS_TEMPLATE__.user || {};
 
 /**
  * User reducer.
