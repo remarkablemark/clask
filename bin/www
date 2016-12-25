@@ -29,7 +29,7 @@ const server = http.createServer(app);
 /**
  * Create Socket.IO instance.
  */
-require('../socket-io')(server);
+require('../socket.io/')(server);
 
 /**
  * Listen on provided port, on all network interfaces.
