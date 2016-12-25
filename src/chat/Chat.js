@@ -74,7 +74,7 @@ export default class Chat extends React.Component {
 
         return (
             <div style={styles.container}>
-                <LeftNav />
+                <LeftNav users={users} />
                 <div style={styles.content}>
                     <MessageList messages={messages} users={users} />
                     <Form />
