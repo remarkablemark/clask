@@ -8,7 +8,8 @@ const Message = require('../models/message');
 const {
     CHAT_MESSAGE,
     USER_DATA,
-    CONNECTED_USERS
+    CONNECTED_USERS,
+    DISCONNECTED_USER
 } = require('./events');
 
 /**
@@ -56,6 +57,7 @@ function onConnection(io, socket) {
     }
 
     socket.on('disconnect', () => {
+        socket.broadcast.emit(DISCONNECTED_USER, socket._id);
         debug('client disconnected', request.session);
     });
 }
