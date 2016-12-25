@@ -7,7 +7,7 @@ const debug = require('debug')(process.env.APP_NAME + ':socket');
 const Message = require('../models/message');
 const {
     CHAT_MESSAGE,
-    USER_AUTH
+    USER_DATA
 } = require('./events');
 
 /**
@@ -31,7 +31,9 @@ function onConnection(socket) {
         });
 
     } else {
-        socket.emit(USER_AUTH, false);
+        socket.emit(USER_DATA, {
+            isAuthenticated: false
+        });
     }
 
     socket.on('disconnect', () => {

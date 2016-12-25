@@ -5,7 +5,7 @@
  */
 const events = {
     CHAT_MESSAGE: 'CHAT_MESSAGE',
-    USER_AUTH: 'USER_AUTH'
+    USER_DATA: 'USER_DATA'
 };
 
 module.exports = events;

@@ -15,7 +15,7 @@ import { removeUser } from '../user/actions';
 // socket
 import {
     CHAT_MESSAGE,
-    USER_AUTH
+    USER_DATA
 } from '../../socket.io/events';
 
 // styles
@@ -50,8 +50,8 @@ class MessageList extends React.Component {
                 });
             });
 
-            socket.on(USER_AUTH, (isAuthenticated) => {
-                if (!isAuthenticated) {
+            socket.on(USER_DATA, (user) => {
+                if (!user.isAuthenticated) {
                     this.props._removeUser();
                     socket.disconnect();
                     browserHistory.push('/signin');
