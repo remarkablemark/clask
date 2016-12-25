@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 import React from 'react';
+import _ from 'lodash';
 import { browserHistory } from 'react-router';
 import Form from './Form';
 import Redirect from '../shared/Redirect';
@@ -38,7 +39,7 @@ class SignUp extends React.Component {
             'email',
             'password'
         ];
-        inputFields.forEach((key) => {
+        _.forEach(inputFields, (key) => {
             state[key] = '';
             state[key + 'Error'] = '';
         });
@@ -57,7 +58,7 @@ class SignUp extends React.Component {
 
         // validate all form inputs (email has HTML5 validation)
         let hasError = false;
-        this._inputFields.forEach((field) => {
+        _.forEach(this._inputFields, (field) => {
             if (!isValid.call(this, field, this.state[field])) {
                 hasError = true;
             }

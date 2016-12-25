@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 import React from 'react';
+import _ from 'lodash';
 import { browserHistory } from 'react-router';
 import List from 'material-ui/List/List';
 import Message from './Message';
@@ -46,7 +47,7 @@ class MessageList extends React.Component {
         window.requirejs(['socket'], (socket) => {
             socket.on(CHAT_MESSAGE, (message) => {
                 this.setState({
-                    messages: this.state.messages.concat([message])
+                    messages: _.concat(this.state.messages, [message])
                 });
             });
 
@@ -66,7 +67,7 @@ class MessageList extends React.Component {
         return (
             <div>
                 <List style={styles.container}>
-                    {messages.map((message, index) => {
+                    {_.map(messages, (message, index) => {
                         const { user_id, time, text } = message;
                         return (
                             <Message

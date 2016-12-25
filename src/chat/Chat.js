@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 import React from 'react';
+import _ from 'lodash';
 import LeftNav from './LeftNav';
 import MessageList from './MessageList';
 import Form from './Form';
@@ -52,7 +53,7 @@ export default class Chat extends React.Component {
 
                 // reformat collection into hash
                 const users = {};
-                response.body.forEach((user) => {
+                _.forEach(response.body, (user) => {
                     const { _id, username } = user;
                     users[_id] = {
                         username
