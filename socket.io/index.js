@@ -3,13 +3,12 @@
 /**
  * Module dependencies.
  */
-const debug = require('debug')(process.env.APP_NAME + ':socket');
 const socket = require('socket.io');
 const session = require('../middleware/session');
-const Message = require('../models/message');
+const onConnection = require('./connection');
 
 /**
- * Socket.IO factory.
+ * Socket.IO server middleware.
  *
  * @param {Object} server - The server.
  */
@@ -22,27 +21,7 @@ function io(server) {
     });
 
     // client connected
-    io.on('connection', (socket) => {
-        const { request } = socket;
-        debug('client connected', request.session);
-
-        if (request.session.isAuthenticated) {
-            socket.on('chat:message', (chatMessage) => {
-                debug('[chat:message]', chatMessage);
-                io.emit('chat:message', chatMessage);
-                const message = new Message(chatMessage);
-                message.save((error) => {
-                    if (error) debug('failed to save message', error);
-                });
-            });
-        } else {
-            socket.emit('user:auth', false);
-        }
-
-        socket.on('disconnect', () => {
-            debug('client disconnected', request.session);
-        });
-    });
+    io.on('connection', onConnection);
 }
 
 module.exports = io;
