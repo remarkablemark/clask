@@ -5,6 +5,10 @@
  */
 const debug = require('debug')(process.env.APP_NAME + ':socket');
 const Message = require('../models/message');
+const {
+    CHAT_MESSAGE,
+    USER_AUTH
+} = require('./events');
 
 /**
  * Handle client 'connection' event.
@@ -16,17 +20,18 @@ function onConnection(socket) {
     debug('client connected', request.session);
 
     if (request.session.isAuthenticated) {
-        socket.on('chat:message', (chatMessage) => {
-            debug('[chat:message]', chatMessage);
-            socket.broadcast.emit('chat:message', chatMessage);
-            socket.emit('chat:message', chatMessage);
+        socket.on(CHAT_MESSAGE, (chatMessage) => {
+            debug(CHAT_MESSAGE, chatMessage);
+            socket.broadcast.emit(CHAT_MESSAGE, chatMessage);
+            socket.emit(CHAT_MESSAGE, chatMessage);
             const message = new Message(chatMessage);
             message.save((error) => {
                 if (error) debug('failed to save message', error);
             });
         });
+
     } else {
-        socket.emit('user:auth', false);
+        socket.emit(USER_AUTH, false);
     }
 
     socket.on('disconnect', () => {

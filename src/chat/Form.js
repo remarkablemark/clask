@@ -13,6 +13,9 @@ import TextField from 'material-ui/TextField';
 // redux
 import { connect } from 'react-redux';
 
+// socket
+import { CHAT_MESSAGE } from '../../socket.io/events';
+
 // styles
 import {
     buttonWidth,
@@ -78,7 +81,7 @@ class Form extends React.Component {
     _handleSubmit(event) {
         event.preventDefault();
         window.requirejs(['socket'], (socket) => {
-            socket.emit('chat:message', {
+            socket.emit(CHAT_MESSAGE, {
                 text: this.state.value,
                 time: getTime(),
                 user_id: this.props.userId

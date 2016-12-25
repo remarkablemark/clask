@@ -12,6 +12,12 @@ import Message from './Message';
 import { connect } from 'react-redux';
 import { removeUser } from '../user/actions';
 
+// socket
+import {
+    CHAT_MESSAGE,
+    USER_AUTH
+} from '../../socket.io/events';
+
 // styles
 import { formHeight, gutter } from './styles';
 const styles = {
@@ -38,13 +44,13 @@ class MessageList extends React.Component {
 
     componentDidMount() {
         window.requirejs(['socket'], (socket) => {
-            socket.on('chat:message', (message) => {
+            socket.on(CHAT_MESSAGE, (message) => {
                 this.setState({
                     messages: this.state.messages.concat([message])
                 });
             });
 
-            socket.on('user:auth', (isAuthenticated) => {
+            socket.on(USER_AUTH, (isAuthenticated) => {
                 if (!isAuthenticated) {
                     this.props._removeUser();
                     socket.disconnect();
