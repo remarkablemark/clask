@@ -7,7 +7,8 @@ const debug = require('debug')(process.env.APP_NAME + ':socket');
 const Message = require('../models/message');
 const {
     CHAT_MESSAGE,
-    USER_DATA
+    USER_DATA,
+    CONNECTED_USERS
 } = require('./events');
 
 /**
@@ -21,6 +22,22 @@ function onConnection(io, socket) {
     debug('client connected', request.session);
 
     if (request.session.isAuthenticated) {
+        // save user id on socket
+        const { _id } = request.session;
+        socket._id = _id;
+
+        // send client an array of all user ids that are connected
+        // duplicates are possible for a user connected on multiple sockets
+        socket.emit(
+            CONNECTED_USERS,
+            Object.keys(io.sockets.connected).map((id) => {
+                return io.sockets.connected[id]._id;
+            })
+        );
+
+        // broadcast to other clients that new user has joined
+        socket.broadcast.emit(CONNECTED_USERS, [_id]);
+
         // chat message
         socket.on(CHAT_MESSAGE, (chatMessage) => {
             debug(CHAT_MESSAGE, chatMessage);
