@@ -8,7 +8,7 @@ const express = require('express');
 const logger = require('morgan');
 const path = require('path');
 
-const pkg = require('./package');
+const { dependencies } = require('./package');
 const config = require('./config/');
 const isProduction = config.isProduction;
 
@@ -56,12 +56,13 @@ app.locals.public = {
     isProduction: isProduction,
     publicPath: isProduction ? '' : require('./webpack/development.config').output.publicPath,
     versions: {
-        'react': pkg.dependencies['react'],
-        'react-dom': pkg.dependencies['react-dom'],
-        'react-router': pkg.dependencies['react-router'],
-        'react-redux': pkg.dependencies['react-redux'],
-        'redux': pkg.dependencies['redux'],
-        'socket.io': pkg.dependencies['socket.io']
+        'lodash': dependencies['lodash'],
+        'react': dependencies['react'],
+        'react-dom': dependencies['react-dom'],
+        'react-router': dependencies['react-router'],
+        'react-redux': dependencies['react-redux'],
+        'redux': dependencies['redux'],
+        'socket.io': dependencies['socket.io']
     }
 };
 

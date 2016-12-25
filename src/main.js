@@ -16,6 +16,9 @@ if (requirejs) {
             'io': [
                 `//cdnjs.cloudflare.com/ajax/libs/socket.io/${versions['socket.io']}/socket.io.min`
             ],
+            'lodash': [
+                `//cdnjs.cloudflare.com/ajax/libs/lodash.js/${versions['lodash']}/lodash.min`
+            ],
             'react': [
                 `//cdnjs.cloudflare.com/ajax/libs/react/${versions['react']}/react.min`
             ],
@@ -57,7 +60,7 @@ define('socket', ['io'], (io) => {
  */
 if (isProduction) {
     requirejs([
-        'react', 'react-dom', 'react-router', 'redux', 'react-redux'
+        'react', 'react-dom', 'react-router', 'redux', 'react-redux', 'lodash',
     ], (React, ReactDOM, ReactRouter, Redux, ReactRedux) => {
         window.React = React;
         window.ReactDOM = ReactDOM;

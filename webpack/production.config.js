@@ -47,6 +47,7 @@ module.exports = {
     ],
 
     externals: {
+        'lodash': '_',
         'react': 'React',
         'react-dom': 'ReactDOM',
         'react-router': 'ReactRouter',
