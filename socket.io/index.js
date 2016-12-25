@@ -21,7 +21,7 @@ function io(server) {
     });
 
     // client connected
-    io.on('connection', onConnection);
+    io.on('connection', onConnection.bind(null, io));
 }
 
 module.exports = io;
