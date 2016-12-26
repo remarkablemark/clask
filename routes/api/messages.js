@@ -12,7 +12,6 @@ const Message = require('../../models/message');
  */
 router.get('/', (req, res, next) => {
     Message.find({}, {
-        _id: 0,
         __v: 0
     }, (error, messages) => {
         if (error) {

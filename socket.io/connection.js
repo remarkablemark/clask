@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 const debug = require('debug')(process.env.APP_NAME + ':socket');
+const ObjectId = require('mongoose').Types.ObjectId;
 const Message = require('../models/message');
 const {
     CHAT_MESSAGE,
@@ -41,12 +42,13 @@ function onConnection(io, socket) {
 
         // chat message
         socket.on(CHAT_MESSAGE, (chatMessage) => {
-            debug(CHAT_MESSAGE, chatMessage);
+            chatMessage._id = ObjectId();
             io.emit(CHAT_MESSAGE, chatMessage);
             const message = new Message(chatMessage);
             message.save((error) => {
                 if (error) debug('failed to save message', error);
             });
+            debug(CHAT_MESSAGE, chatMessage);
         });
 
     } else {
