@@ -20,15 +20,17 @@ import {
 } from '../../socket.io/events';
 
 // styles
-import { formHeight, gutter } from './styles';
+import { formHeight } from './styles';
 const styles = {
     container: {
         position: 'absolute',
         right: 0,
         bottom: formHeight,
         left: 0,
-        margin: gutter,
-        overflowY: 'auto'
+        paddingTop: 0,
+        paddingBottom: 0,
+        overflowY: 'auto',
+        height: `calc(100% - ${formHeight}px)`
     }
 };
 
@@ -65,21 +67,19 @@ class MessageList extends React.Component {
         const { users } = this.props;
         const { messages } = this.state;
         return (
-            <div>
-                <List style={styles.container}>
-                    {_.map(messages, (message, index) => {
-                        const { user_id, time, text } = message;
-                        return (
-                            <Message
-                                user={users[user_id]}
-                                text={text}
-                                time={time}
-                                key={index}
-                            />
-                        );
-                    })}
-                </List>
-            </div>
+            <List style={styles.container}>
+                {_.map(messages, (message, index) => {
+                    const { user_id, time, text } = message;
+                    return (
+                        <Message
+                            user={users[user_id]}
+                            text={text}
+                            time={time}
+                            key={index}
+                        />
+                    );
+                })}
+            </List>
         );
     }
 }

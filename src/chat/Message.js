@@ -12,7 +12,8 @@ import { grey500 } from 'material-ui/styles/colors';
 // styles
 import { messagePadding } from './styles';
 const styles = {
-    listItemInnerDiv: {
+    container: {
+        margin: messagePadding,
         paddingTop: messagePadding,
         paddingBottom: messagePadding
     },
@@ -46,26 +47,36 @@ export default function Message(props) {
         (hours > 12 ? ' PM' : ' AM')
     );
 
+    const leftAvatar = (
+        <Avatar
+            style={styles.avatar}
+            icon={
+                <FontIcon className='material-icons'>
+                    face
+                </FontIcon>
+            }
+        />
+    );
+
+    const primaryText = (
+        <div>
+            <strong style={styles.username}>
+                {user.username}
+            </strong>
+            <span style={styles.time}>
+                {formattedTime}
+            </span>
+            <div style={styles.text}>
+                {text}
+            </div>
+        </div>
+    );
+
     return (
         <ListItem
-            primaryText={
-                <div>
-                    <strong style={styles.username}>{user.username}</strong>
-                    <span style={styles.time}>{formattedTime}</span>
-                    <div style={styles.text}>{text}</div>
-                </div>
-            }
-            leftAvatar={
-                <Avatar
-                    style={styles.avatar}
-                    icon={
-                        <FontIcon className='material-icons'>
-                            face
-                        </FontIcon>
-                    }
-                />
-            }
-            innerDivStyle={styles.listItemInnerDiv}
+            leftAvatar={leftAvatar}
+            primaryText={primaryText}
+            style={styles.container}
             disabled={true}
         />
     );
