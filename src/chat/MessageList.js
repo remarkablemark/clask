@@ -35,6 +35,16 @@ const styles = {
 };
 
 /**
+ * Scrolls element into view.
+ *
+ * @param {String} id - The element id.
+ */
+function scrollIntoView(id) {
+    if (typeof id !== 'string') return;
+    document.getElementById(id).scrollIntoView();
+}
+
+/**
  * MessageList component.
  */
 class MessageList extends React.Component {
@@ -46,10 +56,19 @@ class MessageList extends React.Component {
     }
 
     componentDidMount() {
+        const { messages } = this.state;
+
+        // scroll to last message (if applicable)
+        if (messages.length) {
+            scrollIntoView(_.last(messages)._id);
+        }
+
         window.requirejs(['socket'], (socket) => {
             socket.on(CHAT_MESSAGE, (message) => {
                 this.setState({
                     messages: _.concat(this.state.messages, [message])
+                }, () => {
+                    scrollIntoView(message._id);
                 });
             });
 
@@ -69,9 +88,10 @@ class MessageList extends React.Component {
         return (
             <List style={styles.container}>
                 {_.map(messages, (message, index) => {
-                    const { user_id, time, text } = message;
+                    const { _id, user_id, time, text } = message;
                     return (
                         <Message
+                            id={_id}
                             user={users[user_id]}
                             text={text}
                             time={time}

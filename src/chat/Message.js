@@ -37,7 +37,7 @@ const styles = {
  * Message component.
  */
 export default function Message(props) {
-    const { user, time, text } = props;
+    const { id, user, time, text } = props;
     const date = new Date(time);
     const hours = date.getHours();
     const minutes = date.getMinutes();
@@ -73,16 +73,19 @@ export default function Message(props) {
     );
 
     return (
-        <ListItem
-            leftAvatar={leftAvatar}
-            primaryText={primaryText}
-            style={styles.container}
-            disabled={true}
-        />
+        <div id={id}>
+            <ListItem
+                leftAvatar={leftAvatar}
+                primaryText={primaryText}
+                style={styles.container}
+                disabled={true}
+            />
+        </div>
     );
 }
 
 Message.propTypes = {
+    id: React.PropTypes.string,
     user: React.PropTypes.shape({
         username: React.PropTypes.string
     }),
