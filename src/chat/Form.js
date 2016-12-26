@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 import React from 'react';
+import _ from 'lodash';
 
 // material-ui
 import Divider from 'material-ui/Divider';
@@ -65,9 +66,7 @@ const getTime = (
 class Form extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            value: ''
-        };
+        this.state = { value: '' };
         this._handleChange = this._handleChange.bind(this);
         this._handleSubmit = this._handleSubmit.bind(this);
     }
@@ -80,15 +79,18 @@ class Form extends React.Component {
 
     _handleSubmit(event) {
         event.preventDefault();
+
+        // no-op if trimmed input value is empty
+        const { value } = this.state;
+        if (!_.trim(value)) return;
+
         window.requirejs(['socket'], (socket) => {
             socket.emit(CHAT_MESSAGE, {
-                text: this.state.value,
+                text: value,
                 time: getTime(),
                 user_id: this.props.userId
             });
-            this.setState({
-                value: ''
-            });
+            this.setState({ value: '' });
         });
     }
 
