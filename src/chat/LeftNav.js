@@ -15,17 +15,23 @@ import {
 } from '../../socket.io/events';
 
 // styles
-import { grey700 } from 'material-ui/styles/colors';
+import { grey300, grey700 } from 'material-ui/styles/colors';
 import { leftNavMenuItemHeight } from './styles';
 
 const styles = {};
-styles.menu = {
+styles.menuBase = {
     minHeight: leftNavMenuItemHeight,
     lineHeight: leftNavMenuItemHeight
 };
-styles.header = Object.assign({}, styles.menu, {
+styles.menuHeader = Object.assign({}, styles.menuBase, {
     color: grey700,
     fontWeight: 'bold'
+});
+styles.menuItem = Object.assign({}, styles.menuBase, {
+    padding: '0 0.5em'
+});
+styles.activeMenu = Object.assign({}, styles.menuItem, {
+    backgroundColor: grey300
 });
 
 /**
@@ -63,18 +69,23 @@ export default class LeftNav extends React.Component {
     }
 
     render() {
-        const { users } = this.props;
+        const { activeRoom, rooms } = this.props;
         return (
             <Drawer open={true} width={leftNavWidth}>
                 {/* channels */}
                 <Menu disableAutoFocus={true}>
-                    <MenuItem style={styles.header}>
+                    <MenuItem style={styles.menuHeader}>
                         CHANNELS
                     </MenuItem>
-                    {_.map(this.state.channels, (channel) => {
+                    {_.map(rooms.channels, (channel) => {
+                        const style = (
+                            channel === activeRoom ?
+                            styles.activeMenu :
+                            styles.menuItem
+                        );
                         return (
-                            <MenuItem style={styles.menu} key={channel}>
-                                {channel}
+                            <MenuItem style={style} key={channel}>
+                                {'# ' + channel}
                             </MenuItem>
                         );
                     })}
@@ -82,13 +93,18 @@ export default class LeftNav extends React.Component {
 
                 {/* direct messages */}
                 <Menu disableAutoFocus={true}>
-                    <MenuItem style={styles.header}>
+                    <MenuItem style={styles.menuHeader}>
                         DIRECT MESSAGES
                     </MenuItem>
-                    {_.map(_.uniq(this.state.users), (userId) => {
+                    {_.map(rooms.directMessages, (directMessage, index) => {
+                        const style = (
+                            directMessage === activeRoom ?
+                            styles.activeMenu :
+                            styles.menuItem
+                        );
                         return (
-                            <MenuItem style={styles.menu} key={userId}>
-                                {users[userId].username}
+                            <MenuItem style={style} key={index}>
+                                {directMessage}
                             </MenuItem>
                         );
                     })}
@@ -99,6 +115,18 @@ export default class LeftNav extends React.Component {
 }
 
 LeftNav.propTypes = {
-    users: React.PropTypes.object,
-    channels: React.PropTypes.array
+    activeRoom: React.PropTypes.string,
+    rooms: React.PropTypes.shape({
+        channels: React.PropTypes.array,
+        directMessages: React.PropTypes.array
+    }),
+    users: React.PropTypes.object
+};
+
+LeftNav.defaultProps = {
+    activeRoom: 'general',
+    rooms: {
+        channels: ['general'],
+        directMessages: []
+    }
 };
