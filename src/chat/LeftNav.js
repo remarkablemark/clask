@@ -5,10 +5,14 @@
  */
 import React from 'react';
 import _ from 'lodash';
+
+// material-ui
+import FontIcon from 'material-ui/FontIcon';
 import Drawer from 'material-ui/Drawer';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
-import { leftNavWidth } from './styles';
+
+// socket
 import {
     CONNECTED_USERS,
     DISCONNECTED_USER
@@ -16,12 +20,20 @@ import {
 
 // styles
 import { grey300, grey700 } from 'material-ui/styles/colors';
-import { leftNavMenuItemHeight } from './styles';
+import {
+    leftNavWidth,
+    leftNavMenuItemHeight
+} from './styles';
 
-const styles = {};
-styles.menuBase = {
-    minHeight: leftNavMenuItemHeight,
-    lineHeight: leftNavMenuItemHeight
+const styles = {
+    menuBase: {
+        minHeight: leftNavMenuItemHeight,
+        lineHeight: leftNavMenuItemHeight
+    },
+    menuIcon: {
+        fontSize: 22,
+        margin: 6
+    }
 };
 styles.menuHeader = _.assign({}, styles.menuBase, {
     color: grey700,
@@ -70,13 +82,22 @@ export default class LeftNav extends React.Component {
 
     render() {
         const { activeRoom, rooms } = this.props;
+        const rightIcon = (
+            <FontIcon style={styles.menuIcon} className='material-icons'>
+                add
+            </FontIcon>
+        );
+
         return (
             <Drawer open={true} width={leftNavWidth}>
                 {/* channels */}
                 <Menu disableAutoFocus={true}>
-                    <MenuItem style={styles.menuHeader}>
-                        CHANNELS
-                    </MenuItem>
+                    <MenuItem
+                        primaryText='CHANNELS'
+                        rightIcon={rightIcon}
+                        style={styles.menuHeader}
+                    />
+
                     {_.map(rooms.channels, (channel) => {
                         const style = (
                             channel === activeRoom ?
@@ -93,9 +114,12 @@ export default class LeftNav extends React.Component {
 
                 {/* direct messages */}
                 <Menu disableAutoFocus={true}>
-                    <MenuItem style={styles.menuHeader}>
-                        DIRECT MESSAGES
-                    </MenuItem>
+                    <MenuItem
+                        primaryText='DIRECT MESSAGES'
+                        rightIcon={rightIcon}
+                        style={styles.menuHeader}
+                    />
+
                     {_.map(rooms.directMessages, (directMessage, index) => {
                         const style = (
                             directMessage === activeRoom ?
