@@ -35,8 +35,9 @@ export default class Chat extends React.Component {
     }
 
     componentDidMount() {
+        const { activeRoom } = this.props;
         window.requirejs(['superagent'], (request) => {
-            request.get('/api/messages', (error, response) => {
+            request.get('/api/messages/' + activeRoom, (error, response) => {
                 if (error || !response.ok) {
                     return console.log(error, response); // eslint-disable-line no-console
                 }

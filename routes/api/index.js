@@ -12,7 +12,7 @@ const authMiddleware = require('../../middleware/auth');
 router.use(require('./auth'));
 
 /**
- * Route: /api/messages
+ * Route: /api/messages/:room_id
  */
 router.use('/messages', authMiddleware, require('./messages'));
 
