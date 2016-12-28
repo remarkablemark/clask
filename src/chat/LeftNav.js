@@ -124,7 +124,6 @@ LeftNav.propTypes = {
 };
 
 LeftNav.defaultProps = {
-    activeRoom: 'general',
     rooms: {
         channels: ['general'],
         directMessages: []

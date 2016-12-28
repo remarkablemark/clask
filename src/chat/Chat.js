@@ -71,13 +71,17 @@ export default class Chat extends React.Component {
     render() {
         const { isLoaded, messages, users } = this.state;
         if (isLoaded < 2) return null;
+        const { activeRoom } = this.props;
 
         return (
             <div style={styles.container}>
-                <LeftNav users={users} />
+                <LeftNav
+                    activeRoom={activeRoom}
+                    users={users}
+                />
                 <div style={styles.content}>
                     <MessageList messages={messages} users={users} />
-                    <Form />
+                    <Form activeRoom={activeRoom} />
                 </div>
             </div>
         );
@@ -85,11 +89,13 @@ export default class Chat extends React.Component {
 }
 
 Chat.propTypes = {
+    activeRoom: React.PropTypes.string,
     messages: React.PropTypes.array,
     users: React.PropTypes.object
 };
 
 Chat.defaultProps = {
+    activeRoom: 'general',
     messages: [],
     users: {}
 };

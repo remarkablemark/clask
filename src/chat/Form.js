@@ -125,6 +125,7 @@ class Form extends React.Component {
 }
 
 Form.propTypes = {
+    activeRoom: React.PropTypes.string,
     userId: React.PropTypes.string
 };
 
