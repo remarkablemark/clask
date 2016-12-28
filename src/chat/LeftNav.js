@@ -5,46 +5,19 @@
  */
 import React from 'react';
 import _ from 'lodash';
+import LeftNavMenu from './LeftNavMenu';
 
 // material-ui
-import FontIcon from 'material-ui/FontIcon';
 import Drawer from 'material-ui/Drawer';
-import Menu from 'material-ui/Menu';
-import MenuItem from 'material-ui/MenuItem';
+
+// styles
+import { leftNavWidth } from './styles';
 
 // socket
 import {
     CONNECTED_USERS,
     DISCONNECTED_USER
 } from '../../socket.io/events';
-
-// styles
-import { grey300, grey700 } from 'material-ui/styles/colors';
-import {
-    leftNavWidth,
-    leftNavMenuItemHeight
-} from './styles';
-
-const styles = {
-    menuBase: {
-        minHeight: leftNavMenuItemHeight,
-        lineHeight: leftNavMenuItemHeight
-    },
-    menuIcon: {
-        fontSize: 22,
-        margin: 6
-    }
-};
-styles.menuHeader = _.assign({}, styles.menuBase, {
-    color: grey700,
-    fontWeight: 'bold'
-});
-styles.menuItem = _.assign({}, styles.menuBase, {
-    padding: '0 0.5em'
-});
-styles.activeMenu = _.assign({}, styles.menuItem, {
-    backgroundColor: grey300
-});
 
 /**
  * LeftNav component.
@@ -82,57 +55,21 @@ export default class LeftNav extends React.Component {
 
     render() {
         const { activeRoom, rooms } = this.props;
-        const rightIcon = (
-            <FontIcon style={styles.menuIcon} className='material-icons'>
-                add
-            </FontIcon>
-        );
-
         return (
             <Drawer open={true} width={leftNavWidth}>
-                {/* channels */}
-                <Menu disableAutoFocus={true}>
-                    <MenuItem
-                        primaryText='CHANNELS'
-                        rightIcon={rightIcon}
-                        style={styles.menuHeader}
-                    />
-
-                    {_.map(rooms.channels, (channel) => {
-                        const style = (
-                            channel === activeRoom ?
-                            styles.activeMenu :
-                            styles.menuItem
-                        );
-                        return (
-                            <MenuItem style={style} key={channel}>
-                                {'# ' + channel}
-                            </MenuItem>
-                        );
-                    })}
-                </Menu>
-
-                {/* direct messages */}
-                <Menu disableAutoFocus={true}>
-                    <MenuItem
-                        primaryText='DIRECT MESSAGES'
-                        rightIcon={rightIcon}
-                        style={styles.menuHeader}
-                    />
-
-                    {_.map(rooms.directMessages, (directMessage, index) => {
-                        const style = (
-                            directMessage === activeRoom ?
-                            styles.activeMenu :
-                            styles.menuItem
-                        );
-                        return (
-                            <MenuItem style={style} key={index}>
-                                {directMessage}
-                            </MenuItem>
-                        );
-                    })}
-                </Menu>
+                {/* menus */}
+                {_.map(rooms, (roomData, roomName) => {
+                    const isChannel = roomName === 'channels';
+                    return (
+                        <LeftNavMenu
+                            title={isChannel ? 'CHANNELS' : 'DIRECT MESSAGES'}
+                            items={roomData}
+                            activeItem={activeRoom}
+                            itemPrefix={isChannel ? '# ' : null}
+                            key={roomName}
+                        />
+                    );
+                })}
             </Drawer>
         );
     }
