@@ -13,6 +13,10 @@ const messageSchema = new mongoose.Schema({
         type: String,
         ref: 'User'
     },
+    room_id: {
+        type: String,
+        required: true
+    },
     text: String,
     time: Date
 });

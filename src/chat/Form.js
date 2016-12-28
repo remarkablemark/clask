@@ -88,7 +88,8 @@ class Form extends React.Component {
             socket.emit(CHAT_MESSAGE, {
                 text: value,
                 time: getTime(),
-                user_id: this.props.userId
+                user_id: this.props.userId,
+                room_id: this.props.activeRoom
             });
             this.setState({ value: '' });
         });
