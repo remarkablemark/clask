@@ -3,6 +3,7 @@
 /**
  * Module dependencies.
  */
+import _ from 'lodash';
 import {
     SET_USER,
     REMOVE_USER
@@ -21,7 +22,7 @@ export default function reducer(state = initialState, action) {
     switch (action.type) {
         // set user
         case SET_USER:
-            return Object.assign({}, state, action.user);
+            return _.assign({}, state, action.user);
 
         // remove user
         case REMOVE_USER:

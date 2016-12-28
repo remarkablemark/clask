@@ -23,14 +23,14 @@ styles.menuBase = {
     minHeight: leftNavMenuItemHeight,
     lineHeight: leftNavMenuItemHeight
 };
-styles.menuHeader = Object.assign({}, styles.menuBase, {
+styles.menuHeader = _.assign({}, styles.menuBase, {
     color: grey700,
     fontWeight: 'bold'
 });
-styles.menuItem = Object.assign({}, styles.menuBase, {
+styles.menuItem = _.assign({}, styles.menuBase, {
     padding: '0 0.5em'
 });
-styles.activeMenu = Object.assign({}, styles.menuItem, {
+styles.activeMenu = _.assign({}, styles.menuItem, {
     backgroundColor: grey300
 });
 
