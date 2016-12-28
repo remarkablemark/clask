@@ -8,6 +8,7 @@ import _ from 'lodash';
 import LeftNavMenu from './LeftNavMenu';
 
 // material-ui
+import Dialog from 'material-ui/Dialog';
 import Drawer from 'material-ui/Drawer';
 
 // styles
@@ -26,8 +27,10 @@ export default class LeftNav extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            isDialogOpen: false,
             users: []
         };
+        this._handleDialogClose = this._handleDialogClose.bind(this);
     }
 
     componentDidMount() {
@@ -53,8 +56,34 @@ export default class LeftNav extends React.Component {
         });
     }
 
+    _handleMenuClick(menuIndex) {
+        switch (menuIndex) {
+            case 'channels':
+                this.setState({
+                    isDialogOpen: true,
+                    dialogTitle: 'Channels'
+                });
+                break;
+
+            case 'directMessages':
+                this.setState({
+                    isDialogOpen: true,
+                    dialogTitle: 'Direct Messages'
+                });
+                break;
+        }
+    }
+
+    _handleDialogClose() {
+        this.setState({
+            isDialogOpen: false
+        });
+    }
+
     render() {
         const { activeRoom, rooms } = this.props;
+        const { dialogTitle, isDialogOpen } = this.state;
+
         return (
             <Drawer open={true} width={leftNavWidth}>
                 {/* menus */}
@@ -66,10 +95,18 @@ export default class LeftNav extends React.Component {
                             items={roomData}
                             activeItem={activeRoom}
                             itemPrefix={isChannel ? '# ' : null}
+                            onClick={this._handleMenuClick.bind(this, roomName)}
                             key={roomName}
                         />
                     );
                 })}
+
+                {/* dialog */}
+                <Dialog
+                    title={dialogTitle}
+                    open={isDialogOpen}
+                    onRequestClose={this._handleDialogClose}
+                />
             </Drawer>
         );
     }

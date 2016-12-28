@@ -51,7 +51,8 @@ export default function LeftNavMenu(props) {
         title,
         items,
         activeItem,
-        itemPrefix
+        itemPrefix,
+        onClick
     } = props;
 
     return (
@@ -60,6 +61,7 @@ export default function LeftNavMenu(props) {
                 primaryText={title}
                 rightIcon={rightIcon}
                 style={styles.menuHeader}
+                onClick={onClick}
             />
 
             {_.map(items, (item, index) => {
@@ -83,5 +85,6 @@ LeftNavMenu.propTypes = {
     title: React.PropTypes.string,
     items: React.PropTypes.array,
     activeItem: React.PropTypes.string,
-    itemPrefix: React.PropTypes.node
+    itemPrefix: React.PropTypes.node,
+    onClick: React.PropTypes.func
 };
