@@ -63,10 +63,7 @@ router.post('/', (req, res, next) => {
 
             // other error
             debug('error save user', err);
-            return res.json({
-                success: false,
-                message: 'Server error, please try again.'
-            });
+            return res.status(500).json({});
         }
 
         // user successfully saved

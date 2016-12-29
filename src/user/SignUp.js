@@ -82,8 +82,13 @@ class SignUp extends React.Component {
                     password
                 })
                 .end((err, response) => {
-                    if (err|| !response.ok) {
+                    if (err || !response.ok) {
                         console.log(err, response); // eslint-disable-line no-console
+                        return this.setState({
+                            snackbarMessage: 'Server error, please try again.',
+                            isSnackbarOpen: true,
+                            isFormDisabled: false
+                        });
                     }
 
                     const { success, message, user, error } = response.body;
@@ -103,14 +108,6 @@ class SignUp extends React.Component {
                     } else if (error) {
                         this.setState({
                             [error.field + 'Error']: error.text,
-                            isFormDisabled: false
-                        });
-
-                    // other: server error or message
-                    } else if (message) {
-                        this.setState({
-                            snackbarMessage: message,
-                            isSnackbarOpen: true,
                             isFormDisabled: false
                         });
                     }
