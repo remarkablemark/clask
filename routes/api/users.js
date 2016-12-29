@@ -69,19 +69,24 @@ router.post('/', (req, res, next) => {
         // user successfully saved
         req.session.isAuthenticated = true;
         req.session._id = user._id;
-        res.json({
-            success: true,
-            message: 'Account created!',
-            user: {
-                isAuthenticated: true,
-                _id: user._id,
-                name: user.name,
-                username: user.username,
-                email: user.email,
-                activeRoom: user.activeRoom,
-                sidebar: user.sidebar,
-                channels: user.channels
+
+        const userObj = user.toObject({ versionKey: false });
+        delete userObj.password;
+        userObj.isAuthenticated = true;
+
+        // get users data
+        User.find({}, { username: 1 }, (error, users) => {
+            if (error) {
+                debug('error find users', error);
+                return res.status(500).json({});
             }
+
+            res.json({
+                success: true,
+                message: 'Account created!',
+                user: userObj,
+                users
+            });
         });
     });
 });
