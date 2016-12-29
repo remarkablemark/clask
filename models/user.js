@@ -30,6 +30,21 @@ const userSchema = new mongoose.Schema({
     username: {
         type: String,
         unique: true
+    },
+    channels: {
+        type: Array,
+        default: ['general']
+    },
+    sidebar: {
+        channels: {
+            type: Array,
+            default: ['general']
+        },
+        directMessages: Array
+    },
+    activeRoom: {
+        type: String,
+        default: 'general'
     }
 });
 
