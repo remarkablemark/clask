@@ -4,13 +4,15 @@
  * Module dependencies.
  */
 import { combineReducers, createStore } from 'redux';
-import userReducer from './user/reducer';
+import user from './user/reducer';
+import users from './users/reducer';
 
 /**
  * Reducer.
  */
 const reducer = combineReducers({
-    user: userReducer
+    user,
+    users
 });
 
 /**
