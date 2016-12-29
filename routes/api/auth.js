@@ -15,7 +15,7 @@ router.post('/auth', (req, res, next) => {
     if (!email) return res.json({});
     if (!password) return res.json({});
 
-    User.findOne({ email }, (error, user) => {
+    User.findOne({ email }, { __v: 0 }, (error, user) => {
         if (error) {
             debug('error find user', error)
             return res.status(500).json({});
@@ -27,45 +27,38 @@ router.post('/auth', (req, res, next) => {
                 success: false,
                 message: 'Sorry, you entered an incorrect email address or password.'
             });
+        }
 
         // user found
-        } else {
-            // authentication
-            if (user.validatePassword(password, (error, isMatch) => {
-                // server error
-                if (error) {
-                    debug('unable to validate password', error);
-                    return res.status(500).json({});
-                }
+        user.validatePassword(password, (error, isMatch) => {
+            // server error
+            if (error) {
+                debug('unable to validate password', error);
+                return res.status(500).json({});
+            }
 
-                // success
-                if (isMatch) {
-                    req.session.isAuthenticated = true;
-                    req.session._id = user._id;
-                    res.json({
-                        success: true,
-                        message: 'Authentication successful.',
-                        user: {
-                            isAuthenticated: true,
-                            _id: user._id,
-                            name: user.name,
-                            username: user.username,
-                            email: user.email,
-                            activeRoom: user.activeRoom,
-                            sidebar: user.sidebar,
-                            channels: user.channels
-                        }
-                    });
+            // validation failure
+            if (!isMatch) {
+                return res.json({
+                    success: false,
+                    message: 'Sorry, you entered an incorrect email address or password.'
+                });
+            }
 
-                // failure
-                } else {
-                    res.json({
-                        success: false,
-                        message: 'Sorry, you entered an incorrect email address or password.'
-                    });
-                }
-            }));
-        }
+            // validation success
+            req.session.isAuthenticated = true;
+            req.session._id = user._id;
+
+            const userObj = user.toObject();
+            delete userObj.password;
+            userObj.isAuthenticated = true;
+
+            res.json({
+                success: true,
+                message: 'Authentication successful.',
+                user: userObj
+            });
+        });
     });
 });
 
