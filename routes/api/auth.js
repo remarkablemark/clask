@@ -30,8 +30,6 @@ router.post('/auth', (req, res, next) => {
 
         // user found
         } else {
-            const { _id, name, username, email } = user;
-
             // authentication
             if (user.validatePassword(password, (error, isMatch) => {
                 // server error
@@ -43,16 +41,19 @@ router.post('/auth', (req, res, next) => {
                 // success
                 if (isMatch) {
                     req.session.isAuthenticated = true;
-                    req.session._id = _id;
+                    req.session._id = user._id;
                     res.json({
                         success: true,
                         message: 'Authentication successful.',
                         user: {
-                            _id,
-                            name,
-                            username,
-                            email,
-                            isAuthenticated: req.session.isAuthenticated
+                            isAuthenticated: true,
+                            _id: user._id,
+                            name: user.name,
+                            username: user.username,
+                            email: user.email,
+                            activeRoom: user.activeRoom,
+                            sidebar: user.sidebar,
+                            channels: user.channels
                         }
                     });
 

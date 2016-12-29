@@ -76,11 +76,14 @@ router.post('/', (req, res, next) => {
             success: true,
             message: 'Account created!',
             user: {
+                isAuthenticated: true,
                 _id: user._id,
-                email: user.email,
                 name: user.name,
                 username: user.username,
-                isAuthenticated: req.session.isAuthenticated
+                email: user.email,
+                activeRoom: user.activeRoom,
+                sidebar: user.sidebar,
+                channels: user.channels
             }
         });
     });
