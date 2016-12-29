@@ -53,10 +53,19 @@ router.post('/auth', (req, res, next) => {
             delete userObj.password;
             userObj.isAuthenticated = true;
 
-            res.json({
-                success: true,
-                message: 'Authentication successful.',
-                user: userObj
+            // get users data
+            User.find({}, { username: 1 }, (error, users) => {
+                if (error) {
+                    debug('error find users', error)
+                    return res.status(500).json({});
+                }
+
+                res.json({
+                    success: true,
+                    message: 'Authentication successful.',
+                    user: userObj,
+                    users
+                });
             });
         });
     });
