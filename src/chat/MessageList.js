@@ -9,10 +9,6 @@ import { browserHistory } from 'react-router';
 import List from 'material-ui/List/List';
 import Message from './Message';
 
-// redux
-import { connect } from 'react-redux';
-import { removeUser } from '../user/actions';
-
 // socket
 import {
     CHAT_MESSAGE,
@@ -47,7 +43,7 @@ function scrollIntoView(id) {
 /**
  * MessageList component.
  */
-class MessageList extends React.Component {
+export default class MessageList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -74,7 +70,7 @@ class MessageList extends React.Component {
 
             socket.on(USER_DATA, (user) => {
                 if (!user.isAuthenticated) {
-                    this.props._removeUser();
+                    this.props.removeUser();
                     socket.disconnect();
                     browserHistory.push('/signin');
                 }
@@ -106,19 +102,6 @@ class MessageList extends React.Component {
 
 MessageList.propTypes = {
     messages: React.PropTypes.array,
-    users: React.PropTypes.object,
-    _removeUser: React.PropTypes.func
+    removeUser: React.PropTypes.func,
+    users: React.PropTypes.object
 };
-
-function mapDispatchToProps(dispatch) {
-    return {
-        _removeUser: (user) => {
-            dispatch(removeUser(user));
-        }
-    };
-}
-
-export default connect(
-    null,
-    mapDispatchToProps
-)(MessageList);

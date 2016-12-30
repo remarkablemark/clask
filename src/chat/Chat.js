@@ -12,6 +12,7 @@ import Form from './Form';
 
 // redux
 import { connect } from 'react-redux';
+import { removeUser } from '../user/actions';
 
 // styles
 import { leftNavWidth } from './styles';
@@ -61,6 +62,7 @@ class Chat extends React.Component {
 
         const {
             activeRoom,
+            removeUser,
             user,
             users
         } = this.props;
@@ -74,7 +76,11 @@ class Chat extends React.Component {
                     users={users}
                 />
                 <div style={styles.content}>
-                    <MessageList messages={messages} users={users} />
+                    <MessageList
+                        messages={messages}
+                        removeUser={removeUser}
+                        users={users}
+                    />
                     <Form
                         activeRoom={activeRoom}
                         userId={user._id}
@@ -88,6 +94,7 @@ class Chat extends React.Component {
 Chat.propTypes = {
     activeRoom: React.PropTypes.string,
     messages: React.PropTypes.array,
+    removeUser: React.PropTypes.func,
     user: React.PropTypes.object,
     users: React.PropTypes.object
 };
@@ -106,7 +113,15 @@ function mapStateToProps(state) {
     };
 }
 
+function mapDispatchToProps(dispatch) {
+    return {
+        removeUser: (user) => {
+            dispatch(removeUser(user));
+        }
+    };
+}
+
 export default connect(
     mapStateToProps,
-    null
+    mapDispatchToProps
 )(Chat);
