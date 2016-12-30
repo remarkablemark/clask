@@ -4,10 +4,14 @@
  * Module dependencies.
  */
 import React from 'react';
-import _ from 'lodash';
+
+// components
 import LeftNav from './LeftNav';
 import MessageList from './MessageList';
 import Form from './Form';
+
+// redux
+import { connect } from 'react-redux';
 
 // styles
 import { leftNavWidth } from './styles';
@@ -25,11 +29,11 @@ const styles = {
 /**
  * Chat component.
  */
-export default class Chat extends React.Component {
+class Chat extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoaded: 0,
+            isLoaded: false,
             messages: props.messages
         };
     }
@@ -43,36 +47,22 @@ export default class Chat extends React.Component {
                 }
                 this.setState({
                     messages: response.body,
-                    isLoaded: this.state.isLoaded + 1
-                });
-            });
-
-            request.get('/api/users', (error, response) => {
-                if (error || !response.ok) {
-                    return console.log(error, response); // eslint-disable-line no-console
-                }
-
-                // reformat collection into hash
-                const users = {};
-                _.forEach(response.body, (user) => {
-                    const { _id, username } = user;
-                    users[_id] = {
-                        username
-                    };
-                });
-
-                this.setState({
-                    users,
-                    isLoaded: this.state.isLoaded + 1
+                    isLoaded: true
                 });
             });
         });
     }
 
     render() {
-        const { isLoaded, messages, users } = this.state;
-        if (isLoaded < 2) return null;
-        const { activeRoom } = this.props;
+        const {
+            isLoaded,
+            messages
+        } = this.state;
+        const {
+            activeRoom,
+            users
+        } = this.props;
+        if (!isLoaded) return null;
 
         return (
             <div style={styles.container}>
@@ -100,3 +90,14 @@ Chat.defaultProps = {
     messages: [],
     users: {}
 };
+
+function mapStateToProps(state) {
+    return {
+        users: state.users
+    };
+}
+
+export default connect(
+    mapStateToProps,
+    null
+)(Chat);
