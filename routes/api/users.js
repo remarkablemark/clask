@@ -70,6 +70,7 @@ router.post('/', (req, res, next) => {
         // user successfully saved
         req.session.isAuthenticated = true;
         req.session._id = user._id;
+        req.session.username = user.username;
 
         const userObj = user.toObject({ versionKey: false });
         userObj.password = undefined;

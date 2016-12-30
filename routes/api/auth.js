@@ -49,6 +49,7 @@ router.post('/auth', (req, res, next) => {
             // validation success
             req.session.isAuthenticated = true;
             req.session._id = user._id;
+            req.session.username = user.username;
 
             const userObj = user.toObject();
             userObj.password = undefined;
