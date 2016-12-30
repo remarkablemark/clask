@@ -11,9 +11,6 @@ import Divider from 'material-ui/Divider';
 import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
 
-// redux
-import { connect } from 'react-redux';
-
 // socket
 import { CHAT_MESSAGE } from '../../socket.io/events';
 
@@ -63,7 +60,7 @@ const getTime = (
 /**
  * Form component.
  */
-class Form extends React.Component {
+export default class Form extends React.Component {
     constructor(props) {
         super(props);
         this.state = { value: '' };
@@ -129,13 +126,3 @@ Form.propTypes = {
     activeRoom: React.PropTypes.string,
     userId: React.PropTypes.string
 };
-
-function mapStateToProps(state) {
-    return {
-        userId: state.user._id
-    };
-}
-
-export default connect(
-    mapStateToProps
-)(Form);

@@ -58,10 +58,13 @@ class Chat extends React.Component {
             isLoaded,
             messages
         } = this.state;
+
         const {
             activeRoom,
+            user,
             users
         } = this.props;
+
         if (!isLoaded) return null;
 
         return (
@@ -72,7 +75,10 @@ class Chat extends React.Component {
                 />
                 <div style={styles.content}>
                     <MessageList messages={messages} users={users} />
-                    <Form activeRoom={activeRoom} />
+                    <Form
+                        activeRoom={activeRoom}
+                        userId={user._id}
+                    />
                 </div>
             </div>
         );
@@ -82,17 +88,20 @@ class Chat extends React.Component {
 Chat.propTypes = {
     activeRoom: React.PropTypes.string,
     messages: React.PropTypes.array,
+    user: React.PropTypes.object,
     users: React.PropTypes.object
 };
 
 Chat.defaultProps = {
     activeRoom: 'general',
     messages: [],
+    user: {},
     users: {}
 };
 
 function mapStateToProps(state) {
     return {
+        user: state.user,
         users: state.users
     };
 }
