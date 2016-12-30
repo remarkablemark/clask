@@ -15,6 +15,7 @@ import Snackbar from 'material-ui/Snackbar';
 // redux
 import { connect } from 'react-redux';
 import { setUser } from './actions';
+import { setUsers } from '../users/actions';
 
 /**
  * SignIn component.
@@ -58,11 +59,17 @@ class SignIn extends React.Component {
                     });
                 }
 
-                const { success, message, user } = response.body;
+                const {
+                    success,
+                    message,
+                    user,
+                    users
+                } = response.body;
 
                 // success
                 if (success) {
-                    this.props._setUser(user);
+                    this.props.setUser(user);
+                    this.props.setUsers(users);
                     browserHistory.push('/');
 
                 // error
@@ -126,13 +133,17 @@ class SignIn extends React.Component {
 }
 
 SignIn.propTypes = {
-    _setUser: React.PropTypes.func
+    setUser: React.PropTypes.func,
+    setUsers: React.PropTypes.func
 };
 
 function mapDispatchToProps(dispatch) {
     return {
-        _setUser: (user) => {
+        setUser: (user) => {
             dispatch(setUser(user));
+        },
+        setUsers: (users) => {
+            dispatch(setUsers(users));
         }
     };
 }
