@@ -32,7 +32,7 @@ const styles = {
  */
 class Chat extends React.Component {
     constructor(props) {
-        super(props);
+        super();
         this.state = {
             isLoaded: false,
             messages: props.messages
@@ -63,6 +63,7 @@ class Chat extends React.Component {
         const {
             activeRoom,
             removeUser,
+            socket,
             user,
             users
         } = this.props;
@@ -79,10 +80,12 @@ class Chat extends React.Component {
                     <MessageList
                         messages={messages}
                         removeUser={removeUser}
+                        socket={socket}
                         users={users}
                     />
                     <Form
                         activeRoom={activeRoom}
+                        socket={socket}
                         userId={user._id}
                     />
                 </div>
@@ -95,6 +98,7 @@ Chat.propTypes = {
     activeRoom: React.PropTypes.string,
     messages: React.PropTypes.array,
     removeUser: React.PropTypes.func,
+    socket: React.PropTypes.object,
     user: React.PropTypes.object,
     users: React.PropTypes.object
 };

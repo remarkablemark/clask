@@ -61,9 +61,11 @@ const getTime = (
  * Form component.
  */
 export default class Form extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { value: '' };
+    constructor() {
+        super();
+        this.state = {
+            value: ''
+        };
         this._handleChange = this._handleChange.bind(this);
         this._handleSubmit = this._handleSubmit.bind(this);
     }
@@ -81,15 +83,13 @@ export default class Form extends React.Component {
         const { value } = this.state;
         if (!_.trim(value)) return;
 
-        window.requirejs(['socket'], (socket) => {
-            socket.emit(CHAT_MESSAGE, {
-                text: value,
-                time: getTime(),
-                user_id: this.props.userId,
-                room_id: this.props.activeRoom
-            });
-            this.setState({ value: '' });
+        this.props.socket.emit(CHAT_MESSAGE, {
+            text: value,
+            time: getTime(),
+            user_id: this.props.userId,
+            room_id: this.props.activeRoom
         });
+        this.setState({ value: '' });
     }
 
     render() {
@@ -124,5 +124,6 @@ export default class Form extends React.Component {
 
 Form.propTypes = {
     activeRoom: React.PropTypes.string,
+    socket: React.PropTypes.object,
     userId: React.PropTypes.string
 };

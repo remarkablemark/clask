@@ -59,22 +59,22 @@ export default class MessageList extends React.Component {
             scrollIntoView(_.last(messages)._id);
         }
 
-        window.requirejs(['socket'], (socket) => {
-            socket.on(CHAT_MESSAGE, (message) => {
-                this.setState({
-                    messages: _.concat(this.state.messages, [message])
-                }, () => {
-                    scrollIntoView(message._id);
-                });
-            });
+        const { socket } = this.props;
 
-            socket.on(USER_DATA, (user) => {
-                if (!user.isAuthenticated) {
-                    this.props.removeUser();
-                    socket.disconnect();
-                    browserHistory.push('/signin');
-                }
+        socket.on(CHAT_MESSAGE, (message) => {
+            this.setState({
+                messages: _.concat(this.state.messages, [message])
+            }, () => {
+                scrollIntoView(message._id);
             });
+        });
+
+        socket.on(USER_DATA, (user) => {
+            if (!user.isAuthenticated) {
+                this.props.removeUser();
+                socket.disconnect();
+                browserHistory.push('/signin');
+            }
         });
     }
 
@@ -103,5 +103,6 @@ export default class MessageList extends React.Component {
 MessageList.propTypes = {
     messages: React.PropTypes.array,
     removeUser: React.PropTypes.func,
+    socket: React.PropTypes.object,
     users: React.PropTypes.object
 };

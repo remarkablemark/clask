@@ -5,7 +5,7 @@
  */
 import React from 'react';
 import Redirect from '../shared/Redirect';
-import Chat from '../chat/Chat';
+import Socket from '../chat/Socket';
 
 /**
  * Index component.
@@ -13,7 +13,7 @@ import Chat from '../chat/Chat';
 export default function Index() {
     return (
         <Redirect unauthenticatedTo='/signin'>
-            <Chat />
+            <Socket />
         </Redirect>
     );
 }
