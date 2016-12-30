@@ -6,6 +6,7 @@
 const debug = require('debug')(process.env.APP_NAME + ':db');
 const router = require('express').Router();
 const User = require('../../models/user');
+const { reformatUsers } = require('../helpers');
 
 /**
  * GET: /api/users
@@ -71,7 +72,7 @@ router.post('/', (req, res, next) => {
         req.session._id = user._id;
 
         const userObj = user.toObject({ versionKey: false });
-        delete userObj.password;
+        userObj.password = undefined;
         userObj.isAuthenticated = true;
 
         // get users data
@@ -85,7 +86,7 @@ router.post('/', (req, res, next) => {
                 success: true,
                 message: 'Account created!',
                 user: userObj,
-                users
+                users: reformatUsers(users)
             });
         });
     });

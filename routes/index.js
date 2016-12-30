@@ -7,6 +7,7 @@ const router = require('express').Router();
 const debug = require('debug')(process.env.APP_NAME + ':db');
 const { Promise } = global;
 const User = require('../models/user');
+const { reformatUsers } = require('./helpers');
 
 /**
  * GET: *
@@ -27,7 +28,7 @@ router.get('*', (req, res, next) => {
 
     ]).then((results) => {
         const user = results[0];
-        const users = results[1];
+        const users = reformatUsers(results[1]);
         user.isAuthenticated = true;
 
         res.render('index.html', {

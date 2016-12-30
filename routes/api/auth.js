@@ -6,6 +6,7 @@
 const debug = require('debug')(process.env.APP_NAME + ':db');
 const router = require('express').Router();
 const User = require('../../models/user');
+const { reformatUsers } = require('../helpers');
 
 /**
  * POST: /api/auth
@@ -50,7 +51,7 @@ router.post('/auth', (req, res, next) => {
             req.session._id = user._id;
 
             const userObj = user.toObject();
-            delete userObj.password;
+            userObj.password = undefined;
             userObj.isAuthenticated = true;
 
             // get users data
@@ -64,7 +65,7 @@ router.post('/auth', (req, res, next) => {
                     success: true,
                     message: 'Authentication successful.',
                     user: userObj,
-                    users
+                    users: reformatUsers(users)
                 });
             });
         });
