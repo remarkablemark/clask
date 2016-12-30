@@ -14,12 +14,6 @@ import Drawer from 'material-ui/Drawer';
 // styles
 import { leftNavWidth } from './styles';
 
-// socket
-import {
-    CONNECTED_USERS,
-    DISCONNECTED_USER
-} from '../../socket.io/events';
-
 /**
  * LeftNav component.
  */
@@ -27,33 +21,9 @@ export default class LeftNav extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isDialogOpen: false,
-            users: []
+            isDialogOpen: false
         };
         this._handleDialogClose = this._handleDialogClose.bind(this);
-    }
-
-    componentDidMount() {
-        window.requirejs(['socket'], (socket) => {
-            // an array of user id(s)
-            socket.on(CONNECTED_USERS, (users) => {
-                this.setState({
-                    users: _.concat(this.state.users, users)
-                });
-            });
-
-            // remove user id
-            socket.on(DISCONNECTED_USER, (userId) => {
-                const copy = this.state.users.slice();
-                const index = copy.indexOf(userId);
-                if (index !== -1) {
-                    copy.splice(index, 1);
-                    this.setState({
-                        users: copy
-                    });
-                }
-            });
-        });
     }
 
     _handleMenuClick(menuIndex) {
