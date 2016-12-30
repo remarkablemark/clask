@@ -3,9 +3,11 @@
 /**
  * Constants.
  */
-const { requirejs, define } = window;
-const data = window.__EXPRESS_TEMPLATE__;
-const { isProduction, versions } = data;
+const {
+    isProduction,
+    versions
+} = window.__EXPRESS_TEMPLATE__;
+const { requirejs } = window;
 
 /**
  * RequireJS config.
@@ -50,10 +52,6 @@ if (requirejs) {
         }
     });
 }
-
-define('socket', ['io'], (io) => {
-    return io.connect();
-});
 
 /**
  * Load app.
