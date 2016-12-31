@@ -18,32 +18,27 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
 
-// redux
-import { connect } from 'react-redux';
-import { setUser } from './actions';
-
 /**
  * SignUp component.
  */
-class SignUp extends React.Component {
-    constructor(props) {
-        super(props);
+export default class SignUp extends React.Component {
+    constructor() {
+        super();
         const state = {
             isFormDisabled: false,
             isSnackbarOpen: false,
             snackbarMessage: ''
         };
-        const inputFields = [
+        this._inputFields = [
             'name',
             'username',
             'email',
             'password'
         ];
-        _.forEach(inputFields, (key) => {
+        _.forEach(this._inputFields, (key) => {
             state[key] = '';
             state[key + 'Error'] = '';
         });
-        this._inputFields = inputFields;
         this.state = state;
         this._handleSubmit = this._handleSubmit.bind(this);
     }
@@ -91,17 +86,20 @@ class SignUp extends React.Component {
                         });
                     }
 
-                    const { success, message, user, error } = response.body;
+                    const {
+                        success,
+                        message,
+                        error
+                    } = response.body;
 
-                    // success: redirect to main
+                    // success: redirect to signin
                     if (success) {
-                        this.props._setUser(user);
                         this.setState({
                             snackbarMessage: message,
                             isSnackbarOpen: true
                         });
                         setTimeout(() => {
-                            browserHistory.push('/');
+                            browserHistory.push('/signin');
                         }, 1000);
 
                     // error: display error text
@@ -240,20 +238,3 @@ class SignUp extends React.Component {
         );
     }
 }
-
-SignUp.propTypes = {
-    _setUser: React.PropTypes.func
-};
-
-function mapDispatchToProps(dispatch) {
-    return {
-        _setUser: (user) => {
-            dispatch(setUser(user));
-        }
-    };
-}
-
-export default connect(
-    null,
-    mapDispatchToProps
-)(SignUp);

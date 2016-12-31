@@ -6,7 +6,6 @@
 const debug = require('debug')(process.env.APP_NAME + ':db');
 const router = require('express').Router();
 const User = require('../../models/user');
-const { reformatUsers } = require('../helpers');
 
 /**
  * GET: /api/users
@@ -68,27 +67,9 @@ router.post('/', (req, res, next) => {
         }
 
         // user successfully saved
-        req.session.isAuthenticated = true;
-        req.session._id = user._id;
-        req.session.username = user.username;
-
-        const userObj = user.toObject({ versionKey: false });
-        userObj.password = undefined;
-        userObj.isAuthenticated = true;
-
-        // get users data
-        User.find({}, { username: 1 }, (error, users) => {
-            if (error) {
-                debug('error find users', error);
-                return res.status(500).json({});
-            }
-
-            res.json({
-                success: true,
-                message: 'Account created!',
-                user: userObj,
-                users: reformatUsers(users)
-            });
+        res.json({
+            success: true,
+            message: 'Account created!'
         });
     });
 });
