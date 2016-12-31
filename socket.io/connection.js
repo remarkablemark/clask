@@ -9,8 +9,7 @@ const Message = require('../models/message');
 const {
     CHAT_MESSAGE,
     USER_DATA,
-    CONNECTED_USERS,
-    DISCONNECTED_USER
+    USERS
 } = require('./events');
 
 /**
@@ -23,43 +22,56 @@ function onConnection(io, socket) {
     const { request } = socket;
     debug('client connected', request.session);
 
-    if (request.session.isAuthenticated) {
-        // save user id on socket
-        const { _id } = request.session;
-        socket._id = _id;
-
-        // send client an array of all user ids that are connected
-        // duplicates are possible for a user connected on multiple sockets
-        socket.emit(
-            CONNECTED_USERS,
-            Object.keys(io.sockets.connected).map((id) => {
-                return io.sockets.connected[id]._id;
-            })
-        );
-
-        // broadcast to other clients that new user has joined
-        socket.broadcast.emit(CONNECTED_USERS, [_id]);
-
-        // chat message
-        socket.on(CHAT_MESSAGE, (chatMessage) => {
-            chatMessage._id = ObjectId();
-            io.emit(CHAT_MESSAGE, chatMessage);
-            const message = new Message(chatMessage);
-            message.save((error) => {
-                if (error) debug('failed to save message', error);
-            });
-            debug(CHAT_MESSAGE, chatMessage);
-        });
-
-    } else {
-        // force client to disconnect if unauthenticated
-        socket.emit(USER_DATA, {
+    // force client to disconnect if unauthenticated
+    if (!request.session.isAuthenticated) {
+        return socket.emit(USER_DATA, {
             isAuthenticated: false
         });
     }
 
+    // save user id on socket
+    socket.userId = request.session._id;
+    socket.username = request.session.username;
+
+    // send client object of connected users
+    let connectedUsers = {};
+    Object.keys(io.sockets.connected).map(socketId => {
+        const socket = io.sockets.connected[socketId];
+        connectedUsers[socket.userId] = {
+            username: socket.username,
+            isConnected: true
+        };
+    });
+    socket.emit(USERS, connectedUsers);
+
+    // broadcast to other clients that user has connected
+    socket.broadcast.emit(USERS, {
+        [socket.userId]: {
+            username: socket.username,
+            isConnected: true
+        }
+    });
+
+    // chat message
+    socket.on(CHAT_MESSAGE, (chatMessage) => {
+        chatMessage._id = ObjectId();
+        io.emit(CHAT_MESSAGE, chatMessage);
+        const message = new Message(chatMessage);
+        message.save((error) => {
+            if (error) debug('failed to save message', error);
+        });
+        debug(CHAT_MESSAGE, chatMessage);
+    });
+
     socket.on('disconnect', () => {
-        socket.broadcast.emit(DISCONNECTED_USER, socket._id);
+        socket.broadcast.emit(USERS, {
+            [socket.userId]: {
+                isConnected: false
+            }
+        });
+        Object.keys(socket._events).forEach(eventName => {
+            socket.removeAllListeners(eventName);
+        });
         debug('client disconnected', request.session);
     });
 }

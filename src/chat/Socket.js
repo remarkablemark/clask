@@ -11,8 +11,7 @@ import Chat from './Chat';
 
 // socket
 import {
-    CONNECTED_USERS,
-    DISCONNECTED_USER
+    USERS
 } from '../../socket.io/events';
 
 // redux
@@ -25,6 +24,7 @@ import { setUsers } from '../users/actions';
 class Socket extends React.Component {
     constructor() {
         super();
+        this.events = [];
         this.state = {
             isLoaded: false
         };
@@ -34,31 +34,13 @@ class Socket extends React.Component {
      * Connect to socket and listen to socket events.
      */
     componentDidMount() {
-        const { setUsers } = this.props;
-
         window.requirejs(['io'], io => {
             const socket = io.connect();
             this.socket = socket;
 
-            // an array of user id(s)
-            socket.on(CONNECTED_USERS, (userIds) => {
-                let users = {};
-                _.forEach(userIds, (userId) => {
-                    users[userId] = {
-                        isConnected: true
-                    };
-                })
-                setUsers(users);
-            });
-
-            // user id disconnected
-            socket.on(DISCONNECTED_USER, (userId) => {
-                setUsers({
-                    [userId]: {
-                        isConnected: false
-                    }
-                });
-            });
+            // set users data (e.g., connect/disconnect)
+            socket.on(USERS, users => this.props.setUsers(users));
+            this.events.push(USERS);
 
             this.setState({
                 isLoaded: true
@@ -71,10 +53,7 @@ class Socket extends React.Component {
      * This will prevent memory leaks.
      */
     componentWillUnmount() {
-        _.forEach([
-            CONNECTED_USERS,
-            DISCONNECTED_USER
-        ], eventName => {
+        _.forEach(this.events, eventName => {
             this.socket.off(eventName);
         });
         this.socket.disconnect();
