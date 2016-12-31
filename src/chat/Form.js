@@ -5,6 +5,7 @@
  */
 import React from 'react';
 import _ from 'lodash';
+import { getTime } from './helpers';
 
 // material-ui
 import Divider from 'material-ui/Divider';
@@ -49,13 +50,6 @@ const styles = {
         left: buttonWidth
     }
 };
-
-// shim for getting UTC timestamp in milliseconds
-const getTime = (
-    typeof Date.now === 'function' ?
-    Date.now :
-    new Date().getTime
-);
 
 /**
  * Form component.
