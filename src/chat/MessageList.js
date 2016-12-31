@@ -12,7 +12,7 @@ import Message from './Message';
 // socket
 import {
     CHAT_MESSAGE,
-    USER_DATA
+    USER
 } from '../../socket.io/events';
 
 // styles
@@ -69,7 +69,7 @@ export default class MessageList extends React.Component {
             });
         });
 
-        socket.on(USER_DATA, (user) => {
+        socket.on(USER, (user) => {
             if (!user.isAuthenticated) {
                 this.props.removeUser();
                 socket.disconnect();

@@ -5,7 +5,7 @@
  */
 const events = {
     CHAT_MESSAGE: 'CHAT_MESSAGE',
-    USER_DATA: 'USER_DATA',
+    USER: 'USER',
     USERS: 'USERS'
 };
 

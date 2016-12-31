@@ -8,7 +8,7 @@ const ObjectId = require('mongoose').Types.ObjectId;
 const Message = require('../models/message');
 const {
     CHAT_MESSAGE,
-    USER_DATA,
+    USER,
     USERS
 } = require('./events');
 
@@ -24,7 +24,7 @@ function onConnection(io, socket) {
 
     // force client to disconnect if unauthenticated
     if (!request.session.isAuthenticated) {
-        return socket.emit(USER_DATA, {
+        return socket.emit(USER, {
             isAuthenticated: false
         });
     }
