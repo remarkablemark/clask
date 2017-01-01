@@ -13,7 +13,7 @@ import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
 
 // socket
-import { CHAT_MESSAGE } from '../../socket.io/events';
+import { MESSAGE } from '../../socket.io/events';
 
 // styles
 import {
@@ -77,7 +77,7 @@ export default class Form extends React.Component {
         const { value } = this.state;
         if (!_.trim(value)) return;
 
-        this.props.socket.emit(CHAT_MESSAGE, {
+        this.props.socket.emit(MESSAGE, {
             text: value,
             time: getTime(),
             user_id: this.props.userId,

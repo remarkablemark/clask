@@ -7,7 +7,7 @@ const debug = require('debug')(process.env.APP_NAME + ':socket');
 const ObjectId = require('mongoose').Types.ObjectId;
 const Message = require('../models/message');
 const {
-    CHAT_MESSAGE,
+    MESSAGE,
     USER,
     USERS
 } = require('./events');
@@ -53,14 +53,16 @@ function onConnection(io, socket) {
     });
 
     // chat message
-    socket.on(CHAT_MESSAGE, (chatMessage) => {
-        chatMessage._id = ObjectId();
-        io.emit(CHAT_MESSAGE, chatMessage);
-        const message = new Message(chatMessage);
-        message.save((error) => {
+    socket.on(MESSAGE, (message) => {
+        message._id = ObjectId();
+        io.emit(MESSAGE, message);
+
+        // save to database
+        const msg = new Message(message);
+        msg.save((error) => {
             if (error) debug('failed to save message', error);
         });
-        debug(CHAT_MESSAGE, chatMessage);
+        debug(MESSAGE, message);
     });
 
     socket.on('disconnect', () => {
