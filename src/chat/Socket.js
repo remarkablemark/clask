@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 import React from 'react';
+import { browserHistory } from 'react-router';
 import _ from 'lodash';
 
 // components
@@ -11,11 +12,14 @@ import Chat from './Chat';
 
 // socket
 import {
+    CHAT_MESSAGE,
+    USER,
     USERS
 } from '../../socket.io/events';
 
 // redux
 import { connect } from 'react-redux';
+import { appendMessages } from '../messages/actions';
 import { removeUser } from '../user/actions';
 import { setUsers } from '../users/actions';
 
@@ -38,14 +42,38 @@ class Socket extends React.Component {
         window.requirejs(['io'], io => {
             const socket = io.connect();
             this.socket = socket;
+            const events = [];
 
-            // set users data (e.g., connect/disconnect)
-            socket.on(USERS, users => this.props.setUsers(users));
-            this.events.push(USERS);
+            const {
+                appendMessages,
+                removeUser,
+                setUsers,
+                user
+            } = this.props;
+
+            // disconnect user if unauthenticated
+            socket.on(USER, (user) => {
+                if (!user.isAuthenticated) {
+                    removeUser();
+                    browserHistory.push('/signin');
+                }
+            });
+            events.push(USER);
+
+            // update `users` when another user connects or disconnects
+            socket.on(USERS, (users) => setUsers(users));
+            events.push(USERS);
+
+            // listen for chat messages
+            socket.on(CHAT_MESSAGE, (message) => {
+                appendMessages(user.rooms.active, [message]);
+            });
+            events.push(CHAT_MESSAGE);
 
             this.setState({
                 isLoaded: true
             });
+            this.events = events;
         });
     }
 
@@ -65,7 +93,6 @@ class Socket extends React.Component {
 
         const {
             messages,
-            removeUser,
             user,
             users
         } = this.props;
@@ -74,7 +101,6 @@ class Socket extends React.Component {
             <Chat
                 activeRoom={user.rooms.active}
                 messages={messages[user.rooms.active]}
-                removeUser={removeUser}
                 sidebar={user.sidebar}
                 socket={this.socket}
                 userId={user._id}
@@ -85,6 +111,7 @@ class Socket extends React.Component {
 }
 
 Socket.propTypes = {
+    appendMessages: React.PropTypes.func,
     messages: React.PropTypes.object,
     removeUser: React.PropTypes.func,
     setUsers: React.PropTypes.func,
@@ -130,6 +157,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
+        appendMessages: (room, messages) => {
+            dispatch(appendMessages(room, messages));
+        },
         removeUser: () => {
             dispatch(removeUser());
         },

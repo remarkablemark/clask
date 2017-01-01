@@ -30,7 +30,6 @@ export default function Chat(props) {
     const {
         activeRoom,
         messages,
-        removeUser,
         sidebar,
         socket,
         userId,
@@ -47,7 +46,6 @@ export default function Chat(props) {
             <div style={styles.content}>
                 <MessageList
                     messages={messages}
-                    removeUser={removeUser}
                     socket={socket}
                     users={users}
                 />
@@ -64,7 +62,6 @@ export default function Chat(props) {
 Chat.propTypes = {
     activeRoom: React.PropTypes.string,
     messages: React.PropTypes.array,
-    removeUser: React.PropTypes.func,
     sidebar: React.PropTypes.shape({
         channels: React.PropTypes.array,
         directMessages: React.PropTypes.array

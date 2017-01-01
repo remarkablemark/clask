@@ -5,15 +5,8 @@
  */
 import React from 'react';
 import _ from 'lodash';
-import { browserHistory } from 'react-router';
 import List from 'material-ui/List/List';
 import Message from './Message';
-
-// socket
-import {
-    CHAT_MESSAGE,
-    USER
-} from '../../socket.io/events';
 
 // styles
 import { formHeight } from '../shared/styles';
@@ -44,43 +37,19 @@ function scrollIntoView(id) {
  * MessageList component.
  */
 export default class MessageList extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            messages: props.messages
-        };
-    }
-
-    componentDidMount() {
-        const { messages } = this.state;
-
+    componentDidUpdate() {
+        const { messages } = this.props;
         // scroll to last message (if applicable)
         if (messages.length) {
             scrollIntoView(_.last(messages)._id);
         }
-
-        const { socket } = this.props;
-
-        socket.on(CHAT_MESSAGE, (message) => {
-            this.setState({
-                messages: _.concat(this.state.messages, [message])
-            }, () => {
-                scrollIntoView(message._id);
-            });
-        });
-
-        socket.on(USER, (user) => {
-            if (!user.isAuthenticated) {
-                this.props.removeUser();
-                socket.disconnect();
-                browserHistory.push('/signin');
-            }
-        });
     }
 
     render() {
-        const { users } = this.props;
-        const { messages } = this.state;
+        const {
+            messages,
+            users
+        } = this.props;
         return (
             <List style={styles.container}>
                 {_.map(messages, (message, index) => {
@@ -102,7 +71,5 @@ export default class MessageList extends React.Component {
 
 MessageList.propTypes = {
     messages: React.PropTypes.array,
-    removeUser: React.PropTypes.func,
-    socket: React.PropTypes.object,
     users: React.PropTypes.object
 };
