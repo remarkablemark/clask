@@ -7,7 +7,7 @@ import React from 'react';
 
 // components
 import LeftNav from './LeftNav';
-import MessageList from './MessageList';
+import MessageList from '../messages/MessageList';
 import Form from './Form';
 
 // redux
