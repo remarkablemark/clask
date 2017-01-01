@@ -16,6 +16,7 @@ import {
 
 // redux
 import { connect } from 'react-redux';
+import { removeUser } from '../user/actions';
 import { setUsers } from '../users/actions';
 
 /**
@@ -61,17 +62,77 @@ class Socket extends React.Component {
 
     render() {
         if (!this.state.isLoaded) return null;
-        return <Chat socket={this.socket} />;
+
+        const {
+            messages,
+            removeUser,
+            user,
+            users
+        } = this.props;
+
+        return (
+            <Chat
+                activeRoom={user.rooms.active}
+                messages={messages[user.rooms.active]}
+                removeUser={removeUser}
+                sidebar={user.sidebar}
+                socket={this.socket}
+                userId={user._id}
+                users={users}
+            />
+        );
     }
 }
 
 Socket.propTypes = {
-    children: React.PropTypes.node,
-    setUsers: React.PropTypes.func
+    messages: React.PropTypes.object,
+    removeUser: React.PropTypes.func,
+    setUsers: React.PropTypes.func,
+    socket: React.PropTypes.object,
+    user: React.PropTypes.shape({
+        _id: React.PropTypes.string,
+        isAuthenticated: React.PropTypes.bool,
+        rooms: React.PropTypes.shape({
+            active: React.PropTypes.string,
+            history: React.PropTypes.object
+        }),
+        sidebar: React.PropTypes.shape({
+            channels: React.PropTypes.array,
+            directMessages: React.PropTypes.array
+        }),
+        username: React.PropTypes.string
+    }),
+    users: React.PropTypes.object
 };
+
+Socket.defaultProps = {
+    messages: {},
+    user: {
+        isAuthenticated: false,
+        rooms: {
+            active: 'general'
+        },
+        sidebar: {
+            channels: ['general'],
+            directMessages: []
+        }
+    },
+    users: {}
+};
+
+function mapStateToProps(state) {
+    return {
+        messages: state.messages,
+        user: state.user,
+        users: state.users
+    };
+}
 
 function mapDispatchToProps(dispatch) {
     return {
+        removeUser: () => {
+            dispatch(removeUser());
+        },
         setUsers: (users) => {
             dispatch(setUsers(users));
         }
@@ -79,6 +140,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
 )(Socket);
