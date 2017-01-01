@@ -40,9 +40,8 @@ class Chat extends React.Component {
     }
 
     componentDidMount() {
-        const { activeRoom } = this.props;
         window.requirejs(['superagent'], (request) => {
-            request.get('/api/messages/' + activeRoom, (error, response) => {
+            request.get('/api/messages/' + this.props.user.rooms.active, (error, response) => {
                 if (error || !response.ok) {
                     return console.log(error, response); // eslint-disable-line no-console
                 }
@@ -61,7 +60,6 @@ class Chat extends React.Component {
         } = this.state;
 
         const {
-            activeRoom,
             removeUser,
             socket,
             user,
@@ -73,7 +71,8 @@ class Chat extends React.Component {
         return (
             <div style={styles.container}>
                 <LeftNav
-                    activeRoom={activeRoom}
+                    activeRoom={user.rooms.active}
+                    rooms={user.sidebar}
                     users={users}
                 />
                 <div style={styles.content}>
@@ -84,7 +83,7 @@ class Chat extends React.Component {
                         users={users}
                     />
                     <Form
-                        activeRoom={activeRoom}
+                        activeRoom={user.rooms.active}
                         socket={socket}
                         userId={user._id}
                     />
@@ -95,18 +94,37 @@ class Chat extends React.Component {
 }
 
 Chat.propTypes = {
-    activeRoom: React.PropTypes.string,
     messages: React.PropTypes.array,
     removeUser: React.PropTypes.func,
     socket: React.PropTypes.object,
-    user: React.PropTypes.object,
+    user: React.PropTypes.shape({
+        _id: React.PropTypes.string,
+        isAuthenticated: React.PropTypes.bool,
+        rooms: React.PropTypes.shape({
+            active: React.PropTypes.string,
+            history: React.PropTypes.object
+        }),
+        sidebar: React.PropTypes.shape({
+            channels: React.PropTypes.array,
+            directMessages: React.PropTypes.array
+        }),
+        username: React.PropTypes.string
+    }),
     users: React.PropTypes.object
 };
 
 Chat.defaultProps = {
-    activeRoom: 'general',
     messages: [],
-    user: {},
+    user: {
+        isAuthenticated: false,
+        rooms: {
+            active: 'general'
+        },
+        sidebar: {
+            channels: ['general'],
+            directMessages: []
+        }
+    },
     users: {}
 };
 

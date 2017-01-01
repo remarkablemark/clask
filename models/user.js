@@ -31,10 +31,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         unique: true
     },
-    channels: {
-        type: Array,
-        default: ['general']
-    },
     sidebar: {
         channels: {
             type: Array,
@@ -42,9 +38,16 @@ const userSchema = new mongoose.Schema({
         },
         directMessages: Array
     },
-    activeRoom: {
-        type: String,
-        default: 'general'
+    rooms: {
+        access: {
+            type: Array,
+            default: ['general']
+        },
+        active: {
+            type: String,
+            default: 'general'
+        },
+        history: Object
     }
 });
 

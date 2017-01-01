@@ -57,7 +57,8 @@ export default class LeftNav extends React.Component {
         return (
             <Drawer open={true} width={leftNavWidth}>
                 {/* menus */}
-                {_.map(rooms, (roomData, roomName) => {
+                {_.map(['channels', 'directMessages'], roomName => {
+                    const roomData = rooms[roomName];
                     const isChannel = roomName === 'channels';
                     return (
                         <LeftNavMenu
