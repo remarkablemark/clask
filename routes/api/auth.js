@@ -5,8 +5,12 @@
  */
 const debug = require('debug')(process.env.APP_NAME + ':db');
 const router = require('express').Router();
-const User = require('../../models/user');
 const { reformatUsers } = require('../helpers');
+const { Promise } = global;
+
+// models
+const Message = require('../../models/message');
+const User = require('../../models/user');
 
 /**
  * POST: /api/auth
@@ -55,19 +59,32 @@ router.post('/auth', (req, res, next) => {
             userObj.password = undefined;
             userObj.isAuthenticated = true;
 
-            // get users data
-            User.find({}, { username: 1 }, (error, users) => {
-                if (error) {
-                    debug('error find users', error)
-                    return res.status(500).json({});
-                }
+            // get users and messages
+            Promise.all([
+                User.find({}, { username: 1 }).lean().exec(),
+                Message.find({
+                    room_id: user.rooms.active
+                }, {
+                    __v: 0,
+                    room_id: 0
+                }).lean().exec()
 
+            // success
+            ]).then(results => {
+                const users = reformatUsers(results[0]);
+                const messages = results[1];
                 res.json({
                     success: true,
                     message: 'Authentication successful.',
+                    messages,
                     user: userObj,
-                    users: reformatUsers(users)
+                    users
                 });
+
+            // error
+            }).catch(error => {
+                debug('unable to find users and messages', error);
+                res.status(500).send({});
             });
         });
     });
