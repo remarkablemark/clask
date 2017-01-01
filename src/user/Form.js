@@ -9,7 +9,7 @@ import Center from '../shared/Center';
 
 // styles
 import { grey700 } from 'material-ui/styles/colors';
-import { gutter } from '../chat/styles';
+import { gutter } from '../shared/styles';
 const styles = {
     heading: {
         color: grey700,

@@ -13,7 +13,7 @@ import MenuItem from 'material-ui/MenuItem';
 
 // styles
 import { grey300, grey700 } from 'material-ui/styles/colors';
-import { leftNavMenuItemHeight } from './styles';
+import { leftNavMenuItemHeight } from '../shared/styles';
 
 const styles = {
     menuBase: {

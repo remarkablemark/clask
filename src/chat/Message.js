@@ -10,7 +10,7 @@ import ListItem from 'material-ui/List/ListItem';
 import { grey500 } from 'material-ui/styles/colors';
 
 // styles
-import { messagePadding } from './styles';
+import { messagePadding } from '../shared/styles';
 const styles = {
     container: {
         margin: messagePadding,

@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 import { removeUser } from '../user/actions';
 
 // styles
-import { leftNavWidth } from './styles';
+import { leftNavWidth } from '../shared/styles';
 const styles = {
     container: {
         height: '100%'

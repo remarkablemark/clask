@@ -16,7 +16,7 @@ import {
 } from '../../socket.io/events';
 
 // styles
-import { formHeight } from './styles';
+import { formHeight } from '../shared/styles';
 const styles = {
     container: {
         position: 'absolute',

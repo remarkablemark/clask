@@ -21,7 +21,7 @@ import {
     formHeight,
     gutter,
     leftNavWidth
-} from './styles';
+} from '../shared/styles';
 
 const styles = {
     form: {

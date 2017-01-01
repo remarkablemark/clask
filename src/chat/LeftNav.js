@@ -12,7 +12,7 @@ import Dialog from 'material-ui/Dialog';
 import Drawer from 'material-ui/Drawer';
 
 // styles
-import { leftNavWidth } from './styles';
+import { leftNavWidth } from '../shared/styles';
 
 /**
  * LeftNav component.
