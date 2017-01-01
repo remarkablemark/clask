@@ -30,71 +30,41 @@ const styles = {
 /**
  * Chat component.
  */
-class Chat extends React.Component {
-    constructor(props) {
-        super();
-        this.state = {
-            isLoaded: false,
-            messages: props.messages
-        };
-    }
+function Chat(props) {
+    const {
+        messages,
+        removeUser,
+        socket,
+        user,
+        users
+    } = props;
 
-    componentDidMount() {
-        window.requirejs(['superagent'], (request) => {
-            request.get('/api/messages/' + this.props.user.rooms.active, (error, response) => {
-                if (error || !response.ok) {
-                    return console.log(error, response); // eslint-disable-line no-console
-                }
-                this.setState({
-                    messages: response.body,
-                    isLoaded: true
-                });
-            });
-        });
-    }
-
-    render() {
-        const {
-            isLoaded,
-            messages
-        } = this.state;
-
-        const {
-            removeUser,
-            socket,
-            user,
-            users
-        } = this.props;
-
-        if (!isLoaded) return null;
-
-        return (
-            <div style={styles.container}>
-                <LeftNav
-                    activeRoom={user.rooms.active}
-                    rooms={user.sidebar}
+    return (
+        <div style={styles.container}>
+            <LeftNav
+                activeRoom={user.rooms.active}
+                rooms={user.sidebar}
+                users={users}
+            />
+            <div style={styles.content}>
+                <MessageList
+                    messages={messages[user.rooms.active]}
+                    removeUser={removeUser}
+                    socket={socket}
                     users={users}
                 />
-                <div style={styles.content}>
-                    <MessageList
-                        messages={messages}
-                        removeUser={removeUser}
-                        socket={socket}
-                        users={users}
-                    />
-                    <Form
-                        activeRoom={user.rooms.active}
-                        socket={socket}
-                        userId={user._id}
-                    />
-                </div>
+                <Form
+                    activeRoom={user.rooms.active}
+                    socket={socket}
+                    userId={user._id}
+                />
             </div>
-        );
-    }
+        </div>
+    );
 }
 
 Chat.propTypes = {
-    messages: React.PropTypes.array,
+    messages: React.PropTypes.object,
     removeUser: React.PropTypes.func,
     socket: React.PropTypes.object,
     user: React.PropTypes.shape({
@@ -114,7 +84,7 @@ Chat.propTypes = {
 };
 
 Chat.defaultProps = {
-    messages: [],
+    messages: {},
     user: {
         isAuthenticated: false,
         rooms: {
@@ -130,6 +100,7 @@ Chat.defaultProps = {
 
 function mapStateToProps(state) {
     return {
+        messages: state.messages,
         user: state.user,
         users: state.users
     };
