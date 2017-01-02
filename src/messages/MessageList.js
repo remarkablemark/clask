@@ -6,6 +6,7 @@
 import React from 'react';
 import _ from 'lodash';
 import List from 'material-ui/List/List';
+import DayDivider from './DayDivider';
 import Message from './Message';
 
 // styles
@@ -57,11 +58,12 @@ export default class MessageList extends React.Component {
                     const {
                         _id,
                         created,
+                        isNewDay,
                         text,
                         user_id
                     } = message;
 
-                    return (
+                    const messageNode = (
                         <Message
                             created={created}
                             id={_id}
@@ -70,6 +72,12 @@ export default class MessageList extends React.Component {
                             username={users[user_id].username}
                         />
                     );
+
+                    if (!isNewDay) return messageNode;
+                    return [
+                        <DayDivider date={created} />,
+                        messageNode
+                    ];
                 })}
             </List>
         );
