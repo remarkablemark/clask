@@ -47,7 +47,7 @@ export function reformatMessages(messages, start = 0) {
 }
 
 /**
- * Formats date to a time string.
+ * Formats date to time string.
  *
  * @param  {Date}   date - The date.
  * @return {String}      - The formatted time.
@@ -77,4 +77,17 @@ export function formatTime(date) {
 
     // time: MM:SS PD
     return time.join('');
+}
+
+/**
+ * Formats date to date string.
+ *
+ * @param  {Date}   date - The date.
+ * @return {String}      - The formatted date.
+ */
+export function formatDate(date) {
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const year = date.getFullYear();
+    return [month, day, year].join('/');
 }
