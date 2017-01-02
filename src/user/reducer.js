@@ -4,10 +4,9 @@
  * Module dependencies.
  */
 import _ from 'lodash';
-import {
-    SET_USER,
-    REMOVE_USER
-} from './actions';
+
+// actions
+import { SET_USER } from './actions';
 import { REMOVE_ALL } from '../shared/actions';
 
 const initialState = window.__EXPRESS_TEMPLATE__.user || {};
@@ -25,7 +24,6 @@ export default function reducer(state = initialState, action) {
     switch (action.type) {
         case SET_USER:
             return _.assign({}, state, action.user);
-
 
         case REMOVE_ALL:
             return { isAuthenticated: false };

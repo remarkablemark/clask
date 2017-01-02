@@ -20,7 +20,7 @@ import {
 // redux
 import { connect } from 'react-redux';
 import { appendMessages } from '../messages/actions';
-import { removeUser } from '../user/actions';
+import { removeAll } from '../shared/actions';
 import { setUsers } from '../users/actions';
 
 /**
@@ -46,7 +46,7 @@ class Socket extends React.Component {
 
             const {
                 appendMessages,
-                removeUser,
+                removeAll,
                 setUsers,
                 user
             } = this.props;
@@ -54,7 +54,7 @@ class Socket extends React.Component {
             // disconnect user if unauthenticated
             socket.on(USER, (user) => {
                 if (!user.isAuthenticated) {
-                    removeUser();
+                    removeAll();
                     browserHistory.push('/signin');
                 }
             });
@@ -89,13 +89,13 @@ class Socket extends React.Component {
     }
 
     render() {
-        if (!this.state.isLoaded) return null;
-
         const {
             messages,
             user,
             users
         } = this.props;
+
+        if (!this.state.isLoaded || !user.isAuthenticated) return null;
 
         return (
             <Chat
@@ -113,7 +113,7 @@ class Socket extends React.Component {
 Socket.propTypes = {
     appendMessages: React.PropTypes.func,
     messages: React.PropTypes.object,
-    removeUser: React.PropTypes.func,
+    removeAll: React.PropTypes.func,
     setUsers: React.PropTypes.func,
     socket: React.PropTypes.object,
     user: React.PropTypes.shape({
@@ -160,8 +160,8 @@ function mapDispatchToProps(dispatch) {
         appendMessages: (room, messages) => {
             dispatch(appendMessages(room, messages));
         },
-        removeUser: () => {
-            dispatch(removeUser());
+        removeAll: () => {
+            dispatch(removeAll());
         },
         setUsers: (users) => {
             dispatch(setUsers(users));

@@ -6,7 +6,7 @@
 import React from 'react';
 import Snackbar from 'material-ui/Snackbar';
 import { connect } from 'react-redux';
-import { removeUser } from './actions';
+import { removeAll } from '../shared/actions';
 import SignIn from './SignIn';
 
 // styles
@@ -31,7 +31,7 @@ class SignOut extends React.Component {
     componentDidMount() {
         const {
             isAuthenticated,
-            _removeUser
+            removeAll
         } = this.props;
 
         if (!isAuthenticated) return;
@@ -47,7 +47,7 @@ class SignOut extends React.Component {
                 }
 
                 // success
-                _removeUser();
+                removeAll();
                 this.setState({
                     snackbarMessage: response.body.message,
                     isSnackbarOpen: true
@@ -61,6 +61,7 @@ class SignOut extends React.Component {
             isSnackbarOpen,
             snackbarMessage
         } = this.state;
+
         return (
             <div style={styles.container}>
                 <SignIn />
@@ -75,7 +76,7 @@ class SignOut extends React.Component {
 
 SignOut.propTypes = {
     isAuthenticated: React.PropTypes.bool,
-    _removeUser: React.PropTypes.func
+    removeAll: React.PropTypes.func
 };
 
 function mapStateToProps(state) {
@@ -86,8 +87,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        _removeUser: () => {
-            dispatch(removeUser());
+        removeAll: () => {
+            dispatch(removeAll());
         }
     };
 }
