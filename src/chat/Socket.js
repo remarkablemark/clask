@@ -19,9 +19,11 @@ import {
 
 // redux
 import { connect } from 'react-redux';
-import { appendMessages } from '../messages/actions';
-import { removeAll } from '../shared/actions';
-import { setUsers } from '../users/actions';
+import {
+    appendMessages,
+    removeAll,
+    setUsers
+} from '../actions';
 
 /**
  * Socket component.

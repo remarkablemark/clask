@@ -14,9 +14,11 @@ import Snackbar from 'material-ui/Snackbar';
 
 // redux
 import { connect } from 'react-redux';
-import { setUser } from './actions';
-import { setUsers } from '../users/actions';
-import { appendMessages } from '../messages/actions';
+import {
+    appendMessages,
+    setUser,
+    setUsers
+} from '../actions';
 
 /**
  * SignIn component.

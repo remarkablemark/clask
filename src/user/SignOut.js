@@ -5,9 +5,11 @@
  */
 import React from 'react';
 import Snackbar from 'material-ui/Snackbar';
-import { connect } from 'react-redux';
-import { removeAll } from '../shared/actions';
 import SignIn from './SignIn';
+
+// redux
+import { connect } from 'react-redux';
+import { removeAll } from '../actions';
 
 // styles
 const styles = {
