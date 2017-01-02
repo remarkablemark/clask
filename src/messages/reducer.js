@@ -4,11 +4,14 @@
  * Module dependencies.
  */
 import _ from 'lodash';
+import { reformatMessages } from './helpers';
+
+// actions
 import {
     APPEND_MESSAGES,
     PREPEND_MESSAGES
 } from './actions';
-import { reformatMessages } from './helpers';
+import { REMOVE_ALL } from '../shared/actions';
 
 // initial state
 let initialState = window.__EXPRESS_TEMPLATE__.messages || {};
@@ -61,6 +64,9 @@ export default function reducer(state = initialState, action) {
             return _.assign({}, state, {
                 [room]: reformatMessages(messages)
             });
+
+        case REMOVE_ALL:
+            return {};
 
         default:
             return state;

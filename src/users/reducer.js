@@ -4,24 +4,30 @@
  * Module dependencies.
  */
 import _ from 'lodash';
+
+// actions
 import { SET_USERS } from './actions';
+import { REMOVE_ALL } from '../shared/actions';
 
 const initialState = window.__EXPRESS_TEMPLATE__.users || {};
 
 /**
  * Users reducer.
  *
- * @param  {Object} state  - The state.
- * @param  {Object} action - The state.
- * @return {Object}        - The state.
+ * @param  {Object} state        - The state.
+ * @param  {Object} action       - The action.
+ * @param  {String} action.type  - The action type.
+ * @param  {Object} action.users - The users data.
+ * @return {Object}              - The state.
  */
 export default function reducer(state = initialState, action) {
     switch (action.type) {
-        // set users
         case SET_USERS:
             return _.merge({}, state, action.users);
 
-        // default
+        case REMOVE_ALL:
+            return {};
+
         default:
             return state;
     }
