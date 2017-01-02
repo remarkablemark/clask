@@ -37,7 +37,13 @@ const styles = {
  * Message component.
  */
 export default function Message(props) {
-    const { id, user, created, text } = props;
+    const {
+        created,
+        id,
+        text,
+        username
+    } = props;
+
     const date = new Date(created);
     const hours = date.getHours();
     const minutes = date.getMinutes();
@@ -61,7 +67,7 @@ export default function Message(props) {
     const primaryText = (
         <div>
             <strong style={styles.username}>
-                {user.username}
+                {username}
             </strong>
             <span style={styles.time}>
                 {formattedTime}
@@ -85,12 +91,7 @@ export default function Message(props) {
 }
 
 Message.propTypes = {
-    id: React.PropTypes.string,
-    user: React.PropTypes.shape({
-        username: React.PropTypes.string
-    }),
-    text: React.PropTypes.string,
-    // check that time can be parsed into a valid date
+    // check that value can be parsed into a date
     created: (props, propName, componentName) => {
         if (isNaN(new Date(props[propName]).getTime())) {
             return new Error(
@@ -98,5 +99,8 @@ Message.propTypes = {
                 componentName + '`. Validation failed.'
             );
         }
-    }
+    },
+    id: React.PropTypes.string,
+    text: React.PropTypes.string,
+    username: React.PropTypes.string
 };

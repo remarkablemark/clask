@@ -50,17 +50,24 @@ export default class MessageList extends React.Component {
             messages,
             users
         } = this.props;
+
         return (
             <List style={styles.container}>
-                {_.map(messages, (message, index) => {
-                    const { _id, user_id, created, text } = message;
+                {_.map(messages, (message) => {
+                    const {
+                        _id,
+                        created,
+                        text,
+                        user_id
+                    } = message;
+
                     return (
                         <Message
-                            id={_id}
-                            user={users[user_id]}
-                            text={text}
                             created={created}
-                            key={index}
+                            id={_id}
+                            key={_id}
+                            text={text}
+                            username={users[user_id].username}
                         />
                     );
                 })}
