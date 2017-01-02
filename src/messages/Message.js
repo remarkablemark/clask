@@ -44,9 +44,8 @@ export default function Message(props) {
         username
     } = props;
 
-    const date = new Date(created);
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
+    const hours = created.getHours();
+    const minutes = created.getMinutes();
     const formattedTime = (
         (hours < 13 ? hours : hours - 12) + ':' +
         (minutes > 9 ? minutes : '0' + minutes) +
@@ -91,15 +90,7 @@ export default function Message(props) {
 }
 
 Message.propTypes = {
-    // check that value can be parsed into a date
-    created: (props, propName, componentName) => {
-        if (isNaN(new Date(props[propName]).getTime())) {
-            return new Error(
-                'Invalid prop `' + propName + '` supplied to `' +
-                componentName + '`. Validation failed.'
-            );
-        }
-    },
+    created: React.PropTypes.instanceOf(Date),
     id: React.PropTypes.string,
     text: React.PropTypes.string,
     username: React.PropTypes.string
