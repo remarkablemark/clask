@@ -29,7 +29,7 @@ export function reformatMessages(messages, start = 0) {
             current.created = new Date(current.created);
         }
 
-        // start marking for new day on the 2nd message
+        // start marking on the 2nd message
         if (start) {
             const previous = copy[start - 1];
             const currentDate = current.created;
@@ -44,4 +44,37 @@ export function reformatMessages(messages, start = 0) {
         }
     }
     return copy;
+}
+
+/**
+ * Formats date to a time string.
+ *
+ * @param  {Date}   date - The date.
+ * @return {String}      - The formatted time.
+ */
+export function formatTime(date) {
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const time = [];
+
+    // hours: 1-12
+    if (hours > 12) {
+        time.push(hours - 12);
+    } else if (hours > 0) {
+        time.push(hours);
+    } else if (hours === 0) {
+        time.push(12);
+    }
+
+    // separator
+    time.push(':');
+
+    // minutes: 01-59
+    time.push(minutes > 9 ? minutes : '0' + minutes);
+
+    // period: AM or PM
+    time.push(hours > 12 ? ' PM' : ' AM');
+
+    // time: MM:SS PD
+    return time.join('');
 }

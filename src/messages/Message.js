@@ -8,6 +8,7 @@ import Avatar from 'material-ui/Avatar';
 import FontIcon from 'material-ui/FontIcon';
 import ListItem from 'material-ui/List/ListItem';
 import { grey500 } from 'material-ui/styles/colors';
+import { formatTime } from './helpers';
 
 // styles
 import { messagePadding } from '../shared/styles';
@@ -44,14 +45,6 @@ export default function Message(props) {
         username
     } = props;
 
-    const hours = created.getHours();
-    const minutes = created.getMinutes();
-    const formattedTime = (
-        (hours < 13 ? hours : hours - 12) + ':' +
-        (minutes > 9 ? minutes : '0' + minutes) +
-        (hours > 12 ? ' PM' : ' AM')
-    );
-
     const leftAvatar = (
         <Avatar
             style={styles.avatar}
@@ -69,7 +62,7 @@ export default function Message(props) {
                 {username}
             </strong>
             <span style={styles.time}>
-                {formattedTime}
+                {formatTime(created)}
             </span>
             <div style={styles.text}>
                 {text}
