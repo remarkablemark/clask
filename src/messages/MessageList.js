@@ -53,13 +53,13 @@ export default class MessageList extends React.Component {
         return (
             <List style={styles.container}>
                 {_.map(messages, (message, index) => {
-                    const { _id, user_id, time, text } = message;
+                    const { _id, user_id, created, text } = message;
                     return (
                         <Message
                             id={_id}
                             user={users[user_id]}
                             text={text}
-                            time={time}
+                            created={created}
                             key={index}
                         />
                     );

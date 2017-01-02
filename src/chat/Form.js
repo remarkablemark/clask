@@ -79,7 +79,7 @@ export default class Form extends React.Component {
 
         this.props.socket.emit(MESSAGE, {
             text: value,
-            time: getTime(),
+            created: getTime(),
             user_id: this.props.userId,
             room_id: this.props.activeRoom
         });

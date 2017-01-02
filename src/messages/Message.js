@@ -37,8 +37,8 @@ const styles = {
  * Message component.
  */
 export default function Message(props) {
-    const { id, user, time, text } = props;
-    const date = new Date(time);
+    const { id, user, created, text } = props;
+    const date = new Date(created);
     const hours = date.getHours();
     const minutes = date.getMinutes();
     const formattedTime = (
@@ -91,7 +91,7 @@ Message.propTypes = {
     }),
     text: React.PropTypes.string,
     // check that time can be parsed into a valid date
-    time: (props, propName, componentName) => {
+    created: (props, propName, componentName) => {
         if (isNaN(new Date(props[propName]).getTime())) {
             return new Error(
                 'Invalid prop `' + propName + '` supplied to `' +
