@@ -8,13 +8,13 @@ import {
     APPEND_MESSAGES,
     PREPEND_MESSAGES
 } from './actions';
-import { markNewDayMessages } from './helpers';
+import { reformatMessages } from './helpers';
 
 // initial state
 let initialState = window.__EXPRESS_TEMPLATE__.messages || {};
 if (!_.isEmpty(initialState)) {
     _.forEach(initialState, (value, key) => {
-        initialState[key] = markNewDayMessages(value);
+        initialState[key] = reformatMessages(value);
     });
 }
 
@@ -40,26 +40,26 @@ export default function reducer(state = initialState, action) {
                 return _.assign({}, state, {
                     // start position for checking new day
                     // should be one less than the original
-                    [room]: markNewDayMessages(
+                    [room]: reformatMessages(
                         _.concat(current, messages), current.length - 2
                     )
                 });
             }
             // messages empty
             return _.assign({}, state, {
-                [room]: markNewDayMessages(messages)
+                [room]: reformatMessages(messages)
             });
 
         case PREPEND_MESSAGES:
             // messages found
             if (_.isArray(current)) {
                 return _.assign({}, state, {
-                    [room]: _.concat(markNewDayMessages(messages), current)
+                    [room]: _.concat(reformatMessages(messages), current)
                 });
             }
             // messages empty
             return _.assign({}, state, {
-                [room]: markNewDayMessages(messages)
+                [room]: reformatMessages(messages)
             });
 
         default:
