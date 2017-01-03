@@ -4,7 +4,7 @@
  * Socket events.
  */
 const events = {
-    MESSAGE: 'MESSAGE',
+    MESSAGES: 'MESSAGES',
     USER: 'USER',
     USERS: 'USERS'
 };

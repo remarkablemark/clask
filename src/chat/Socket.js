@@ -12,7 +12,7 @@ import Chat from './Chat';
 
 // socket
 import {
-    MESSAGE,
+    MESSAGES,
     USER,
     USERS
 } from '../../socket.io/events';
@@ -64,10 +64,10 @@ class Socket extends React.Component {
             this.events.push(USERS);
 
             // listen for chat messages
-            socket.on(MESSAGE, (messages) => {
+            socket.on(MESSAGES, (messages) => {
                 appendMessages(messages[0].room_id, messages);
             });
-            this.events.push(MESSAGE);
+            this.events.push(MESSAGES);
         });
     }
 

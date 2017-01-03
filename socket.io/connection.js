@@ -11,7 +11,7 @@ const Message = require('../models/message');
 
 // socket events
 const {
-    MESSAGE,
+    MESSAGES,
     USER,
     USERS
 } = require('./events');
@@ -41,17 +41,17 @@ function connection(io, socket) {
     // perform initial actions on connect
     connect(io, socket);
 
-    // chat message
-    socket.on(MESSAGE, (message) => {
-        message._id = ObjectId();
-        io.emit(MESSAGE, [message]);
+    // chat messages
+    socket.on(MESSAGES, (messages) => {
+        messages[0]._id = ObjectId();
+        io.emit(MESSAGES, messages);
 
         // save to database
-        const msg = new Message(message);
-        msg.save((error) => {
+        const message = new Message(messages[0]);
+        message.save((error) => {
             if (error) debug('failed to save message', error);
         });
-        debug(MESSAGE, message);
+        debug(MESSAGES, messages);
     });
 
     socket.on('disconnect', () => {

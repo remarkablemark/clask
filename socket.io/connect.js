@@ -8,7 +8,7 @@ const { reformatUsers } = require('../routes/helpers');
 
 // socket events
 const {
-    MESSAGE,
+    MESSAGES,
     USER,
     USERS
 } = require('./events');
@@ -50,7 +50,7 @@ function connect(io, socket) {
             if (!messages) return debug('room _id invalid', user.rooms.active);
 
             // send client latest messages
-            socket.emit(MESSAGE, messages);
+            socket.emit(MESSAGES, messages);
         });
     });
 
