@@ -1,5 +1,5 @@
 <script>
-    window.__EXPRESS_TEMPLATE__ = {{ public | dump | safe }};
+    window.__EXPRESS_TEMPLATE__ = {{ _public | dump | safe }};
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.min.js"></script>
-<script src="{{ public.publicPath }}/bundle.js"></script>
+<script src="{{ _public.publicPath }}/bundle.js"></script>

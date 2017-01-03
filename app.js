@@ -31,7 +31,7 @@ require('nunjucks').configure('views', {
  * Middleware.
  */
 // uncomment after placing your favicon in /build
-//app.use(require('serve-favicon')(path.join(__dirname, 'public', 'favicon.ico')));
+//app.use(require('serve-favicon')(path.join(__dirname, 'build', 'favicon.ico')));
 
 // logger
 app.use(logger('dev'));
@@ -52,7 +52,7 @@ app.use(express.static(path.join(__dirname, 'build')));
 /**
  * App locals.
  */
-app.locals.public = {
+app.locals._public = {
     isProduction: isProduction,
     publicPath: isProduction ? '' : require('./webpack/development.config').output.publicPath,
     versions: {

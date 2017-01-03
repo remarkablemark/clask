@@ -130,8 +130,15 @@ class SignIn extends React.Component {
 }
 
 SignIn.propTypes = {
+    isAuthenticated: React.PropTypes.bool,
     setUser: React.PropTypes.func
 };
+
+function mapStateToProps(state) {
+    return {
+        isAuthenticated: state.user.isAuthenticated
+    };
+}
 
 function mapDispatchToProps(dispatch) {
     return {
@@ -142,6 +149,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
 )(SignIn);
