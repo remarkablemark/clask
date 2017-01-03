@@ -17,8 +17,16 @@ const messageSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    text: String,
-    created: Date
+    text: {
+        type: String,
+        required: true
+    },
+    created: {
+        type: Date,
+        required: true
+    },
+    updated: Date,
+    isFirst: Boolean
 });
 
 /**
