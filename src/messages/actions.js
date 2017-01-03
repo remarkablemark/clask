@@ -3,39 +3,23 @@
 /**
  * Action types.
  */
-export const APPEND_MESSAGES = 'APPEND_MESSAGES';
-export const PREPEND_MESSAGES = 'PREPEND_MESSAGES';
+export const UPDATE_MESSAGES = 'UPDATE_MESSAGES';
 
 /**
  * Action creators.
  */
 
 /**
- * Appends messages.
+ * Adds or updates messages.
  *
- * @param  {String} room - The room id.
- * @param  {Array}       - The messages.
- * @return {Object}      - The dispatch action.
+ * @param  {String} roomId   - The room id.
+ * @param  {Array}  messages - The messages.
+ * @return {Object}          - The dispatch action.
  */
-export function appendMessages(room, messages) {
+export function updateMessages(roomId, messages) {
     return {
-        type: APPEND_MESSAGES,
-        room,
-        messages
-    };
-}
-
-/**
- * Prepends messages.
- *
- * @param  {String} room - The room id.
- * @param  {Array}       - The messages.
- * @return {Object}      - The dispatch action.
- */
-export function prependMessages(room, messages) {
-    return {
-        type: PREPEND_MESSAGES,
-        room,
+        type: UPDATE_MESSAGES,
+        roomId,
         messages
     };
 }

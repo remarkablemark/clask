@@ -20,10 +20,10 @@ import {
 // redux
 import { connect } from 'react-redux';
 import {
-    appendMessages,
     removeAll,
     setUser,
-    setUsers
+    setUsers,
+    updateMessages
 } from '../actions';
 
 /**
@@ -40,10 +40,10 @@ class Socket extends React.Component {
             this.events = [];
 
             const {
-                appendMessages,
                 removeAll,
                 setUser,
-                setUsers
+                setUsers,
+                updateMessages
             } = this.props;
 
             // update `user` when client connects
@@ -65,7 +65,7 @@ class Socket extends React.Component {
 
             // listen for chat messages
             socket.on(MESSAGES, (messages) => {
-                appendMessages(messages[0].room_id, messages);
+                updateMessages(messages[0].room_id, messages);
             });
             this.events.push(MESSAGES);
         });
@@ -108,12 +108,12 @@ class Socket extends React.Component {
 }
 
 Socket.propTypes = {
-    appendMessages: React.PropTypes.func,
     messages: React.PropTypes.object,
     removeAll: React.PropTypes.func,
     setUser: React.PropTypes.func,
     setUsers: React.PropTypes.func,
     socket: React.PropTypes.object,
+    updateMessages: React.PropTypes.func,
     user: React.PropTypes.shape({
         _id: React.PropTypes.string,
         isAuthenticated: React.PropTypes.bool,
@@ -155,9 +155,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        appendMessages: (room, messages) => {
-            dispatch(appendMessages(room, messages));
-        },
         removeAll: () => {
             dispatch(removeAll());
         },
@@ -166,6 +163,9 @@ function mapDispatchToProps(dispatch) {
         },
         setUsers: (users) => {
             dispatch(setUsers(users));
+        },
+        updateMessages: (room, messages) => {
+            dispatch(updateMessages(room, messages));
         }
     };
 }
