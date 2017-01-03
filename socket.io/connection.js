@@ -44,7 +44,7 @@ function connection(io, socket) {
     // chat message
     socket.on(MESSAGE, (message) => {
         message._id = ObjectId();
-        io.emit(MESSAGE, message);
+        io.emit(MESSAGE, [message]);
 
         // save to database
         const msg = new Message(message);

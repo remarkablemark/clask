@@ -14,18 +14,14 @@ import Snackbar from 'material-ui/Snackbar';
 
 // redux
 import { connect } from 'react-redux';
-import {
-    appendMessages,
-    setUser,
-    setUsers
-} from '../actions';
+import { setUser } from '../actions';
 
 /**
  * SignIn component.
  */
 class SignIn extends React.Component {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
         this.state = {
             isFormDisabled: false,
             isSnackbarOpen: false,
@@ -65,16 +61,12 @@ class SignIn extends React.Component {
                 const {
                     success,
                     message,
-                    messages,
-                    user,
-                    users
+                    user
                 } = response.body;
 
                 // success
                 if (success) {
                     this.props.setUser(user);
-                    this.props.setUsers(users);
-                    this.props.appendMessages(user.rooms.active, messages);
                     browserHistory.push('/');
 
                 // error
@@ -138,21 +130,13 @@ class SignIn extends React.Component {
 }
 
 SignIn.propTypes = {
-    appendMessages: React.PropTypes.func,
-    setUser: React.PropTypes.func,
-    setUsers: React.PropTypes.func
+    setUser: React.PropTypes.func
 };
 
 function mapDispatchToProps(dispatch) {
     return {
-        appendMessages: (room, messages) => {
-            dispatch(appendMessages(room, messages));
-        },
         setUser: (user) => {
             dispatch(setUser(user));
-        },
-        setUsers: (users) => {
-            dispatch(setUsers(users));
         }
     };
 }

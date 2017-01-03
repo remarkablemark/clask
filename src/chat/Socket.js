@@ -22,6 +22,7 @@ import { connect } from 'react-redux';
 import {
     appendMessages,
     removeAll,
+    setUser,
     setUsers
 } from '../actions';
 
@@ -29,14 +30,6 @@ import {
  * Socket component.
  */
 class Socket extends React.Component {
-    constructor() {
-        super();
-        this.events = [];
-        this.state = {
-            isLoaded: false
-        };
-    }
-
     /**
      * Connect to socket and listen to socket events.
      */
@@ -44,38 +37,37 @@ class Socket extends React.Component {
         window.requirejs(['io'], io => {
             const socket = io.connect();
             this.socket = socket;
-            const events = [];
+            this.events = [];
 
             const {
                 appendMessages,
                 removeAll,
-                setUsers,
-                user
+                setUser,
+                setUsers
             } = this.props;
 
-            // disconnect user if unauthenticated
+            // update `user` when client connects
             socket.on(USER, (user) => {
+                // disconnect user if unauthenticated
                 if (!user.isAuthenticated) {
                     removeAll();
-                    browserHistory.push('/signin');
+                    return browserHistory.push('/signin');
                 }
+                setUser(user);
             });
-            events.push(USER);
+            this.events.push(USER);
 
             // update `users` when another user connects or disconnects
-            socket.on(USERS, (users) => setUsers(users));
-            events.push(USERS);
+            socket.on(USERS, (users) => {
+                setUsers(users);
+            });
+            this.events.push(USERS);
 
             // listen for chat messages
-            socket.on(MESSAGE, (message) => {
-                appendMessages(user.rooms.active, [message]);
+            socket.on(MESSAGE, (messages) => {
+                appendMessages(messages[0].room_id, messages);
             });
-            events.push(MESSAGE);
-
-            this.setState({
-                isLoaded: true
-            });
-            this.events = events;
+            this.events.push(MESSAGE);
         });
     }
 
@@ -84,7 +76,7 @@ class Socket extends React.Component {
      * This will prevent memory leaks.
      */
     componentWillUnmount() {
-        _.forEach(this.events, eventName => {
+        _.forEach(this.events, (eventName) => {
             this.socket.off(eventName);
         });
         this.socket.disconnect();
@@ -96,13 +88,16 @@ class Socket extends React.Component {
             user,
             users
         } = this.props;
+        const activeRoom = _.get(user, 'rooms.active', null);
 
-        if (!this.state.isLoaded || !user.isAuthenticated) return null;
+        if (!user.isAuthenticated) return null;
+        if (!activeRoom) return null;
+        if (_.isEmpty(users)) return null;
 
         return (
             <Chat
-                activeRoom={user.rooms.active}
-                messages={messages[user.rooms.active]}
+                activeRoom={activeRoom}
+                messages={messages[activeRoom]}
                 sidebar={user.sidebar}
                 socket={this.socket}
                 userId={user._id}
@@ -116,6 +111,7 @@ Socket.propTypes = {
     appendMessages: React.PropTypes.func,
     messages: React.PropTypes.object,
     removeAll: React.PropTypes.func,
+    setUser: React.PropTypes.func,
     setUsers: React.PropTypes.func,
     socket: React.PropTypes.object,
     user: React.PropTypes.shape({
@@ -164,6 +160,9 @@ function mapDispatchToProps(dispatch) {
         },
         removeAll: () => {
             dispatch(removeAll());
+        },
+        setUser: (user) => {
+            dispatch(setUser(user));
         },
         setUsers: (users) => {
             dispatch(setUsers(users));
