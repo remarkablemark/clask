@@ -88,16 +88,20 @@ class Socket extends React.Component {
             user,
             users
         } = this.props;
-        const activeRoom = _.get(user, 'rooms.active', null);
 
+        const activeRoom = _.get(user, 'rooms.active');
+        const activeMessages = _.get(messages, activeRoom);
+
+        // render only when loaded
         if (!user.isAuthenticated) return null;
-        if (!activeRoom) return null;
         if (_.isEmpty(users)) return null;
+        if (!activeRoom) return null;
+        if (!_.isArray(activeMessages)) return null;
 
         return (
             <Chat
                 activeRoom={activeRoom}
-                messages={messages[activeRoom]}
+                messages={activeMessages}
                 sidebar={user.sidebar}
                 socket={this.socket}
                 userId={user._id}

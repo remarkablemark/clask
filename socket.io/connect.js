@@ -5,6 +5,7 @@
  */
 const debug = require('debug')(process.env.APP_NAME + ':db');
 const { reformatUsers } = require('../routes/helpers');
+const { messagesLimit } = require('../config/constants');
 
 // socket events
 const {
@@ -45,12 +46,17 @@ function connect(io, socket) {
             room_id: user.rooms.active
         }, {
             __v: 0
+        }, {
+            limit: messagesLimit,
+            sort: { created: -1 }
         }, (error, messages) => {
             if (error) return debug('unable to find messages', error);
-            if (!messages) return debug('room _id invalid', user.rooms.active);
+
+            // no messages found
+            if (!messages) return socket.emit(MESSAGES, []);
 
             // send client latest messages
-            socket.emit(MESSAGES, messages);
+            socket.emit(MESSAGES, messages.reverse());
         });
     });
 
