@@ -13,25 +13,17 @@ import {
 } from './actions';
 import { REMOVE_ALL } from '../shared/actions';
 
-// initial state
-let initialState = window.__EXPRESS_TEMPLATE__.messages || {};
-if (!_.isEmpty(initialState)) {
-    _.forEach(initialState, (value, key) => {
-        initialState[key] = reformatMessages(value);
-    });
-}
-
 /**
  * Messages reducer.
  *
- * @param  {Object} state           - The state.
+ * @param  {Object} state={}        - The state.
  * @param  {Object} action          - The action.
  * @param  {String} action.type     - The action type.
  * @param  {String} action.room     - The room id.
  * @param  {Array}  action.messages - The messages.
  * @return {Object}                 - The state.
  */
-export default function reducer(state = initialState, action) {
+export default function reducer(state = {}, action) {
     const { type, room, messages } = action;
     // current messages
     const current = state[room];
