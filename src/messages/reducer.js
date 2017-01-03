@@ -33,8 +33,8 @@ export default function reducer(state = {}, action) {
             // messages found
             if (_.isArray(current)) {
                 return _.assign({}, state, {
-                    // start position for checking new day
-                    // should be one less than the original
+                    // start position for marking new day should be
+                    // one less than the current (original) total
                     [room]: reformatMessages(
                         _.concat(current, messages), current.length - 2
                     )
@@ -49,7 +49,11 @@ export default function reducer(state = {}, action) {
             // messages found
             if (_.isArray(current)) {
                 return _.assign({}, state, {
-                    [room]: _.concat(reformatMessages(messages), current)
+                    // end position for marking new day should be
+                    // one more than the messages total
+                    [room]: reformatMessages(
+                        _.concat(messages, current), 0, messages.length + 1
+                    )
                 });
             }
             // messages empty

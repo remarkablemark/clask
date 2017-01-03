@@ -15,13 +15,16 @@ const millisecondsInOneDay = 86400000;
  *
  * @param  {Array}  messages  - The messages.
  * @param  {Number} [start=0] - The starting position.
+ * @param  {Number} [end]     - The end position.
  * @return {Array}            - The reformatted messages.
  */
-export function reformatMessages(messages, start = 0) {
+export function reformatMessages(messages, start = 0, end) {
+    end = end || messages.length;
+
     // make a copy of messages
     const copy = _.slice(messages);
 
-    for (let len = copy.length; start < len; start++) {
+    for (; start < end; start++) {
         const current = copy[start];
 
         // convert to Date object
