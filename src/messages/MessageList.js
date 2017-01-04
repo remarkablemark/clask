@@ -116,7 +116,7 @@ export default class MessageList extends React.Component {
         );
 
         return (
-            <List style={containerStyle} onScroll={this._handleScroll}>
+            <List style={containerStyle} onScroll={_.debounce(this._handleScroll, 250)}>
                 <div ref='content'>
                     <LoadMore
                         hasMore={hasMore}
