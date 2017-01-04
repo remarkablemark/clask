@@ -51,6 +51,7 @@ export default function Chat(props) {
                 />
                 <Form
                     activeRoom={activeRoom}
+                    hasMessages={messages.length !== 0}
                     socket={socket}
                     userId={userId}
                 />

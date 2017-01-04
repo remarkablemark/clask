@@ -77,11 +77,19 @@ export default class Form extends React.Component {
         const { value } = this.state;
         if (!_.trim(value)) return;
 
-        this.props.socket.emit(MESSAGES, [{
-            text: value,
+        const {
+            activeRoom,
+            hasMessages,
+            socket,
+            userId
+        } = this.props;
+
+        socket.emit(MESSAGES, [{
             created: getTime(),
-            user_id: this.props.userId,
-            room_id: this.props.activeRoom
+            isFirst: hasMessages ? undefined : true,
+            room_id: activeRoom,
+            text: value,
+            user_id: userId
         }]);
         this.setState({ value: '' });
     }
@@ -118,6 +126,7 @@ export default class Form extends React.Component {
 
 Form.propTypes = {
     activeRoom: React.PropTypes.string,
+    hasMessages: React.PropTypes.bool,
     socket: React.PropTypes.object,
     userId: React.PropTypes.string
 };
