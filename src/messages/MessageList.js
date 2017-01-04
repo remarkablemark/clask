@@ -5,11 +5,16 @@
  */
 import React from 'react';
 import _ from 'lodash';
+
+// components
 import List from 'material-ui/List/List';
 import DayDivider from './DayDivider';
 import LoadMore from './LoadMore';
 import Message from './Message';
+
+// constants
 import { messagesLimit } from '../../config/constants';
+import { GET_MESSAGES } from '../../socket.io/events';
 
 // styles
 import { formHeight } from '../shared/styles';
@@ -38,35 +43,63 @@ function scrollIntoView(id) {
  * MessageList component.
  */
 export default class MessageList extends React.Component {
-    componentDidUpdate() {
+    constructor() {
+        super();
+        this.state = {
+            isLoadingMessages: false
+        };
+        this._getMessages = this._getMessages.bind(this);
+    }
+
+    componentDidMount() {
+        scrollIntoView(_.get(_.last(this.props.messages), '_id'));
+    }
+
+    componentDidUpdate(prevProps) {
         const { messages } = this.props;
-        // scroll to last message (if applicable)
-        if (messages.length) {
-            scrollIntoView(_.last(messages)._id);
+
+        const messagesLenDiff = (
+            messages.length - prevProps.messages.length
+        );
+
+        // new message
+        if (messagesLenDiff === 1) {
+            scrollIntoView(_.get(_.last(messages), '_id'));
+
+        // multiple messages prepended
+        } else if (messagesLenDiff > 1) {
+            this.setState({
+                isLoadingMessages: false
+            });
         }
+    }
+
+    _getMessages() {
+        this.setState({
+            isLoadingMessages: true
+        });
+        this.props.socket.emit(GET_MESSAGES, {
+            before: _.first(this.props.messages).created
+        });
     }
 
     render() {
         const {
             messages,
-            socket,
             users
         } = this.props;
 
-        const messagesCount = messages.length;
-
         const hasMore = (
             !_.first(messages).isFirst &&
-            messagesCount >= messagesLimit
+            messages.length >= messagesLimit
         );
 
         return (
             <List style={containerStyle}>
                 <LoadMore
-                    date={_.first(messages).created}
                     hasMore={hasMore}
-                    messagesCount={messagesCount}
-                    socket={socket}
+                    isLoading={this.state.isLoadingMessages}
+                    onClick={this._getMessages}
                 />
 
                 {_.map(messages, (message) => {
