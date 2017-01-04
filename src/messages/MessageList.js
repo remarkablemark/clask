@@ -71,13 +71,25 @@ export default class MessageList extends React.Component {
             this.setState({
                 isLoadingMessages: false
             });
+
+            // keep scroll position
+            const contentElement = this.refs.content;
+            contentElement.parentNode.scrollTop = (
+                this._top + contentElement.clientHeight - this._height
+            );
         }
     }
 
     _getMessages() {
+        // cache position
+        const contentElement = this.refs.content;
+        this._height = contentElement.clientHeight;
+        this._top = contentElement.parentNode.scrollTop;
+
         this.setState({
             isLoadingMessages: true
         });
+
         this.props.socket.emit(GET_MESSAGES, {
             before: _.first(this.props.messages).created
         });
@@ -96,37 +108,39 @@ export default class MessageList extends React.Component {
 
         return (
             <List style={containerStyle}>
-                <LoadMore
-                    hasMore={hasMore}
-                    isLoading={this.state.isLoadingMessages}
-                    onClick={this._getMessages}
-                />
+                <div ref='content'>
+                    <LoadMore
+                        hasMore={hasMore}
+                        isLoading={this.state.isLoadingMessages}
+                        onClick={this._getMessages}
+                    />
 
-                {_.map(messages, (message) => {
-                    const {
-                        _id,
-                        created,
-                        isNewDay,
-                        text,
-                        user_id
-                    } = message;
+                    {_.map(messages, (message) => {
+                        const {
+                            _id,
+                            created,
+                            isNewDay,
+                            text,
+                            user_id
+                        } = message;
 
-                    const messageNode = (
-                        <Message
-                            created={created}
-                            id={_id}
-                            key={_id}
-                            text={text}
-                            username={users[user_id].username}
-                        />
-                    );
+                        const messageNode = (
+                            <Message
+                                created={created}
+                                id={_id}
+                                key={_id}
+                                text={text}
+                                username={users[user_id].username}
+                            />
+                        );
 
-                    if (!isNewDay) return messageNode;
-                    return [
-                        <DayDivider date={created} />,
-                        messageNode
-                    ];
-                })}
+                        if (!isNewDay) return messageNode;
+                        return [
+                            <DayDivider date={created} />,
+                            messageNode
+                        ];
+                    })}
+                </div>
             </List>
         );
     }
