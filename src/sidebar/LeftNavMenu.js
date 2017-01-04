@@ -15,30 +15,27 @@ import MenuItem from 'material-ui/MenuItem';
 import { grey300, grey700 } from 'material-ui/styles/colors';
 import { leftNavMenuItemHeight } from '../shared/styles';
 
-const styles = {
-    menuBase: {
-        minHeight: leftNavMenuItemHeight,
-        lineHeight: leftNavMenuItemHeight
-    },
-    menuIcon: {
-        fontSize: 22,
-        margin: 6
-    }
+const menuBaseStyle = {
+    minHeight: leftNavMenuItemHeight,
+    lineHeight: leftNavMenuItemHeight
 };
-styles.menuHeader = _.assign({}, styles.menuBase, {
+
+const menuHeaderStyle = _.assign({}, menuBaseStyle, {
     color: grey700,
     fontWeight: 'bold'
 });
-styles.menuItem = _.assign({}, styles.menuBase, {
+
+const menuItemStyle = _.assign({}, menuBaseStyle, {
     padding: '0 0.5em'
 });
-styles.activeMenu = _.assign({}, styles.menuItem, {
+
+const activeMenuStyle = _.assign({}, menuItemStyle, {
     backgroundColor: grey300
 });
 
 // menu header icon
 const rightIcon = (
-    <FontIcon style={styles.menuIcon} className='material-icons'>
+    <FontIcon style={{ fontSize: 22, margin: 6 }} className='material-icons'>
         add
     </FontIcon>
 );
@@ -60,15 +57,15 @@ export default function LeftNavMenu(props) {
             <MenuItem
                 primaryText={title}
                 rightIcon={rightIcon}
-                style={styles.menuHeader}
+                style={menuHeaderStyle}
                 onClick={onClick}
             />
 
             {_.map(items, (item, index) => {
                 const style = (
                     item === activeItem ?
-                    styles.activeMenu :
-                    styles.menuItem
+                    activeMenuStyle :
+                    menuItemStyle
                 );
                 return (
                     <MenuItem style={style} key={index}>
