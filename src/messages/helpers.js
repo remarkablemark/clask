@@ -21,8 +21,13 @@ const millisecondsInOneDay = 86400000;
 export function reformatMessages(messages, start = 0, end) {
     end = end || messages.length;
 
-    // make a copy of messages
-    const copy = _.slice(messages);
+    // make a deep copy of messages to prevent mutations
+    const copy = _.cloneDeep(messages);
+
+    // check if starting message is the first message of the channel
+    if (start === 0 && copy[start].isFirst) {
+        copy[start].isNewDay = true;
+    }
 
     for (; start < end; start++) {
         const current = copy[start];
@@ -33,7 +38,7 @@ export function reformatMessages(messages, start = 0, end) {
         }
 
         // start marking on the 2nd message
-        if (start) {
+        if (start > 0) {
             const previous = copy[start - 1];
             const currentDate = current.created;
             const previousDate = previous.created;
