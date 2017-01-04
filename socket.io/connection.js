@@ -5,17 +5,11 @@
  */
 const { debug } = require('./helpers');
 
-// mongoose
-const ObjectId = require('mongoose').Types.ObjectId;
-const Message = require('../models/message');
-
 // socket events
-const {
-    MESSAGES,
-    USER
-} = require('./events');
+const { USER } = require('./events');
 const connect = require('./connect');
 const disconnect = require('./disconnect');
+const messages = require('./messages');
 
 /**
  * Handle client 'connection' event.
@@ -41,18 +35,8 @@ function connection(io, socket) {
     // perform initial actions on connect
     connect(io, socket);
 
-    // chat messages
-    socket.on(MESSAGES, (messages) => {
-        messages[0]._id = ObjectId();
-        io.emit(MESSAGES, messages);
-
-        // save to database
-        const message = new Message(messages[0]);
-        message.save((error) => {
-            if (error) debug('failed to save message', error);
-        });
-        debug(MESSAGES, messages);
-    });
+    // event listeners for messages
+    messages(io, socket);
 
     // handle disconnect event
     disconnect(socket);
