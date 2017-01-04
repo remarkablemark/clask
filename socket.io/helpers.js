@@ -16,6 +16,10 @@ function reformatUsers(users) {
     return usersObj;
 }
 
+/** Socket debugger. */
+const debug = require('debug')(process.env.APP_NAME + ':socket');
+
 module.exports = {
+    debug,
     reformatUsers
 };

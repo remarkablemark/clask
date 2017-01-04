@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-const debug = require('debug')(process.env.APP_NAME + ':socket');
+const { debug } = require('./helpers');
 const { USERS } = require('./events');
 
 /**
