@@ -49,17 +49,25 @@ export default class MessageList extends React.Component {
     render() {
         const {
             messages,
+            socket,
             users
         } = this.props;
 
+        const messagesCount = messages.length;
+
         const hasMore = (
             !_.first(messages).isFirst &&
-            messages.length >= messagesLimit
+            messagesCount >= messagesLimit
         );
 
         return (
             <List style={containerStyle}>
-                <LoadMore hasMore={hasMore} />
+                <LoadMore
+                    date={_.first(messages).created}
+                    hasMore={hasMore}
+                    messagesCount={messagesCount}
+                    socket={socket}
+                />
 
                 {_.map(messages, (message) => {
                     const {
@@ -93,5 +101,6 @@ export default class MessageList extends React.Component {
 
 MessageList.propTypes = {
     messages: React.PropTypes.array,
+    socket: React.PropTypes.object,
     users: React.PropTypes.object
 };

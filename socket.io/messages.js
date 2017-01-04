@@ -42,6 +42,9 @@ function messages(io, socket) {
 
     // client requests previous messages
     socket.on(GET_MESSAGES, (data) => {
+        if (!data && !data.before) return;
+
+        // find messages before date
         Message.find({
             created: { $lt: data.before }
         }, { __v: 0 }, {
