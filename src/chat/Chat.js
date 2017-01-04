@@ -6,7 +6,7 @@
 import React from 'react';
 
 // components
-import LeftNav from './LeftNav';
+import LeftNav from '../sidebar/LeftNav';
 import MessageList from '../messages/MessageList';
 import Form from './Form';
 
