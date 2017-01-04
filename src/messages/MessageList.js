@@ -15,9 +15,10 @@ import Message from './Message';
 // constants
 import { messagesLimit } from '../../config/constants';
 import { GET_MESSAGES } from '../../socket.io/events';
+import { formHeight, gutter } from '../shared/styles';
+const loadMoreTopOffset = gutter * 3;
 
 // styles
-import { formHeight } from '../shared/styles';
 const containerStyle = {
     position: 'absolute',
     right: 0,
@@ -48,6 +49,7 @@ export default class MessageList extends React.Component {
         this.state = {
             isLoadingMessages: false
         };
+        this._handleScroll = this._handleScroll.bind(this);
         this._getMessages = this._getMessages.bind(this);
     }
 
@@ -80,6 +82,13 @@ export default class MessageList extends React.Component {
         }
     }
 
+    _handleScroll() {
+        if (!this.state.isLoadingMessages &&
+            this.refs.content.parentNode.scrollTop < loadMoreTopOffset) {
+            this._getMessages();
+        }
+    }
+
     _getMessages() {
         // cache position
         const contentElement = this.refs.content;
@@ -107,7 +116,7 @@ export default class MessageList extends React.Component {
         );
 
         return (
-            <List style={containerStyle}>
+            <List style={containerStyle} onScroll={this._handleScroll}>
                 <div ref='content'>
                     <LoadMore
                         hasMore={hasMore}
