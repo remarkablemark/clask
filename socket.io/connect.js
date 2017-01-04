@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 const debug = require('debug')(process.env.APP_NAME + ':db');
-const { reformatUsers } = require('../routes/helpers');
+const { reformatUsers } = require('./helpers');
 const { messagesLimit } = require('../config/constants');
 
 // socket events
