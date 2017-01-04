@@ -12,10 +12,10 @@ const Message = require('../models/message');
 // socket events
 const {
     MESSAGES,
-    USER,
-    USERS
+    USER
 } = require('./events');
 const connect = require('./connect');
+const disconnect = require('./disconnect');
 
 /**
  * Handle client 'connection' event.
@@ -54,17 +54,8 @@ function connection(io, socket) {
         debug(MESSAGES, messages);
     });
 
-    socket.on('disconnect', () => {
-        socket.broadcast.emit(USERS, {
-            [socket.userId]: {
-                isConnected: false
-            }
-        });
-        Object.keys(socket._events).forEach(eventName => {
-            socket.removeAllListeners(eventName);
-        });
-        debug('client disconnected', request.session);
-    });
+    // handle disconnect event
+    disconnect(socket);
 }
 
 module.exports = connection;
