@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Constants.
+ * Constants (public).
  */
 const constants = {
     messagesLimit: 15

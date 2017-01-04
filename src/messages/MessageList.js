@@ -7,21 +7,21 @@ import React from 'react';
 import _ from 'lodash';
 import List from 'material-ui/List/List';
 import DayDivider from './DayDivider';
+import LoadMore from './LoadMore';
 import Message from './Message';
+import { messagesLimit } from '../../config/constants';
 
 // styles
 import { formHeight } from '../shared/styles';
-const styles = {
-    container: {
-        position: 'absolute',
-        right: 0,
-        bottom: formHeight,
-        left: 0,
-        paddingTop: 0,
-        paddingBottom: 0,
-        overflowY: 'auto',
-        height: `calc(100% - ${formHeight}px)`
-    }
+const containerStyle = {
+    position: 'absolute',
+    right: 0,
+    bottom: formHeight,
+    left: 0,
+    paddingTop: 0,
+    paddingBottom: 0,
+    overflowY: 'auto',
+    height: `calc(100% - ${formHeight}px)`
 };
 
 /**
@@ -52,8 +52,15 @@ export default class MessageList extends React.Component {
             users
         } = this.props;
 
+        const hasMore = (
+            !_.first(messages).isFirst &&
+            messages.length >= messagesLimit
+        );
+
         return (
-            <List style={styles.container}>
+            <List style={containerStyle}>
+                <LoadMore hasMore={hasMore} />
+
                 {_.map(messages, (message) => {
                     const {
                         _id,
