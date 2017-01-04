@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-const debug = require('debug')(process.env.APP_NAME + ':db');
+const { debug } = require('./helpers');
 const mongoose = require('mongoose');
 const config = require('../config/');
 

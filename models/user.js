@@ -6,7 +6,7 @@
 const mongoose = require('mongoose');
 const generateId = require('shortid').generate;
 const bcrypt = require('bcrypt');
-const debug = require('debug')(process.env.APP_NAME + ':db');
+const { debug } = require('../db/helpers');
 
 /**
  * User schema.

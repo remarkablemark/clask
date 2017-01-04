@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-const debug = require('debug')(process.env.APP_NAME + ':db');
+const debug = require('../db/helpers').debug;
 const { reformatUsers } = require('./helpers');
 const { messagesLimit } = require('../config/constants');
 
