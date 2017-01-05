@@ -5,21 +5,21 @@
  */
 import React from 'react';
 import _ from 'lodash';
-import LeftNavMenu from './LeftNavMenu';
 
-// material-ui
-import Dialog from 'material-ui/Dialog';
+// components
 import Drawer from 'material-ui/Drawer';
+import LeftNavMenu from './LeftNavMenu';
+import MenuDialog from './MenuDialog';
 
-// styles
+// constants
 import { leftNavWidth } from '../shared/styles';
 
 /**
  * LeftNav component.
  */
 export default class LeftNav extends React.Component {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
         this.state = {
             isDialogOpen: false
         };
@@ -73,7 +73,7 @@ export default class LeftNav extends React.Component {
                 })}
 
                 {/* dialog */}
-                <Dialog
+                <MenuDialog
                     title={dialogTitle}
                     open={isDialogOpen}
                     onRequestClose={this._handleDialogClose}
