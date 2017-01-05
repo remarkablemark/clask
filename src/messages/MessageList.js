@@ -111,6 +111,7 @@ export default class MessageList extends React.Component {
         } = this.props;
 
         const hasMore = (
+            !_.isEmpty(messages) &&
             !_.first(messages).isFirst &&
             messages.length >= messagesLimit
         );
