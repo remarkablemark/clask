@@ -57,8 +57,6 @@ app.locals._public = {
     publicPath: isProduction ? '' : require('./webpack/development.config').output.publicPath,
     versions: {
         'lodash': dependencies['lodash'],
-        'react': dependencies['react'],
-        'react-dom': dependencies['react-dom'],
         'react-router': dependencies['react-router'],
         'react-redux': dependencies['react-redux'],
         'redux': dependencies['redux'],
