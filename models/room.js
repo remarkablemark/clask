@@ -28,7 +28,11 @@ const roomSchema = new mongoose.Schema({
         type: String,
         ref: 'User'
     },
-    created: Date
+    created: {
+        type: Date,
+        default: Date.now
+    },
+    isPublic: Boolean
 });
 
 /**

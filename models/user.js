@@ -31,6 +31,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         unique: true
     },
+    created: {
+        type: Date,
+        default: Date.now
+    },
     sidebar: {
         channels: {
             type: Array,
