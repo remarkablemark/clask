@@ -13,6 +13,10 @@ import MenuDialog from './MenuDialog';
 
 // constants
 import { leftNavWidth } from '../shared/styles';
+import {
+    CHANNELS_TYPE,
+    DIRECT_MESSAGES_TYPE
+} from './helpers';
 
 /**
  * LeftNav component.
@@ -26,22 +30,11 @@ export default class LeftNav extends React.Component {
         this._handleDialogClose = this._handleDialogClose.bind(this);
     }
 
-    _handleMenuClick(menuIndex) {
-        switch (menuIndex) {
-            case 'channels':
-                this.setState({
-                    isDialogOpen: true,
-                    dialogTitle: 'Channels'
-                });
-                break;
-
-            case 'directMessages':
-                this.setState({
-                    isDialogOpen: true,
-                    dialogTitle: 'Direct Messages'
-                });
-                break;
-        }
+    _handleMenuClick(type) {
+        this.setState({
+            dialogType: type,
+            isDialogOpen: true
+        });
     }
 
     _handleDialogClose() {
@@ -52,14 +45,14 @@ export default class LeftNav extends React.Component {
 
     render() {
         const { activeRoom, rooms } = this.props;
-        const { dialogTitle, isDialogOpen } = this.state;
+        const { dialogType, isDialogOpen } = this.state;
 
         return (
             <Drawer open={true} width={leftNavWidth}>
                 {/* menus */}
-                {_.map(['channels', 'directMessages'], roomName => {
+                {_.map([CHANNELS_TYPE, DIRECT_MESSAGES_TYPE], (roomName) => {
                     const roomData = rooms[roomName];
-                    const isChannel = roomName === 'channels';
+                    const isChannel = roomName === CHANNELS_TYPE;
                     return (
                         <LeftNavMenu
                             title={isChannel ? 'CHANNELS' : 'DIRECT MESSAGES'}
@@ -72,12 +65,13 @@ export default class LeftNav extends React.Component {
                     );
                 })}
 
-                {/* dialog */}
-                <MenuDialog
-                    title={dialogTitle}
-                    open={isDialogOpen}
-                    onRequestClose={this._handleDialogClose}
-                />
+                {isDialogOpen && (
+                    <MenuDialog
+                        onRequestClose={this._handleDialogClose}
+                        open={isDialogOpen}
+                        type={dialogType}
+                    />
+                )}
             </Drawer>
         );
     }

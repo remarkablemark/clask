@@ -5,6 +5,7 @@
  */
 import React from 'react';
 import Dialog from 'material-ui/Dialog';
+import { CHANNELS_TYPE } from './helpers';
 
 /**
  * MenuDialog component.
@@ -12,23 +13,22 @@ import Dialog from 'material-ui/Dialog';
 export default class MenuDialog extends React.Component {
     render() {
         const {
-            title,
+            onRequestClose,
             open,
-            onRequestClose
+            type
         } = this.props;
 
+        const title = type === CHANNELS_TYPE ? 'CHANNELS' : 'DIRECT MESSAGES';
+
         return (
-            <Dialog
-                title={title}
-                open={open}
-                onRequestClose={onRequestClose}
-            />
+            <Dialog title={title} open={open} onRequestClose={onRequestClose}>
+            </Dialog>
         );
     }
 }
 
 MenuDialog.propTypes = {
-    title: React.PropTypes.string,
+    onRequestClose: React.PropTypes.func,
     open: React.PropTypes.bool,
-    onRequestClose: React.PropTypes.func
+    type: React.PropTypes.string
 };
