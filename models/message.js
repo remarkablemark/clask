@@ -15,7 +15,8 @@ const messageSchema = new mongoose.Schema({
     },
     room_id: {
         type: String,
-        required: true
+        required: true,
+        ref: 'Room'
     },
     text: {
         type: String,
@@ -28,6 +29,9 @@ const messageSchema = new mongoose.Schema({
     updated: Date,
     isFirst: Boolean
 });
+
+// compound indexes
+messageSchema.index({ created: 1, type: -1 }, { room_id: 1 });
 
 /**
  * Export model for `messages` collection.
