@@ -7,6 +7,9 @@ const { debug } = require('./helpers');
 const mongoose = require('mongoose');
 const config = require('../config/');
 
+// seed database with default data
+require('./seed');
+
 // fix warning: mpromise (mongoose's default promise library) is deprecated
 // http://mongoosejs.com/docs/promises.html#plugging-in-your-own-promises-library
 mongoose.Promise = global.Promise;
