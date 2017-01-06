@@ -10,13 +10,6 @@ import _ from 'lodash';
 // components
 import Chat from './Chat';
 
-// socket
-import {
-    MESSAGES,
-    USER,
-    USERS
-} from '../../socket.io/events';
-
 // redux
 import { connect } from 'react-redux';
 import {
@@ -25,6 +18,14 @@ import {
     setUsers,
     updateMessages
 } from '../actions';
+
+// constants
+import {
+    MESSAGES,
+    USER,
+    USERS
+} from '../../socket.io/events';
+import { defaultRoom } from '../../config/constants';
 
 /**
  * Socket component.
@@ -139,10 +140,10 @@ Socket.defaultProps = {
     user: {
         isAuthenticated: false,
         rooms: {
-            active: 'general'
+            active: defaultRoom
         },
         sidebar: {
-            channels: ['general'],
+            channels: [defaultRoom],
             directMessages: []
         }
     },

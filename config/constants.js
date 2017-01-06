@@ -4,6 +4,7 @@
  * Constants (public).
  */
 const constants = {
+    defaultRoom: 'general',
     messagesLimit: 15
 };
 

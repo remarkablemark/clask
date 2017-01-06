@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const generateId = require('shortid').generate;
 const bcrypt = require('bcrypt');
 const { debug } = require('../db/helpers');
+const { defaultRoom } = require('../config/constants');
 
 /**
  * User schema.
@@ -38,18 +39,18 @@ const userSchema = new mongoose.Schema({
     sidebar: {
         channels: {
             type: Array,
-            default: ['general']
+            default: [defaultRoom]
         },
         directMessages: Array
     },
     rooms: {
         access: {
             type: Array,
-            default: ['general']
+            default: [defaultRoom]
         },
         active: {
             type: String,
-            default: 'general'
+            default: defaultRoom
         },
         history: Object
     }

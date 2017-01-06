@@ -17,6 +17,7 @@ import {
     CHANNELS_TYPE,
     DIRECT_MESSAGES_TYPE
 } from './helpers';
+import { defaultRoom } from '../../config/constants';
 
 /**
  * LeftNav component.
@@ -88,7 +89,7 @@ LeftNav.propTypes = {
 
 LeftNav.defaultProps = {
     rooms: {
-        channels: ['general'],
+        channels: [defaultRoom],
         directMessages: []
     }
 };
