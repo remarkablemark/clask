@@ -18,7 +18,7 @@ const roomSchema = new mongoose.Schema({
     // defined for channel
     // undefined for direct message
     name: String,
-    users: [
+    user_ids: [
         {
             type: String,
             ref: 'User'
@@ -30,9 +30,14 @@ const roomSchema = new mongoose.Schema({
     },
     created: {
         type: Date,
+        required: true,
         default: Date.now
     },
-    isPublic: Boolean
+    isPublic: {
+        type: Boolean,
+        required: true,
+        default: false
+    }
 });
 
 /**
