@@ -8,7 +8,7 @@ import _ from 'lodash';
 
 // components
 import Drawer from 'material-ui/Drawer';
-import LeftNavMenu from './LeftNavMenu';
+import SidebarMenu from './SidebarMenu';
 import MenuDialog from './MenuDialog';
 
 // constants
@@ -20,9 +20,9 @@ import {
 import { defaultRoom } from '../../config/constants';
 
 /**
- * LeftNav component.
+ * Sidebar component.
  */
-export default class LeftNav extends React.Component {
+export default class Sidebar extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -63,7 +63,7 @@ export default class LeftNav extends React.Component {
                     const roomData = sidebar[roomType];
                     const isChannel = roomType === CHANNELS_TYPE;
                     return (
-                        <LeftNavMenu
+                        <SidebarMenu
                             activeItem={activeRoom}
                             itemPrefix={isChannel ? '# ' : null}
                             items={roomData}
@@ -87,7 +87,7 @@ export default class LeftNav extends React.Component {
     }
 }
 
-LeftNav.propTypes = {
+Sidebar.propTypes = {
     activeRoom: React.PropTypes.string,
     rooms: React.PropTypes.object,
     sidebar: React.PropTypes.shape({
@@ -97,7 +97,7 @@ LeftNav.propTypes = {
     users: React.PropTypes.object
 };
 
-LeftNav.defaultProps = {
+Sidebar.defaultProps = {
     sidebar: {
         channels: [defaultRoom],
         directMessages: []

@@ -41,9 +41,9 @@ const rightIcon = (
 );
 
 /**
- * LeftNavMenu component.
+ * SidebarMenu component.
  */
-export default function LeftNavMenu(props) {
+export default function SidebarMenu(props) {
     const {
         activeItem,
         itemPrefix,
@@ -79,7 +79,7 @@ export default function LeftNavMenu(props) {
     );
 }
 
-LeftNavMenu.propTypes = {
+SidebarMenu.propTypes = {
     activeItem: React.PropTypes.string,
     itemPrefix: React.PropTypes.node,
     items: React.PropTypes.array,

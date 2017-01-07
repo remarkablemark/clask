@@ -6,7 +6,7 @@
 import React from 'react';
 
 // components
-import LeftNav from '../sidebar/LeftNav';
+import Sidebar from '../sidebar/Sidebar';
 import MessageList from '../messages/MessageList';
 import Form from './Form';
 
@@ -39,7 +39,7 @@ export default function Chat(props) {
 
     return (
         <div style={styles.container}>
-            <LeftNav
+            <Sidebar
                 activeRoom={activeRoom}
                 rooms={rooms}
                 sidebar={sidebar}
