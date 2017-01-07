@@ -45,11 +45,13 @@ export default function reducer(state = {}, action) {
 
             // append messages
             if (firstMessage.created > _.last(current).created) {
+                // start position for marking new day should be
+                // one less than the current (original) total
+                const currentLen = current.length;
+                const start = currentLen > 1 ? currentLen - 2 : 0;
                 return _.assign({}, state, {
-                    // start position for marking new day should be
-                    // one less than the current (original) total
                     [roomId]: reformatMessages(
-                        _.concat(current, messages), current.length - 2
+                        _.concat(current, messages), start
                     )
                 });
 
