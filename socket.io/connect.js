@@ -19,7 +19,11 @@ const {
     USERS
 } = require('./events');
 
-const userProjection = { __v: 0, password: 0 };
+const userProjection = {
+    name: 1,
+    rooms: 1,
+    username: 1
+};
 const messageProjection = { __v: 0 };
 const messageOptions = {
     limit: require('../config/constants').messagesLimit,
