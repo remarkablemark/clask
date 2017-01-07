@@ -40,7 +40,7 @@ export default function Chat(props) {
         <div style={styles.container}>
             <LeftNav
                 activeRoom={activeRoom}
-                rooms={sidebar}
+                sidebar={sidebar}
                 users={users}
             />
             <div style={styles.content}>

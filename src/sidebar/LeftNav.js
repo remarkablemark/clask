@@ -45,14 +45,14 @@ export default class LeftNav extends React.Component {
     }
 
     render() {
-        const { activeRoom, rooms } = this.props;
+        const { activeRoom, sidebar } = this.props;
         const { dialogType, isDialogOpen } = this.state;
 
         return (
             <Drawer open={true} width={leftNavWidth}>
                 {/* menus */}
                 {_.map([CHANNELS_TYPE, DIRECT_MESSAGES_TYPE], (roomName) => {
-                    const roomData = rooms[roomName];
+                    const roomData = sidebar[roomName];
                     const isChannel = roomName === CHANNELS_TYPE;
                     return (
                         <LeftNavMenu
@@ -80,7 +80,7 @@ export default class LeftNav extends React.Component {
 
 LeftNav.propTypes = {
     activeRoom: React.PropTypes.string,
-    rooms: React.PropTypes.shape({
+    sidebar: React.PropTypes.shape({
         channels: React.PropTypes.array,
         directMessages: React.PropTypes.array
     }),
@@ -88,7 +88,7 @@ LeftNav.propTypes = {
 };
 
 LeftNav.defaultProps = {
-    rooms: {
+    sidebar: {
         channels: [defaultRoom],
         directMessages: []
     }
