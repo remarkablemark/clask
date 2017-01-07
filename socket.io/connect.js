@@ -5,18 +5,26 @@
  */
 const debug = require('../db/helpers').debug;
 const { reformatUsers } = require('./helpers');
-const { messagesLimit } = require('../config/constants');
 
-// socket events
+// models
+const Message = require('../models/message');
+const User = require('../models/user');
+
+// constants
 const {
     MESSAGES,
     USER,
     USERS
 } = require('./events');
 
-// mongoose
-const Message = require('../models/message');
-const User = require('../models/user');
+const userProjection = { __v: 0, password: 0 };
+const messageProjection = { __v: 0 };
+const messageOptions = {
+    limit: require('../config/constants').messagesLimit,
+    sort: { created: -1 }
+};
+const emptyQuery = {};
+const usersProjection = { username: 1 };
 
 /**
  * Initial actions when client connects.
@@ -25,32 +33,37 @@ const User = require('../models/user');
  * @param {Object} socket - The socket.
  */
 function connect(io, socket) {
-    // find user based on _id
-    User.findOne({
-        _id: socket.userId
-    }, {
-        __v: 0,
-        password: 0
-    }, (error, user) => {
-        if (error) return debug('unable to find user', error);
-        if (!user) return debug('user _id invalid', socket.userId);
+    const { userId } = socket;
 
-        const userData = user.toObject();
-        userData.isAuthenticated = true;
+    // broadcast to other clients that user has connected
+    socket.broadcast.emit(USERS, {
+        [userId]: {
+            username: socket.username,
+            isConnected: true
+        }
+    });
+
+    /**
+     * Find user.
+     */
+    User.findById(userId, userProjection, (err, user) => {
+        if (err) return debug('unable to find user', err);
+
+        // user not found
+        if (!user) return socket.emit(USER, { isAuthenticated: false });
 
         // send client user data
-        socket.emit(USER, userData);
+        socket.emit(USER, Object.assign(user.toObject(), {
+            isAuthenticated: true
+        }));
 
-        // find messages based on user's last active room
+        /**
+         * Find messages.
+         */
         Message.find({
             _room: user.rooms.active
-        }, {
-            __v: 0
-        }, {
-            limit: messagesLimit,
-            sort: { created: -1 }
-        }, (error, messages) => {
-            if (error) return debug('unable to find messages', error);
+        }, messageProjection, messageOptions, (err, messages) => {
+            if (err) return debug('unable to find messages', err);
 
             // no messages found
             if (!messages) return socket.emit(MESSAGES, []);
@@ -60,28 +73,20 @@ function connect(io, socket) {
         });
     });
 
-    // get all user _id and usernames
-    User.find({}, {
-        username: 1
-    }, (error, users) => {
-        if (error || !users) return debug('no users found', error);
+    /**
+     * Find all users.
+     */
+    User.find(emptyQuery, usersProjection, (err, users) => {
+        if (err || !users) return debug('no users found', err);
 
-        // reformat users
+        // mark connected user
         let usersData = reformatUsers(users);
         Object.keys(io.sockets.connected).map((socketId) => {
             usersData[io.sockets.connected[socketId].userId].isConnected = true;
         });
 
-        // send client data of all connected users
+        // send client data of all users
         socket.emit(USERS, usersData);
-    });
-
-    // broadcast to other clients that user has connected
-    socket.broadcast.emit(USERS, {
-        [socket.userId]: {
-            username: socket.username,
-            isConnected: true
-        }
     });
 }
 
