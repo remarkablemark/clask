@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 const debug = require('../db/helpers').debug;
-const { reformatUsers } = require('./helpers');
+const { docsToObj } = require('./helpers');
 
 // models
 const Message = require('../models/message');
@@ -80,7 +80,7 @@ function connect(io, socket) {
         if (err || !users) return debug('no users found', err);
 
         // mark connected user
-        let usersData = reformatUsers(users);
+        let usersData = docsToObj(users);
         Object.keys(io.sockets.connected).map((socketId) => {
             usersData[io.sockets.connected[socketId].userId].isConnected = true;
         });
