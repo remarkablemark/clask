@@ -14,6 +14,7 @@ import Chat from './Chat';
 import { connect } from 'react-redux';
 import {
     removeAll,
+    setRooms,
     setUser,
     setUsers,
     updateMessages
@@ -22,6 +23,7 @@ import {
 // constants
 import {
     MESSAGES,
+    ROOMS,
     USER,
     USERS
 } from '../../socket.io/events';
@@ -41,12 +43,15 @@ class Socket extends React.Component {
 
             const {
                 removeAll,
+                setRooms,
                 setUser,
                 setUsers,
                 updateMessages
             } = this.props;
 
-            // update `user` when client connects
+            /**
+             * Set `user` when client connects.
+             */
             socket.on(USER, (user) => {
                 // disconnect user if unauthenticated
                 if (!user.isAuthenticated) {
@@ -57,13 +62,25 @@ class Socket extends React.Component {
             });
             this.events.push(USER);
 
-            // update `users` when another user connects or disconnects
+            /**
+             * Update `users` when user connects or disconnects.
+             */
             socket.on(USERS, (users) => {
                 setUsers(users);
             });
             this.events.push(USERS);
 
-            // listen for chat messages
+            /**
+             * Set `rooms` joined by user.
+             */
+            socket.on(ROOMS, (rooms) => {
+                setRooms(rooms);
+            });
+            this.events.push(ROOMS);
+
+            /**
+             * Listen for chat messages.
+             */
             socket.on(MESSAGES, (messages) => {
                 const roomId = _.get(messages, '[0]._room');
                 if (roomId) updateMessages(roomId, messages);
@@ -115,6 +132,8 @@ class Socket extends React.Component {
 Socket.propTypes = {
     messages: React.PropTypes.object,
     removeAll: React.PropTypes.func,
+    rooms: React.PropTypes.object,
+    setRooms: React.PropTypes.func,
     setUser: React.PropTypes.func,
     setUsers: React.PropTypes.func,
     socket: React.PropTypes.object,
@@ -138,6 +157,7 @@ Socket.propTypes = {
 function mapStateToProps(state) {
     return {
         messages: state.messages,
+        rooms: state.rooms,
         user: state.user,
         users: state.users
     };
@@ -147,6 +167,9 @@ function mapDispatchToProps(dispatch) {
     return {
         removeAll: () => {
             dispatch(removeAll());
+        },
+        setRooms: (rooms) => {
+            dispatch(setRooms(rooms));
         },
         setUser: (user) => {
             dispatch(setUser(user));
