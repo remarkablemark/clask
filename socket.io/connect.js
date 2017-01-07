@@ -43,7 +43,7 @@ function connect(io, socket) {
 
         // find messages based on user's last active room
         Message.find({
-            room_id: user.rooms.active
+            _room: user.rooms.active
         }, {
             __v: 0
         }, {

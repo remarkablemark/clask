@@ -18,7 +18,7 @@ const roomSchema = new mongoose.Schema({
     // defined for channel
     // undefined for direct message
     name: String,
-    user_ids: [
+    _users: [
         {
             type: String,
             ref: 'User'

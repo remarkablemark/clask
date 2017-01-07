@@ -85,11 +85,11 @@ export default class Form extends React.Component {
         } = this.props;
 
         socket.emit(MESSAGES, [{
+            _room: activeRoom,
+            _user: userId,
             created: getTime(),
             isFirst: hasMessages ? undefined : true,
-            room_id: activeRoom,
-            text: value,
-            user_id: userId
+            text: value
         }]);
         this.setState({ value: '' });
     }

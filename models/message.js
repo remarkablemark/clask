@@ -9,11 +9,11 @@ const mongoose = require('mongoose');
  * Message schema.
  */
 const messageSchema = new mongoose.Schema({
-    user_id: {
+    _user: {
         type: String,
         ref: 'User'
     },
-    room_id: {
+    _room: {
         type: String,
         required: true,
         ref: 'Room'
@@ -32,7 +32,7 @@ const messageSchema = new mongoose.Schema({
 });
 
 // compound indexes
-messageSchema.index({ created: 1, type: -1 }, { room_id: 1 });
+messageSchema.index({ created: 1, type: -1 }, { _room: 1 });
 
 /**
  * Export model for `messages` collection.

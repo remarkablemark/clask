@@ -128,10 +128,10 @@ export default class MessageList extends React.Component {
                     {_.map(messages, (message) => {
                         const {
                             _id,
+                            _user,
                             created,
                             isNewDay,
-                            text,
-                            user_id
+                            text
                         } = message;
 
                         const messageNode = (
@@ -140,7 +140,7 @@ export default class MessageList extends React.Component {
                                 id={_id}
                                 key={_id}
                                 text={text}
-                                username={users[user_id].username}
+                                username={users[_user].username}
                             />
                         );
 
