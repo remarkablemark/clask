@@ -103,6 +103,7 @@ class Socket extends React.Component {
     render() {
         const {
             messages,
+            rooms,
             user,
             users
         } = this.props;
@@ -114,12 +115,14 @@ class Socket extends React.Component {
         // render only when loaded
         if (!user.isAuthenticated) return null;
         if (_.isEmpty(users)) return null;
+        if (_.isEmpty(rooms)) return null;
         if (!activeRoom) return null;
 
         return (
             <Chat
                 activeRoom={activeRoom}
                 messages={activeMessages}
+                rooms={rooms}
                 sidebar={userRooms.sidebar}
                 socket={this.socket}
                 userId={user._id}

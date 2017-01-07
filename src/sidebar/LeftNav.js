@@ -45,23 +45,32 @@ export default class LeftNav extends React.Component {
     }
 
     render() {
-        const { activeRoom, sidebar } = this.props;
-        const { dialogType, isDialogOpen } = this.state;
+        const {
+            activeRoom,
+            rooms,
+            sidebar
+        } = this.props;
+
+        const {
+            dialogType,
+            isDialogOpen
+        } = this.state;
 
         return (
             <Drawer open={true} width={leftNavWidth}>
                 {/* menus */}
-                {_.map([CHANNELS_TYPE, DIRECT_MESSAGES_TYPE], (roomName) => {
-                    const roomData = sidebar[roomName];
-                    const isChannel = roomName === CHANNELS_TYPE;
+                {_.map([CHANNELS_TYPE, DIRECT_MESSAGES_TYPE], (roomType) => {
+                    const roomData = sidebar[roomType];
+                    const isChannel = roomType === CHANNELS_TYPE;
                     return (
                         <LeftNavMenu
-                            title={isChannel ? 'CHANNELS' : 'DIRECT MESSAGES'}
-                            items={roomData}
                             activeItem={activeRoom}
                             itemPrefix={isChannel ? '# ' : null}
-                            onClick={this._handleMenuClick.bind(this, roomName)}
-                            key={roomName}
+                            items={roomData}
+                            key={roomType}
+                            onClick={this._handleMenuClick.bind(this, roomType)}
+                            rooms={rooms}
+                            title={isChannel ? 'CHANNELS' : 'DIRECT MESSAGES'}
                         />
                     );
                 })}
@@ -80,6 +89,7 @@ export default class LeftNav extends React.Component {
 
 LeftNav.propTypes = {
     activeRoom: React.PropTypes.string,
+    rooms: React.PropTypes.object,
     sidebar: React.PropTypes.shape({
         channels: React.PropTypes.array,
         directMessages: React.PropTypes.array

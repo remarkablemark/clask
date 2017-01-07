@@ -30,6 +30,7 @@ export default function Chat(props) {
     const {
         activeRoom,
         messages,
+        rooms,
         sidebar,
         socket,
         userId,
@@ -40,6 +41,7 @@ export default function Chat(props) {
         <div style={styles.container}>
             <LeftNav
                 activeRoom={activeRoom}
+                rooms={rooms}
                 sidebar={sidebar}
                 users={users}
             />
@@ -63,6 +65,7 @@ export default function Chat(props) {
 Chat.propTypes = {
     activeRoom: React.PropTypes.string,
     messages: React.PropTypes.array,
+    rooms: React.PropTypes.object,
     sidebar: React.PropTypes.shape({
         channels: React.PropTypes.array,
         directMessages: React.PropTypes.array

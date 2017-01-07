@@ -45,11 +45,12 @@ const rightIcon = (
  */
 export default function LeftNavMenu(props) {
     const {
-        title,
-        items,
         activeItem,
         itemPrefix,
-        onClick
+        items,
+        onClick,
+        rooms,
+        title
     } = props;
 
     return (
@@ -70,7 +71,7 @@ export default function LeftNavMenu(props) {
                 return (
                     <MenuItem style={style} key={index}>
                         {itemPrefix}
-                        {item}
+                        {rooms[item].name}
                     </MenuItem>
                 );
             })}
@@ -79,9 +80,10 @@ export default function LeftNavMenu(props) {
 }
 
 LeftNavMenu.propTypes = {
-    title: React.PropTypes.string,
-    items: React.PropTypes.array,
     activeItem: React.PropTypes.string,
     itemPrefix: React.PropTypes.node,
-    onClick: React.PropTypes.func
+    items: React.PropTypes.array,
+    onClick: React.PropTypes.func,
+    rooms: React.PropTypes.object,
+    title: React.PropTypes.string
 };
