@@ -5,6 +5,10 @@
  */
 const { debug } = require('../../db/helpers');
 const router = require('express').Router();
+const { defaultRoom } = require('../../config/constants');
+
+// models
+const Room = require('../../models/room');
 const User = require('../../models/user');
 
 /**
@@ -65,6 +69,13 @@ router.post('/', (req, res, next) => {
             debug('error save user', err);
             return res.status(500).json({});
         }
+
+        // add user to default room
+        Room.findByIdAndUpdate(defaultRoom, {
+            $push: { _users: user._id }
+        }, (err) => {
+            if (err) debug(`unable to update '${defaultRoom}' room`, err);
+        });
 
         // user successfully saved
         res.json({
