@@ -4,17 +4,11 @@
  * Module dependencies.
  */
 const router = require('express').Router();
-const authMiddleware = require('../../middleware/auth');
 
 /**
  * Route: /api/auth
  */
 router.use(require('./auth'));
-
-/**
- * Route: /api/messages/:room_id
- */
-router.use('/messages', authMiddleware, require('./messages'));
 
 /**
  * Route: /api/users
