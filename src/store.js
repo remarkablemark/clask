@@ -5,6 +5,7 @@
  */
 import { combineReducers, createStore } from 'redux';
 import messages from './messages/reducer';
+import rooms from './rooms/reducer';
 import user from './user/reducer';
 import users from './users/reducer';
 
@@ -13,6 +14,7 @@ import users from './users/reducer';
  */
 const reducer = combineReducers({
     messages,
+    rooms,
     user,
     users
 });
