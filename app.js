@@ -30,6 +30,10 @@ require('nunjucks').configure('views', {
 /**
  * Middleware.
  */
+// security and performance
+app.use(require('helmet')());
+app.use(require('compression')());
+
 // uncomment after placing your favicon in /build
 //app.use(require('serve-favicon')(path.join(__dirname, 'build', 'favicon.ico')));
 
