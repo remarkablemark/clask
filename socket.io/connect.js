@@ -8,11 +8,13 @@ const { docsToObj } = require('./helpers');
 
 // models
 const Message = require('../models/message');
+const Room = require('../models/room');
 const User = require('../models/user');
 
 // constants
 const {
     MESSAGES,
+    ROOMS,
     USER,
     USERS
 } = require('./events');
@@ -23,6 +25,7 @@ const messageOptions = {
     limit: require('../config/constants').messagesLimit,
     sort: { created: -1 }
 };
+const roomsProjection = { name: 1, _users: 1 };
 const emptyQuery = {};
 const usersProjection = { username: 1 };
 
@@ -71,6 +74,18 @@ function connect(io, socket) {
             // send client latest messages
             socket.emit(MESSAGES, messages.reverse());
         });
+    });
+
+    /**
+     * Find all rooms (joined by user).
+     */
+    Room.find({
+        _users: { $in: [userId] }
+    }, roomsProjection, (err, rooms) => {
+        if (err || !rooms) return debug('no rooms found', err);
+
+        // send client data of joined rooms
+        socket.emit(ROOMS, docsToObj(rooms));
     });
 
     /**
