@@ -36,20 +36,18 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    sidebar: {
-        channels: {
-            type: Array,
-            default: [defaultRoom]
-        },
-        directMessages: Array
-    },
     rooms: {
-        access: {
-            type: Array,
-            default: [defaultRoom]
+        sidebar: {
+            channels: {
+                type: Array,
+                ref: 'Room',
+                default: [defaultRoom]
+            },
+            directMessages: Array
         },
         active: {
             type: String,
+            ref: 'Room',
             default: defaultRoom
         },
         history: Object

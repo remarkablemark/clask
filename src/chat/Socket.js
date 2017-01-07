@@ -25,7 +25,6 @@ import {
     USER,
     USERS
 } from '../../socket.io/events';
-import { defaultRoom } from '../../config/constants';
 
 /**
  * Socket component.
@@ -91,7 +90,8 @@ class Socket extends React.Component {
             users
         } = this.props;
 
-        const activeRoom = _.get(user, 'rooms.active');
+        const userRooms = _.get(user, 'rooms', {});
+        const activeRoom = userRooms.active;
         const activeMessages = _.get(messages, activeRoom, []);
 
         // render only when loaded
@@ -103,7 +103,7 @@ class Socket extends React.Component {
             <Chat
                 activeRoom={activeRoom}
                 messages={activeMessages}
-                sidebar={user.sidebar}
+                sidebar={userRooms.sidebar}
                 socket={this.socket}
                 userId={user._id}
                 users={users}
@@ -124,30 +124,15 @@ Socket.propTypes = {
         isAuthenticated: React.PropTypes.bool,
         rooms: React.PropTypes.shape({
             active: React.PropTypes.string,
-            history: React.PropTypes.object
-        }),
-        sidebar: React.PropTypes.shape({
-            channels: React.PropTypes.array,
-            directMessages: React.PropTypes.array
+            history: React.PropTypes.object,
+            sidebar: React.PropTypes.shape({
+                channels: React.PropTypes.array,
+                directMessages: React.PropTypes.array
+            })
         }),
         username: React.PropTypes.string
     }),
     users: React.PropTypes.object
-};
-
-Socket.defaultProps = {
-    messages: {},
-    user: {
-        isAuthenticated: false,
-        rooms: {
-            active: defaultRoom
-        },
-        sidebar: {
-            channels: [defaultRoom],
-            directMessages: []
-        }
-    },
-    users: {}
 };
 
 function mapStateToProps(state) {
