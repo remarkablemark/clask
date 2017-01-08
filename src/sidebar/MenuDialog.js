@@ -5,30 +5,27 @@
  */
 import React from 'react';
 import Dialog from 'material-ui/Dialog';
-import { CHANNELS_TYPE } from './helpers';
 
 /**
  * MenuDialog component.
  */
-export default class MenuDialog extends React.Component {
-    render() {
-        const {
-            onRequestClose,
-            open,
-            type
-        } = this.props;
+export default function MenuDialog(props) {
+    const {
+        onRequestClose,
+        open,
+        title
+    } = props;
 
-        const title = type === CHANNELS_TYPE ? 'CHANNELS' : 'DIRECT MESSAGES';
-
-        return (
-            <Dialog title={title} open={open} onRequestClose={onRequestClose}>
-            </Dialog>
-        );
-    }
+    return (
+        <Dialog title={title} open={open} onRequestClose={onRequestClose}>
+            {props.children}
+        </Dialog>
+    );
 }
 
 MenuDialog.propTypes = {
+    children: React.PropTypes.node,
     onRequestClose: React.PropTypes.func,
     open: React.PropTypes.bool,
-    type: React.PropTypes.string
+    title: React.PropTypes.string
 };

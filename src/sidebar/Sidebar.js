@@ -81,7 +81,7 @@ export default class Sidebar extends React.Component {
                     <MenuDialog
                         onRequestClose={this._handleDialogClose}
                         open={isDialogOpen}
-                        type={dialogType}
+                        title={dialogType === CHANNELS_TYPE ? 'CHANNELS' : 'DIRECT MESSAGES'}
                     />
                 )}
             </Drawer>
