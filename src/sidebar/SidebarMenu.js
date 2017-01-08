@@ -45,10 +45,10 @@ const rightIcon = (
  */
 export default function SidebarMenu(props) {
     const {
-        activeItem,
-        itemPrefix,
-        items,
+        activeRoom,
         onClick,
+        roomIds,
+        roomPrefix,
         rooms,
         title
     } = props;
@@ -62,16 +62,16 @@ export default function SidebarMenu(props) {
                 onClick={onClick}
             />
 
-            {_.map(items, (item, index) => {
+            {_.map(roomIds, (roomId) => {
                 const style = (
-                    item === activeItem ?
+                    roomId === activeRoom ?
                     activeMenuStyle :
                     menuItemStyle
                 );
                 return (
-                    <MenuItem style={style} key={index}>
-                        {itemPrefix}
-                        {rooms[item].name}
+                    <MenuItem style={style} key={roomId}>
+                        {roomPrefix}
+                        {rooms[roomId].name}
                     </MenuItem>
                 );
             })}
@@ -80,10 +80,10 @@ export default function SidebarMenu(props) {
 }
 
 SidebarMenu.propTypes = {
-    activeItem: React.PropTypes.string,
-    itemPrefix: React.PropTypes.node,
-    items: React.PropTypes.array,
+    activeRoom: React.PropTypes.string,
     onClick: React.PropTypes.func,
+    roomIds: React.PropTypes.array,
+    roomPrefix: React.PropTypes.node,
     rooms: React.PropTypes.object,
     title: React.PropTypes.string
 };

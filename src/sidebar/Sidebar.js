@@ -59,19 +59,19 @@ export default class Sidebar extends React.Component {
             <Drawer open={true} width={leftNavWidth}>
                 {/* channels */}
                 <SidebarMenu
-                    activeItem={activeRoom}
-                    itemPrefix='# '
-                    items={sidebar[CHANNELS_TYPE]}
+                    activeRoom={activeRoom}
                     onClick={this._handleMenuClick.bind(this, CHANNELS_TYPE)}
+                    roomIds={sidebar[CHANNELS_TYPE]}
+                    roomPrefix='# '
                     rooms={rooms}
                     title='CHANNELS'
                 />
 
                 {/* direct messages */}
                 <SidebarMenu
-                    activeItem={activeRoom}
-                    items={sidebar[DIRECT_MESSAGES_TYPE]}
+                    activeRoom={activeRoom}
                     onClick={this._handleMenuClick.bind(this, DIRECT_MESSAGES_TYPE)}
+                    roomIds={sidebar[DIRECT_MESSAGES_TYPE]}
                     rooms={rooms}
                     title='DIRECT MESSAGES'
                 />
