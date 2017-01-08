@@ -15,9 +15,13 @@ const roomSchema = new mongoose.Schema({
         unique: true,
         default: generateId
     },
-    // defined for channel
-    // undefined for direct message
-    name: String,
+    // undefined = direct message
+    // defined = channel
+    name: {
+        type: String,
+        sparse: true,
+        unique: true
+    },
     _users: [
         {
             type: String,
