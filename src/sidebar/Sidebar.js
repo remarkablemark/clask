@@ -4,7 +4,6 @@
  * Module dependencies.
  */
 import React from 'react';
-import _ from 'lodash';
 
 // components
 import Drawer from 'material-ui/Drawer';
@@ -58,23 +57,26 @@ export default class Sidebar extends React.Component {
 
         return (
             <Drawer open={true} width={leftNavWidth}>
-                {/* menus */}
-                {_.map([CHANNELS_TYPE, DIRECT_MESSAGES_TYPE], (roomType) => {
-                    const roomData = sidebar[roomType];
-                    const isChannel = roomType === CHANNELS_TYPE;
-                    return (
-                        <SidebarMenu
-                            activeItem={activeRoom}
-                            itemPrefix={isChannel ? '# ' : null}
-                            items={roomData}
-                            key={roomType}
-                            onClick={this._handleMenuClick.bind(this, roomType)}
-                            rooms={rooms}
-                            title={isChannel ? 'CHANNELS' : 'DIRECT MESSAGES'}
-                        />
-                    );
-                })}
+                {/* channels */}
+                <SidebarMenu
+                    activeItem={activeRoom}
+                    itemPrefix='# '
+                    items={sidebar[CHANNELS_TYPE]}
+                    onClick={this._handleMenuClick.bind(this, CHANNELS_TYPE)}
+                    rooms={rooms}
+                    title='CHANNELS'
+                />
 
+                {/* direct messages */}
+                <SidebarMenu
+                    activeItem={activeRoom}
+                    items={sidebar[DIRECT_MESSAGES_TYPE]}
+                    onClick={this._handleMenuClick.bind(this, DIRECT_MESSAGES_TYPE)}
+                    rooms={rooms}
+                    title='DIRECT MESSAGES'
+                />
+
+                {/* dialog */}
                 {isDialogOpen && (
                     <MenuDialog
                         onRequestClose={this._handleDialogClose}
