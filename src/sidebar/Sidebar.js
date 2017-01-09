@@ -32,9 +32,14 @@ export default class Sidebar extends React.Component {
         this._handleDialogClose = this._handleDialogClose.bind(this);
     }
 
-    _handleMenuClick(type) {
+    /**
+     * Listens to click from menu or button.
+     *
+     * @param {String} dialogType - The dialog type.
+     */
+    _handleClick(dialogType) {
         this.setState({
-            dialogType: type,
+            dialogType,
             isDialogOpen: true
         });
     }
@@ -89,7 +94,7 @@ export default class Sidebar extends React.Component {
                 {/* channels */}
                 <SidebarMenu
                     activeRoom={activeRoom}
-                    onClick={this._handleMenuClick.bind(this, CHANNELS_TYPE)}
+                    onClick={() => this._handleClick(CHANNELS_TYPE)}
                     roomIds={sidebar[CHANNELS_TYPE]}
                     roomPrefix='# '
                     rooms={rooms}
@@ -99,7 +104,7 @@ export default class Sidebar extends React.Component {
                 {/* direct messages */}
                 <SidebarMenu
                     activeRoom={activeRoom}
-                    onClick={this._handleMenuClick.bind(this, DIRECT_MESSAGES_TYPE)}
+                    onClick={() => this._handleClick(DIRECT_MESSAGES_TYPE)}
                     roomIds={sidebar[DIRECT_MESSAGES_TYPE]}
                     rooms={rooms}
                     title='DIRECT MESSAGES'
