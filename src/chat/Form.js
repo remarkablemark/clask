@@ -20,35 +20,37 @@ import {
     buttonWidth,
     formHeight,
     gutter,
-    leftNavWidth
+    sidebarWidth
 } from '../shared/styles';
 
-const styles = {
-    form: {
-        position: 'fixed',
-        right: 0,
-        bottom: 0,
-        left: 0,
-        marginLeft: leftNavWidth,
-        height: formHeight
-    },
-    line: {
-        marginBottom: gutter
-    },
-    container: {
-        position: 'relative',
-        margin: `0 ${gutter}px`
-    },
-    button: {
-        // width is 48px
-        position: 'absolute',
-        left: 0
-    },
-    input: {
-        position: 'absolute',
-        right: 0,
-        left: buttonWidth
-    }
+const formStyle = {
+    position: 'fixed',
+    right: 0,
+    bottom: 0,
+    left: 0,
+    marginLeft: sidebarWidth,
+    height: formHeight
+};
+
+const lineStyle = {
+    marginBottom: gutter
+};
+
+const containerStyle = {
+    position: 'relative',
+    margin: `0 ${gutter}px`
+};
+
+const buttonStyle = {
+    // width is 48px
+    position: 'absolute',
+    left: 0
+};
+
+const inputStyle = {
+    position: 'absolute',
+    right: 0,
+    left: buttonWidth
 };
 
 /**
@@ -96,17 +98,17 @@ export default class Form extends React.Component {
 
     render() {
         return (
-            <form onSubmit={this._handleSubmit} style={styles.form}>
-                <Divider style={styles.line} />
-                <div style={styles.container}>
-                    <div style={styles.button}>
+            <form onSubmit={this._handleSubmit} style={formStyle}>
+                <Divider style={lineStyle} />
+                <div style={containerStyle}>
+                    <div style={buttonStyle}>
                         <IconButton
                             iconClassName='material-icons'
                             type='submit'>
                             add
                         </IconButton>
                     </div>
-                    <div style={styles.input}>
+                    <div style={inputStyle}>
                         <TextField
                             autoComplete='off'
                             autoCorrect='off'

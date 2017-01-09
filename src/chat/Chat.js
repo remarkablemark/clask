@@ -11,14 +11,14 @@ import MessageList from '../messages/MessageList';
 import Form from './Form';
 
 // styles
-import { leftNavWidth } from '../shared/styles';
+import { sidebarWidth } from '../shared/styles';
 const styles = {
     container: {
         height: '100%'
     },
     content: {
         position: 'relative',
-        marginLeft: leftNavWidth,
+        marginLeft: sidebarWidth,
         height: '100%'
     }
 };

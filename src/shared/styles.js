@@ -10,8 +10,8 @@ const styles = {
     dialogPadding: gutter2,
     formHeight: gutter * 4,
     messagePadding: gutter / 3,
-    leftNavWidth: 224,
-    leftNavMenuItemHeight: gutter * 1.5 + 'px'
+    sidebarWidth: 224,
+    sidebarMenuItemHeight: gutter * 1.5 + 'px'
 };
 
 module.exports = styles;

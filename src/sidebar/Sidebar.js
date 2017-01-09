@@ -13,7 +13,7 @@ import MenuDialog from './MenuDialog';
 import RoomFinder from './RoomFinder';
 
 // constants
-import { leftNavWidth } from '../shared/styles';
+import { sidebarWidth } from '../shared/styles';
 import {
     CHANNELS_TYPE,
     DIRECT_MESSAGES_TYPE
@@ -85,7 +85,7 @@ export default class Sidebar extends React.Component {
         }
 
         return (
-            <Drawer open={true} width={leftNavWidth}>
+            <Drawer open={true} width={sidebarWidth}>
                 {/* channels */}
                 <SidebarMenu
                     activeRoom={activeRoom}

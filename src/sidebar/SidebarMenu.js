@@ -13,11 +13,11 @@ import MenuItem from 'material-ui/MenuItem';
 
 // styles
 import { grey300, grey700 } from 'material-ui/styles/colors';
-import { leftNavMenuItemHeight } from '../shared/styles';
+import { sidebarMenuItemHeight } from '../shared/styles';
 
 const menuBaseStyle = {
-    minHeight: leftNavMenuItemHeight,
-    lineHeight: leftNavMenuItemHeight
+    minHeight: sidebarMenuItemHeight,
+    lineHeight: sidebarMenuItemHeight
 };
 
 const menuHeaderStyle = _.assign({}, menuBaseStyle, {
