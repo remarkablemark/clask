@@ -5,11 +5,15 @@
  */
 import React from 'react';
 import AutoComplete from 'material-ui/AutoComplete';
+import RaisedButton from 'material-ui/RaisedButton';
 
 // styles
 import { gutter } from '../shared/styles';
-const style = {
+const autocompleteStyle = {
     marginTop: gutter / 2
+};
+const buttonStyle = {
+    float: 'right'
 };
 
 /**
@@ -18,9 +22,7 @@ const style = {
 export default class RoomFinder extends React.Component {
     constructor() {
         super();
-        this.state = {
-            searchText: ''
-        };
+        this.state = { searchText: '' };
         this._handleUpdateInput = this._handleUpdateInput.bind(this);
     }
 
@@ -30,35 +32,45 @@ export default class RoomFinder extends React.Component {
      * @param {String} searchText - The input value.
      */
     _handleUpdateInput(searchText) {
-        this.setState({
-            searchText
-        });
+        this.setState({ searchText });
     }
 
     render() {
         const {
             dataSource,
-            hintText
+            hintText,
+            onRequestClose
         } = this.props;
 
         return (
-            <AutoComplete
-                dataSource={dataSource}
-                hintText={hintText}
-                searchText={this.state.searchText}
-                onUpdateInput={this._handleUpdateInput}
-                openOnFocus={true}
-                fullWidth={true}
-                style={style}
-                autoFocus
-            />
+            <div>
+                <AutoComplete
+                    dataSource={dataSource}
+                    hintText={hintText}
+                    searchText={this.state.searchText}
+                    onUpdateInput={this._handleUpdateInput}
+                    openOnFocus={true}
+                    fullWidth={true}
+                    style={autocompleteStyle}
+                    autoFocus
+                />
+                <br />
+                <br />
+
+                <RaisedButton
+                    label='Cancel'
+                    onClick={onRequestClose}
+                    style={buttonStyle}
+                />
+            </div>
         );
     }
 }
 
 RoomFinder.propTypes = {
     dataSource: React.PropTypes.array,
-    hintText: React.PropTypes.string
+    hintText: React.PropTypes.string,
+    onRequestClose: React.PropTypes.func
 };
 
 RoomFinder.defaultProps = {

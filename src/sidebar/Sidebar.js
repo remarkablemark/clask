@@ -84,6 +84,7 @@ export default class Sidebar extends React.Component {
                     <RoomFinder
                         dataSource={dataSource}
                         hintText='Find or start a conversation'
+                        onRequestClose={this._handleDialogClose}
                     />
                 </MenuDialog>
             );
