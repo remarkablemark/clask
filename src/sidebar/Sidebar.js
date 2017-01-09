@@ -4,11 +4,13 @@
  * Module dependencies.
  */
 import React from 'react';
+import _ from 'lodash';
 
 // components
 import Drawer from 'material-ui/Drawer';
 import SidebarMenu from './SidebarMenu';
 import MenuDialog from './MenuDialog';
+import RoomFinder from './RoomFinder';
 
 // constants
 import { leftNavWidth } from '../shared/styles';
@@ -47,13 +49,40 @@ export default class Sidebar extends React.Component {
         const {
             activeRoom,
             rooms,
-            sidebar
+            sidebar,
+            users
         } = this.props;
 
-        const {
-            dialogType,
-            isDialogOpen
-        } = this.state;
+        const { isDialogOpen } = this.state;
+        let dialogNode;
+
+        if (isDialogOpen) {
+            const isChannel = this.state.dialogType === CHANNELS_TYPE;
+            const title = isChannel ? 'CHANNELS' : 'DIRECT MESSAGES';
+            const dataSource = isChannel ? _.map(rooms, (value, key) => {
+                return {
+                    text: rooms[key].name,
+                    value: key
+                };
+            }) : _.map(users, (value, key) => {
+                return {
+                    text: users[key].username,
+                    value: key
+                };
+            });
+
+            dialogNode = (
+                <MenuDialog
+                    onRequestClose={this._handleDialogClose}
+                    open={isDialogOpen}
+                    title={title}>
+                    <RoomFinder
+                        dataSource={dataSource}
+                        hintText='Find or start a conversation'
+                    />
+                </MenuDialog>
+            );
+        }
 
         return (
             <Drawer open={true} width={leftNavWidth}>
@@ -77,13 +106,7 @@ export default class Sidebar extends React.Component {
                 />
 
                 {/* dialog */}
-                {isDialogOpen && (
-                    <MenuDialog
-                        onRequestClose={this._handleDialogClose}
-                        open={isDialogOpen}
-                        title={dialogType === CHANNELS_TYPE ? 'CHANNELS' : 'DIRECT MESSAGES'}
-                    />
-                )}
+                {dialogNode}
             </Drawer>
         );
     }
