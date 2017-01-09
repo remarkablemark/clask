@@ -6,6 +6,12 @@
 import React from 'react';
 import AutoComplete from 'material-ui/AutoComplete';
 
+// styles
+import { gutter } from '../shared/styles';
+const style = {
+    marginTop: gutter / 2
+};
+
 /**
  * RoomFinder component.
  */
@@ -43,6 +49,7 @@ export default class RoomFinder extends React.Component {
                 onUpdateInput={this._handleUpdateInput}
                 openOnFocus={true}
                 fullWidth={true}
+                style={style}
                 autoFocus
             />
         );
