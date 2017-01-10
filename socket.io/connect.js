@@ -78,18 +78,18 @@ function connect(io, socket) {
             // send client latest messages
             socket.emit(MESSAGES, messages.reverse());
         });
-    });
 
-    /**
-     * Find all rooms (joined by user).
-     */
-    Room.find({
-        _users: { $in: [userId] }
-    }, roomsProjection, (err, rooms) => {
-        if (err || !rooms) return debug('no rooms found', err);
+        /**
+         * Find rooms (joined by user).
+         */
+        Room.find({
+            _id: { $in: [user.rooms.joined] }
+        }, roomsProjection, (err, rooms) => {
+            if (err || !rooms) return debug('unable to find rooms', err);
 
-        // send client data of joined rooms
-        socket.emit(ROOMS, docsToObj(rooms));
+            // send client data of joined rooms
+            socket.emit(ROOMS, docsToObj(rooms));
+        });
     });
 
     /**

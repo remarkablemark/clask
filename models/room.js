@@ -22,12 +22,6 @@ const roomSchema = new mongoose.Schema({
         sparse: true,
         unique: true
     },
-    _users: [
-        {
-            type: String,
-            ref: 'User'
-        }
-    ],
     creator: {
         type: String,
         ref: 'User'
