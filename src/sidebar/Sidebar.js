@@ -11,14 +11,26 @@ import Drawer from 'material-ui/Drawer';
 import SidebarMenu from './SidebarMenu';
 import MenuDialog from './MenuDialog';
 import RoomFinder from './RoomFinder';
+import CreateChannel from './CreateChannel';
+import RaisedButton from 'material-ui/RaisedButton';
 
 // constants
-import { sidebarWidth } from '../shared/styles';
+import {
+    dialogPadding,
+    sidebarWidth
+} from '../shared/styles';
 import {
     CHANNELS_TYPE,
+    CREATE_CHANNEL_TYPE,
     DIRECT_MESSAGES_TYPE
 } from './helpers';
 import { defaultRoom } from '../../config/constants';
+
+// styles
+const newChannelButtonStyle = {
+    position: 'absolute',
+    right: dialogPadding
+};
 
 /**
  * Sidebar component.
@@ -58,12 +70,28 @@ export default class Sidebar extends React.Component {
             users
         } = this.props;
 
-        const { isDialogOpen } = this.state;
+        const { dialogType, isDialogOpen } = this.state;
         let dialogNode;
 
         if (isDialogOpen) {
-            const isChannel = this.state.dialogType === CHANNELS_TYPE;
-            const title = isChannel ? 'CHANNELS' : 'DIRECT MESSAGES';
+            const isChannel = dialogType !== DIRECT_MESSAGES_TYPE;
+            let title = !isChannel && 'DIRECT MESSAGES';
+            if (dialogType === CHANNELS_TYPE) {
+                title = (
+                    <div>
+                        CHANNELS
+                        <RaisedButton
+                            label='NEW CHANNEL'
+                            primary={true}
+                            style={newChannelButtonStyle}
+                            onClick={() => this._handleClick(CREATE_CHANNEL_TYPE)}
+                        />
+                    </div>
+                );
+            } else if (dialogType === CREATE_CHANNEL_TYPE) {
+                title = 'CREATE CHANNEL';
+            }
+
             const dataSource = isChannel ? _.map(rooms, (value, key) => {
                 return {
                     text: rooms[key].name,
@@ -81,11 +109,17 @@ export default class Sidebar extends React.Component {
                     onRequestClose={this._handleDialogClose}
                     open={isDialogOpen}
                     title={title}>
-                    <RoomFinder
-                        dataSource={dataSource}
-                        hintText='Find or start a conversation'
-                        onRequestClose={this._handleDialogClose}
-                    />
+                    {dialogType === CREATE_CHANNEL_TYPE ? (
+                        <CreateChannel
+                            onRequestClose={this._handleDialogClose}
+                        />
+                    ) : (
+                        <RoomFinder
+                            dataSource={dataSource}
+                            hintText='Find or start a conversation'
+                            onRequestClose={this._handleDialogClose}
+                        />
+                    )}
                 </MenuDialog>
             );
         }

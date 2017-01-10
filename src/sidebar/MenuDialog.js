@@ -43,5 +43,5 @@ MenuDialog.propTypes = {
     children: React.PropTypes.node,
     onRequestClose: React.PropTypes.func,
     open: React.PropTypes.bool,
-    title: React.PropTypes.string
+    title: React.PropTypes.node
 };
