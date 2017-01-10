@@ -3,12 +3,16 @@
 /**
  * Socket events.
  */
-const events = {
-    'GET_MESSAGES': 'GET_MESSAGES',
-    MESSAGES: 'MESSAGES',
-    ROOMS: 'ROOMS',
-    USER: 'USER',
-    USERS: 'USERS'
-};
+const GET_MESSAGES = 'GET_MESSAGES';
+const MESSAGES = 'MESSAGES';
+const ROOMS = 'ROOMS';
+const USER = 'USER';
+const USERS = 'USERS';
 
-module.exports = events;
+module.exports = {
+    GET_MESSAGES,
+    MESSAGES,
+    ROOMS,
+    USER,
+    USERS
+};
