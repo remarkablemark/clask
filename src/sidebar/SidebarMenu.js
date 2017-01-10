@@ -12,8 +12,6 @@ import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import MenuDialog from './MenuDialog';
-import RoomFinder from './RoomFinder';
-import CreateChannel from './CreateChannel';
 
 // constants
 import { grey300, grey700 } from 'material-ui/styles/colors';
@@ -22,10 +20,10 @@ import {
     sidebarMenuItemHeight
 } from '../shared/styles';
 import {
-    CHANNELS_TYPE,
     CREATE_CHANNEL_TYPE,
+    CHANNELS_TYPE,
     DIRECT_MESSAGES_TYPE
-} from './helpers';
+}  from './helpers';
 
 // styles
 const menuBaseStyle = {
@@ -62,10 +60,10 @@ const rightIcon = (
  * SidebarMenu component.
  */
 export default class SidebarMenu extends React.Component {
-    constructor() {
+    constructor(props) {
         super();
         this.state = {
-            dialogType: '',
+            dialogType: props.type,
             isDialogOpen: false
         };
         this._closeDialog = this._closeDialog.bind(this);
@@ -102,12 +100,13 @@ export default class SidebarMenu extends React.Component {
         } = this.props;
 
         const { dialogType, isDialogOpen } = this.state;
-        let dialogNode;
-
+        let dialogTitle;
         if (isDialogOpen) {
-            const isChannel = dialogType !== DIRECT_MESSAGES_TYPE;
-            let dialogTitle = !isChannel && 'DIRECT MESSAGES';
-            if (dialogType === CHANNELS_TYPE) {
+            if (dialogType === DIRECT_MESSAGES_TYPE) {
+                dialogTitle = 'DIRECT MESSAGES';
+            } else if (dialogType === CREATE_CHANNEL_TYPE) {
+                dialogTitle = 'CREATE CHANNEL';
+            } else if (dialogType === CHANNELS_TYPE) {
                 dialogTitle = (
                     <div>
                         CHANNELS
@@ -119,40 +118,7 @@ export default class SidebarMenu extends React.Component {
                         />
                     </div>
                 );
-            } else if (dialogType === CREATE_CHANNEL_TYPE) {
-                dialogTitle = 'CREATE CHANNEL';
             }
-
-            const dataSource = isChannel ? _.map(rooms, (value, key) => {
-                return {
-                    text: rooms[key].name,
-                    value: key
-                };
-            }) : _.map(users, (value, key) => {
-                return {
-                    text: users[key].username,
-                    value: key
-                };
-            });
-
-            dialogNode = (
-                <MenuDialog
-                    onRequestClose={this._closeDialog}
-                    open={isDialogOpen}
-                    title={dialogTitle}>
-                    {dialogType === CREATE_CHANNEL_TYPE ? (
-                        <CreateChannel
-                            onRequestClose={this._closeDialog}
-                        />
-                    ) : (
-                        <RoomFinder
-                            dataSource={dataSource}
-                            hintText='Find or start a conversation'
-                            onRequestClose={this._closeDialog}
-                        />
-                    )}
-                </MenuDialog>
-            );
         }
 
         return (
@@ -181,7 +147,16 @@ export default class SidebarMenu extends React.Component {
                 })}
 
                 {/* dialog */}
-                {dialogNode}
+                {isDialogOpen && (
+                    <MenuDialog
+                        title={dialogTitle}
+                        open={isDialogOpen}
+                        onRequestClose={this._closeDialog}
+                        type={dialogType}
+                        rooms={rooms}
+                        users={users}
+                    />
+                )}
             </Menu>
         );
     }
