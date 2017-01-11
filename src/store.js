@@ -6,6 +6,7 @@
 import { combineReducers, createStore } from 'redux';
 import messages from './messages/reducer';
 import rooms from './rooms/reducer';
+import socket from './socket/reducer';
 import user from './user/reducer';
 import users from './users/reducer';
 
@@ -15,6 +16,7 @@ import users from './users/reducer';
 const reducer = combineReducers({
     messages,
     rooms,
+    socket,
     user,
     users
 });
