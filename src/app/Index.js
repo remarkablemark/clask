@@ -5,7 +5,7 @@
  */
 import React from 'react';
 import Redirect from '../shared/Redirect';
-import Socket from '../chat/Socket';
+import Socket from '../socket/Socket';
 
 /**
  * Index component.

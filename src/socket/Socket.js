@@ -8,7 +8,7 @@ import { browserHistory } from 'react-router';
 import _ from 'lodash';
 
 // components
-import Chat from './Chat';
+import Chat from '../chat/Chat';
 
 // redux
 import { connect } from 'react-redux';
