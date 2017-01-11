@@ -21,16 +21,21 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        trim: true
     },
-    name: String,
+    name: {
+        type: String,
+        trim: true
+    },
     password: {
         type: String,
         required: true
     },
     username: {
         type: String,
-        unique: true
+        unique: true,
+        trim: true
     },
     created: {
         type: Date,

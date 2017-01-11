@@ -20,9 +20,10 @@ const roomSchema = new mongoose.Schema({
     name: {
         type: String,
         sparse: true,
-        unique: true
+        unique: true,
+        trim: true
     },
-    creator: {
+    _creator: {
         type: String,
         ref: 'User'
     },
