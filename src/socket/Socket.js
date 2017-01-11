@@ -128,7 +128,6 @@ class Socket extends React.Component {
                 rooms={rooms}
                 sidebar={userRooms.sidebar}
                 socket={this.socket}
-                userId={user._id}
                 users={users}
             />
         );

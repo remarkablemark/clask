@@ -100,6 +100,9 @@ class Form extends React.Component {
     }
 
     render() {
+        const { activeRoom, userId }  = this.props;
+        if (!activeRoom || !userId) return null;
+
         return (
             <form onSubmit={this._handleSubmit} style={formStyle}>
                 <Divider style={lineStyle} />
@@ -137,8 +140,15 @@ Form.propTypes = {
 };
 
 function mapStateToProps(state) {
+    const { messages, socket, user } = state;
+    const userRooms = _.get(user, 'rooms', {});
+    const activeRoom = userRooms.active;
+
     return {
-        socket: state.socket
+        activeRoom,
+        hasMessages: _.get(messages, activeRoom, []).length !== 0,
+        socket: socket,
+        userId: user._id
     };
 }
 
