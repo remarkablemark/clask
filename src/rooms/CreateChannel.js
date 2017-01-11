@@ -45,6 +45,23 @@ class CreateChannel extends React.Component {
         });
     }
 
+    componentDidMount() {
+        const { onRequestClose, socket } = this.props;
+        socket.on(CREATE_ROOM, ({ success, message }) => {
+            if (success) {
+                onRequestClose();
+            } else {
+                this.setState({
+                    errorText: message
+                });
+            }
+        });
+    }
+
+    componentWillUnmount() {
+        this.props.socket.off(CREATE_ROOM);
+    }
+
     /**
      * Registers and validates input changes.
      *
