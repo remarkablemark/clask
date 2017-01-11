@@ -29,7 +29,7 @@ const messageOptions = {
     limit: require('../config/constants').messagesLimit,
     sort: { created: -1 }
 };
-const roomsProjection = { name: 1, _users: 1 };
+const roomsProjection = { name: 1 };
 const emptyQuery = {};
 const usersProjection = { username: 1 };
 
@@ -83,12 +83,13 @@ function connect(io, socket) {
          * Find rooms (joined by user).
          */
         Room.find({
-            _id: { $in: [user.rooms.joined] }
+            _id: { $in: user.rooms.joined }
         }, roomsProjection, (err, rooms) => {
             if (err || !rooms) return debug('unable to find rooms', err);
 
             // send client data of joined rooms
             socket.emit(ROOMS, docsToObj(rooms));
+            debug(ROOMS, rooms);
         });
     });
 
