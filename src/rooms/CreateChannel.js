@@ -53,8 +53,12 @@ class CreateChannel extends React.Component {
      */
     _handleChange(event, name) {
         let errorText;
-        if (!/^\w+$/.test(name)) {
+        if (!_.trim(name)) {
+            errorText = 'Name must not be blank.';
+        } else if (!/^\w+$/.test(name)) {
             errorText = 'Name must be alphanumeric.';
+        } else if (this.props.rooms.indexOf(name) !== -1) {
+            errorText = 'Name is already taken.';
         }
         this.setState({
             errorText,
@@ -82,13 +86,8 @@ class CreateChannel extends React.Component {
         const { socket, userId } = this.props;
         const { errorText, name, isPublic } = this.state;
 
-        // validate
+        // validation must pass
         if (errorText) return;
-        else if (!_.trim(name)) {
-            return this.setState({
-                errorText: 'Name cannot be blank.'
-            });
-        }
 
         socket.emit(CREATE_ROOM, {
             name,
@@ -144,12 +143,16 @@ class CreateChannel extends React.Component {
 
 CreateChannel.propTypes = {
     onRequestClose: React.PropTypes.func,
+    rooms: React.PropTypes.array,
     socket: React.PropTypes.object,
     userId: React.PropTypes.string
 };
 
 function mapStateToProps(state) {
     return {
+        rooms: _.map(state.rooms, (value, key) => {
+            return value.name;
+        }),
         socket: state.socket,
         userId: state.user._id
     };
