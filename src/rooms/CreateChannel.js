@@ -31,26 +31,39 @@ class CreateChannel extends React.Component {
     constructor() {
         super();
         this.state = {
+            errorText: '',
             isPublic: false,
             name: ''
         };
-        this._handleChange = this._handleChange.bind(this);
-        this._handleToggle = this._handleToggle.bind(this);
-        this._handleSubmit = this._handleSubmit.bind(this);
+        // bind internal methods
+        _.forEach([
+            '_handleChange',
+            '_handleSubmit',
+            '_handleToggle'
+        ], (methodName) => {
+            this[methodName] = this[methodName].bind(this);
+        });
     }
 
     /**
-     * Listens to input change.
+     * Registers and validates input changes.
      *
      * @param {Object} event - The event.
      * @param {String} name  - The input value.
      */
     _handleChange(event, name) {
-        this.setState({ name });
+        let errorText;
+        if (!/^\w+$/.test(name)) {
+            errorText = 'Name must be alphanumeric.';
+        }
+        this.setState({
+            errorText,
+            name
+        });
     }
 
     /**
-     * Listens to input change.
+     * Toggles `isPublic`.
      *
      * @param {Object} event    - The event.
      * @param {String} isPublic - The toggle value.
@@ -67,7 +80,15 @@ class CreateChannel extends React.Component {
     _handleSubmit(event) {
         event.preventDefault();
         const { socket, userId } = this.props;
-        const { name, isPublic } = this.state;
+        const { errorText, name, isPublic } = this.state;
+
+        // validate
+        if (errorText) return;
+        else if (!_.trim(name)) {
+            return this.setState({
+                errorText: 'Name cannot be blank.'
+            });
+        }
 
         socket.emit(CREATE_ROOM, {
             name,
@@ -77,12 +98,19 @@ class CreateChannel extends React.Component {
     }
 
     render() {
+        const {
+            errorText,
+            isPublic,
+            name
+        } = this.state;
+
         return (
             <form onSubmit={this._handleSubmit}>
                 <TextField
                     floatingLabelText='Channel Name'
+                    value={name}
+                    errorText={errorText}
                     fullWidth={true}
-                    value={this.state.name}
                     onChange={this._handleChange}
                     autoFocus
                 />
@@ -93,7 +121,7 @@ class CreateChannel extends React.Component {
                     label='Public (anyone can join)'
                     labelPosition='right'
                     onToggle={this._handleToggle}
-                    toggled={this.state.isPublic}
+                    toggled={isPublic}
                 />
                 <br />
                 <br />
