@@ -12,6 +12,7 @@ const { USER } = require('./events');
 const connect = require('./connect');
 const disconnect = require('./disconnect');
 const messages = require('./messages');
+const rooms = require('./rooms');
 
 /**
  * Socket.IO server middleware.
@@ -45,8 +46,11 @@ function io(server) {
         // perform initial actions on connect
         connect(io, socket);
 
-        // event listeners for messages
+        // set up event listeners for messages
         messages(io, socket);
+
+        // set up event listeners for rooms
+        rooms(io, socket);
 
         // handle disconnect event
         disconnect(socket);
