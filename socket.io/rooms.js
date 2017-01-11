@@ -9,11 +9,13 @@ debug.socket = require('./helpers').debug;
 
 // mongoose
 const Room = require('../models/room');
+const User = require('../models/user');
 
 // constants
 const {
     CREATE_ROOM,
-    ROOMS
+    ROOMS,
+    USER
 }  = require('./events');
 
 /**
@@ -30,20 +32,41 @@ function rooms(io, socket) {
         // save to database
         new Room(data).save((err, room) => {
             if (err) return debug.db('failed to save room', err);
+            const roomId = room._id;
 
-            // send creator success or failure message
+            // reformat before emitting new room to all clients
+            io.emit(ROOMS, {
+                [roomId]: {
+                    name: room.name
+                }
+            });
+            debug.socket(CREATE_ROOM, room);
+
+            // send user success or failure message
             socket.emit(CREATE_ROOM, {
                 success: true,
                 message: 'New channel created.'
             });
 
-            // reformat before emitting new room to all clients
-            io.emit(ROOMS, {
-                [room._id]: {
-                    name: room.name
+            // update user
+            User.findByIdAndUpdate(socket.userId, {
+                $push: {
+                    'rooms.joined': roomId,
+                    'rooms.sidebar.channels': roomId
+                },
+                $set: {
+                    'rooms.active': roomId
                 }
+            }, { new: true }, (err, user) => {
+                if (err) return debug.db('failed to update user', err);
+                debug.socket('user rooms', user);
+
+                // update user rooms
+                socket.emit(USER, {
+                    rooms: user.rooms
+                });
+                debug.socket(USER, user.rooms);
             });
-            debug.socket(CREATE_ROOM, room);
         });
     });
 }
