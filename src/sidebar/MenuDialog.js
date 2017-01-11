@@ -6,8 +6,8 @@
 import React from 'react';
 import _ from 'lodash';
 import Dialog from 'material-ui/Dialog';
-import RoomFinder from './RoomFinder';
 import CreateChannel from '../rooms/CreateChannel';
+import RoomFinder from '../rooms/RoomFinder';
 
 // constants
 import {
