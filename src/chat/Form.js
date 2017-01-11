@@ -12,6 +12,9 @@ import Divider from 'material-ui/Divider';
 import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
 
+// redux
+import { connect } from 'react-redux';
+
 // socket
 import { MESSAGES } from '../../socket.io/events';
 
@@ -56,7 +59,7 @@ const inputStyle = {
 /**
  * Form component.
  */
-export default class Form extends React.Component {
+class Form extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -132,3 +135,13 @@ Form.propTypes = {
     socket: React.PropTypes.object,
     userId: React.PropTypes.string
 };
+
+function mapStateToProps(state) {
+    return {
+        socket: state.socket
+    };
+}
+
+export default connect(
+    mapStateToProps
+)(Form);

@@ -32,7 +32,6 @@ export default function Chat(props) {
         messages,
         rooms,
         sidebar,
-        socket,
         userId,
         users
     } = props;
@@ -48,13 +47,11 @@ export default function Chat(props) {
             <div style={styles.content}>
                 <MessageList
                     messages={messages}
-                    socket={socket}
                     users={users}
                 />
                 <Form
                     activeRoom={activeRoom}
                     hasMessages={messages.length !== 0}
-                    socket={socket}
                     userId={userId}
                 />
             </div>
@@ -70,7 +67,6 @@ Chat.propTypes = {
         channels: React.PropTypes.array,
         directMessages: React.PropTypes.array
     }),
-    socket: React.PropTypes.object,
     userId: React.PropTypes.string,
     users: React.PropTypes.object
 };

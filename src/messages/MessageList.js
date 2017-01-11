@@ -12,6 +12,9 @@ import DayDivider from './DayDivider';
 import LoadMore from './LoadMore';
 import Message from './Message';
 
+// redux
+import { connect } from 'react-redux';
+
 // constants
 import { messagesLimit } from '../../config/constants';
 import { GET_MESSAGES } from '../../socket.io/events';
@@ -43,7 +46,7 @@ function scrollIntoView(id) {
 /**
  * MessageList component.
  */
-export default class MessageList extends React.Component {
+class MessageList extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -161,3 +164,13 @@ MessageList.propTypes = {
     socket: React.PropTypes.object,
     users: React.PropTypes.object
 };
+
+function mapStateToProps(state) {
+    return {
+        socket: state.socket
+    };
+}
+
+export default connect(
+    mapStateToProps
+)(MessageList);
