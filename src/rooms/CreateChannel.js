@@ -9,6 +9,12 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import Toggle from 'material-ui/Toggle';
 
+// redux
+import { connect } from 'react-redux';
+
+// constants
+import { CREATE_ROOM } from '../../socket.io/events';
+
 // styles
 import { gutter } from '../shared/styles';
 const buttonStyle = {
@@ -21,7 +27,7 @@ const lastButtonStyle = _.assign({
 /**
  * CreateChannel component.
  */
-export default class CreateChannel extends React.Component {
+class CreateChannel extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -60,6 +66,14 @@ export default class CreateChannel extends React.Component {
      */
     _handleSubmit(event) {
         event.preventDefault();
+        const { socket, userId } = this.props;
+        const { name, isPublic } = this.state;
+
+        socket.emit(CREATE_ROOM, {
+            name,
+            isPublic,
+            _creator: userId
+        });
     }
 
     render() {
@@ -101,5 +115,18 @@ export default class CreateChannel extends React.Component {
 }
 
 CreateChannel.propTypes = {
-    onRequestClose: React.PropTypes.func
+    onRequestClose: React.PropTypes.func,
+    socket: React.PropTypes.object,
+    userId: React.PropTypes.string
 };
+
+function mapStateToProps(state) {
+    return {
+        socket: state.socket,
+        userId: state.user._id
+    };
+}
+
+export default connect(
+    mapStateToProps
+)(CreateChannel);
