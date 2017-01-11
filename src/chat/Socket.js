@@ -15,12 +15,13 @@ import { connect } from 'react-redux';
 import {
     removeAll,
     setRooms,
+    setSocket,
     setUser,
     setUsers,
     updateMessages
 } from '../actions';
 
-// constants
+// socket events
 import {
     MESSAGES,
     ROOMS,
@@ -36,18 +37,20 @@ class Socket extends React.Component {
      * Connect to socket and listen to socket events.
      */
     componentDidMount() {
-        window.requirejs(['io'], io => {
-            const socket = io.connect();
-            this.socket = socket;
-            this.events = [];
-
+        window.requirejs(['io'], (io) => {
             const {
                 removeAll,
                 setRooms,
                 setUser,
                 setUsers,
+                setSocket,
                 updateMessages
             } = this.props;
+
+            const socket = io.connect();
+            setSocket(socket);
+            this.socket = socket;
+            this.events = [];
 
             /**
              * Set `user` when client connects.
@@ -137,9 +140,9 @@ Socket.propTypes = {
     removeAll: React.PropTypes.func,
     rooms: React.PropTypes.object,
     setRooms: React.PropTypes.func,
+    setSocket: React.PropTypes.func,
     setUser: React.PropTypes.func,
     setUsers: React.PropTypes.func,
-    socket: React.PropTypes.object,
     updateMessages: React.PropTypes.func,
     user: React.PropTypes.shape({
         _id: React.PropTypes.string,
@@ -173,6 +176,9 @@ function mapDispatchToProps(dispatch) {
         },
         setRooms: (rooms) => {
             dispatch(setRooms(rooms));
+        },
+        setSocket: (socket) => {
+            dispatch(setSocket(socket));
         },
         setUser: (user) => {
             dispatch(setUser(user));
