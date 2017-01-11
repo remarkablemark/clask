@@ -57,7 +57,7 @@ class Socket extends React.Component {
              */
             socket.on(USER, (user) => {
                 // disconnect user if unauthenticated
-                if (!user.isAuthenticated) {
+                if (user.isAuthenticated === false) {
                     removeAll();
                     return browserHistory.push('/signin');
                 }
