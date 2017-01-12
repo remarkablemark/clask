@@ -61,7 +61,27 @@ class MessageList extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        const { messages } = this.props;
+        const {
+            activeRoom,
+            isRoomLoaded,
+            messages,
+            socket
+        } = this.props;
+
+        // get messages if switched to a different room
+        if (!_.isUndefined(prevProps.activeRoom) &&
+            activeRoom !== prevProps.activeRoom &&
+            !isRoomLoaded) {
+            if (typeof socket.emit === 'function') {
+                socket.emit(GET_MESSAGES, {
+                    before: _.get(messages, '[0].created', _.now()),
+                    roomId: activeRoom
+                });
+                this.setState({
+                    isLoadingMessages: true
+                });
+            }
+        }
 
         const messagesLenDiff = (
             messages.length - prevProps.messages.length
@@ -162,6 +182,7 @@ class MessageList extends React.Component {
 
 MessageList.propTypes = {
     activeRoom: React.PropTypes.string,
+    isRoomLoaded: React.PropTypes.bool,
     messages: React.PropTypes.array,
     socket: React.PropTypes.object,
     users: React.PropTypes.object
@@ -177,6 +198,7 @@ function mapStateToProps(state) {
     const activeMessages = messages[activeRoom];
     return {
         activeRoom,
+        isRoomLoaded: !_.isUndefined(activeMessages),
         messages: activeMessages,
         socket,
         users
