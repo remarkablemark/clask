@@ -27,21 +27,9 @@ const styles = {
  * Chat component.
  */
 export default function Chat(props) {
-    const {
-        activeRoom,
-        rooms,
-        sidebar,
-        users
-    } = props;
-
     return (
         <div style={styles.container}>
-            <Sidebar
-                activeRoom={activeRoom}
-                rooms={rooms}
-                sidebar={sidebar}
-                users={users}
-            />
+            <Sidebar />
             <div style={styles.content}>
                 <MessageList />
                 <Form />
@@ -49,13 +37,3 @@ export default function Chat(props) {
         </div>
     );
 }
-
-Chat.propTypes = {
-    activeRoom: React.PropTypes.string,
-    rooms: React.PropTypes.object,
-    sidebar: React.PropTypes.shape({
-        channels: React.PropTypes.array,
-        directMessages: React.PropTypes.array
-    }),
-    users: React.PropTypes.object
-};

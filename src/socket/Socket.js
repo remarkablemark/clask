@@ -104,64 +104,18 @@ class Socket extends React.Component {
     }
 
     render() {
-        const {
-            rooms,
-            user,
-            users
-        } = this.props;
-
-        const userRooms = _.get(user, 'rooms', {});
-        const activeRoom = userRooms.active;
-
-        // render only when loaded
-        if (!user.isAuthenticated) return null;
-        if (_.isEmpty(users)) return null;
-        if (_.isEmpty(rooms)) return null;
-        if (!activeRoom) return null;
-
-        return (
-            <Chat
-                activeRoom={activeRoom}
-                rooms={rooms}
-                sidebar={userRooms.sidebar}
-                socket={this.socket}
-                users={users}
-            />
-        );
+        return <Chat />;
     }
 }
 
 Socket.propTypes = {
     removeAll: React.PropTypes.func,
-    rooms: React.PropTypes.object,
     setRooms: React.PropTypes.func,
     setSocket: React.PropTypes.func,
     setUser: React.PropTypes.func,
     setUsers: React.PropTypes.func,
-    updateMessages: React.PropTypes.func,
-    user: React.PropTypes.shape({
-        _id: React.PropTypes.string,
-        isAuthenticated: React.PropTypes.bool,
-        rooms: React.PropTypes.shape({
-            active: React.PropTypes.string,
-            history: React.PropTypes.object,
-            sidebar: React.PropTypes.shape({
-                channels: React.PropTypes.array,
-                directMessages: React.PropTypes.array
-            })
-        }),
-        username: React.PropTypes.string
-    }),
-    users: React.PropTypes.object
+    updateMessages: React.PropTypes.func
 };
-
-function mapStateToProps(state) {
-    return {
-        rooms: state.rooms,
-        user: state.user,
-        users: state.users
-    };
-}
 
 function mapDispatchToProps(dispatch) {
     return {
@@ -187,6 +141,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(
-    mapStateToProps,
+    null,
     mapDispatchToProps
 )(Socket);

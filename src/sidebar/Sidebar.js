@@ -4,10 +4,14 @@
  * Module dependencies.
  */
 import React from 'react';
+import _ from 'lodash';
 
 // components
 import Drawer from 'material-ui/Drawer';
 import SidebarMenu from './SidebarMenu';
+
+// redux
+import { connect } from 'react-redux';
 
 // constants
 import { sidebarWidth } from '../shared/styles';
@@ -20,13 +24,15 @@ import { defaultRoom } from '../../config/constants';
 /**
  * Sidebar component.
  */
-export default function Sidebar(props) {
+function Sidebar(props) {
     const {
         activeRoom,
         rooms,
         sidebar,
         users
     } = props;
+
+    if (!activeRoom || _.isEmpty(rooms) || _.isEmpty(users)) return null;
 
     return (
         <Drawer open={true} width={sidebarWidth}>
@@ -70,3 +76,20 @@ Sidebar.defaultProps = {
         directMessages: []
     }
 };
+
+function mapStateToProps(state) {
+    const { rooms, user, users } = state;
+    const activeRoom = _.get(user, 'rooms.active');
+    const sidebar = _.get(user, 'rooms.sidebar');
+
+    return {
+        activeRoom,
+        rooms,
+        sidebar,
+        users
+    };
+}
+
+export default connect(
+    mapStateToProps
+)(Sidebar);
