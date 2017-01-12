@@ -13,7 +13,7 @@ import Toggle from 'material-ui/Toggle';
 import { connect } from 'react-redux';
 
 // constants
-import { CREATE_ROOM } from '../../socket.io/events';
+import { NEW_ROOM } from '../../socket.io/events';
 
 // styles
 import { gutter } from '../shared/styles';
@@ -47,7 +47,7 @@ class CreateChannel extends React.Component {
 
     componentDidMount() {
         const { onRequestClose, socket } = this.props;
-        socket.on(CREATE_ROOM, ({ success, message }) => {
+        socket.on(NEW_ROOM, ({ success, message }) => {
             if (success) {
                 onRequestClose();
             } else {
@@ -59,7 +59,7 @@ class CreateChannel extends React.Component {
     }
 
     componentWillUnmount() {
-        this.props.socket.off(CREATE_ROOM);
+        this.props.socket.off(NEW_ROOM);
     }
 
     /**
@@ -106,7 +106,7 @@ class CreateChannel extends React.Component {
         // validation must pass
         if (errorText) return;
 
-        socket.emit(CREATE_ROOM, {
+        socket.emit(NEW_ROOM, {
             name,
             isPublic,
             _creator: userId

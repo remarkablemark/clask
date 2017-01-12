@@ -13,7 +13,7 @@ const User = require('../models/user');
 
 // constants
 const {
-    CREATE_ROOM,
+    NEW_ROOM,
     ROOMS,
     USER
 }  = require('./events');
@@ -28,7 +28,7 @@ function rooms(io, socket) {
     /**
      * Create new room.
      */
-    socket.on(CREATE_ROOM, (data) => {
+    socket.on(NEW_ROOM, (data) => {
         // save to database
         new Room(data).save((err, room) => {
             if (err) return debug.db('failed to save room', err);
@@ -40,10 +40,10 @@ function rooms(io, socket) {
                     name: room.name
                 }
             });
-            debug.socket(CREATE_ROOM, room);
+            debug.socket(NEW_ROOM, room);
 
             // send user success or failure message
-            socket.emit(CREATE_ROOM, {
+            socket.emit(NEW_ROOM, {
                 success: true,
                 message: 'New channel created.'
             });
