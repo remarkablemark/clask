@@ -105,7 +105,6 @@ class Socket extends React.Component {
 
     render() {
         const {
-            messages,
             rooms,
             user,
             users
@@ -113,7 +112,6 @@ class Socket extends React.Component {
 
         const userRooms = _.get(user, 'rooms', {});
         const activeRoom = userRooms.active;
-        const activeMessages = _.get(messages, activeRoom, []);
 
         // render only when loaded
         if (!user.isAuthenticated) return null;
@@ -124,7 +122,6 @@ class Socket extends React.Component {
         return (
             <Chat
                 activeRoom={activeRoom}
-                messages={activeMessages}
                 rooms={rooms}
                 sidebar={userRooms.sidebar}
                 socket={this.socket}
@@ -135,7 +132,6 @@ class Socket extends React.Component {
 }
 
 Socket.propTypes = {
-    messages: React.PropTypes.object,
     removeAll: React.PropTypes.func,
     rooms: React.PropTypes.object,
     setRooms: React.PropTypes.func,
@@ -161,7 +157,6 @@ Socket.propTypes = {
 
 function mapStateToProps(state) {
     return {
-        messages: state.messages,
         rooms: state.rooms,
         user: state.user,
         users: state.users

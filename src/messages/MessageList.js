@@ -108,10 +108,8 @@ class MessageList extends React.Component {
     }
 
     render() {
-        const {
-            messages,
-            users
-        } = this.props;
+        const { messages, users } = this.props;
+        if (!messages || _.isEmpty(users)) return null;
 
         const hasMore = (
             !_.isEmpty(messages) &&
@@ -165,9 +163,16 @@ MessageList.propTypes = {
     users: React.PropTypes.object
 };
 
+MessageList.defaultProps = {
+    messages: []
+};
+
 function mapStateToProps(state) {
+    const { messages, socket, user, users } = state;
     return {
-        socket: state.socket
+        messages: messages[_.get(user, 'rooms.active')],
+        socket,
+        users
     };
 }
 
