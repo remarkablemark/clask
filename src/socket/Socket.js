@@ -4,7 +4,6 @@
  * Module dependencies.
  */
 import React from 'react';
-import { browserHistory } from 'react-router';
 import _ from 'lodash';
 
 // components
@@ -60,7 +59,6 @@ class Socket extends React.Component {
                 // disconnect user if unauthenticated
                 if (user.isAuthenticated === false) {
                     removeAll();
-                    return browserHistory.push('/signin');
                     socket.disconnect();
                 }
                 setUser(user);

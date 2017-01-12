@@ -11,15 +11,24 @@ import { connect } from 'react-redux';
  * Redirect component.
  */
 class Redirect extends React.Component {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
+        this._handleRedirect = this._handleRedirect.bind(this);
     }
 
     componentDidMount() {
+        this._handleRedirect();
+    }
+
+    componentDidUpdate() {
+        this._handleRedirect();
+    }
+
+    _handleRedirect() {
         const {
+            isAuthenticated,
             authenticatedTo,
-            unauthenticatedTo,
-            isAuthenticated
+            unauthenticatedTo
         } = this.props;
 
         if (isAuthenticated && authenticatedTo) {
@@ -31,8 +40,8 @@ class Redirect extends React.Component {
 
     render() {
         const {
-            authenticatedTo,
             isAuthenticated,
+            authenticatedTo,
             children
         } = this.props;
 
