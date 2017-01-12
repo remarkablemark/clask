@@ -12,6 +12,7 @@ import SidebarMenu from './SidebarMenu';
 
 // redux
 import { connect } from 'react-redux';
+import { setUser } from '../actions';
 
 // constants
 import { sidebarWidth } from '../shared/styles';
@@ -28,6 +29,7 @@ function Sidebar(props) {
     const {
         activeRoom,
         rooms,
+        setUser,
         sidebar,
         users
     } = props;
@@ -42,6 +44,7 @@ function Sidebar(props) {
                 roomIds={sidebar[CHANNELS_TYPE]}
                 roomPrefix='# '
                 rooms={rooms}
+                setUser={setUser}
                 title='CHANNELS'
                 type={CHANNELS_TYPE}
                 users={users}
@@ -52,6 +55,7 @@ function Sidebar(props) {
                 activeRoom={activeRoom}
                 roomIds={sidebar[DIRECT_MESSAGES_TYPE]}
                 rooms={rooms}
+                setUser={setUser}
                 title='DIRECT MESSAGES'
                 type={DIRECT_MESSAGES_TYPE}
                 users={users}
@@ -63,6 +67,7 @@ function Sidebar(props) {
 Sidebar.propTypes = {
     activeRoom: React.PropTypes.string,
     rooms: React.PropTypes.object,
+    setUser: React.PropTypes.func,
     sidebar: React.PropTypes.shape({
         channels: React.PropTypes.array,
         directMessages: React.PropTypes.array
@@ -90,6 +95,15 @@ function mapStateToProps(state) {
     };
 }
 
+function mapDispatchToProps(dispatch) {
+    return {
+        setUser: (user) => {
+            dispatch(setUser(user));
+        }
+    };
+}
+
 export default connect(
-    mapStateToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(Sidebar);

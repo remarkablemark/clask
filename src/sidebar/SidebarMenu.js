@@ -70,6 +70,19 @@ export default class SidebarMenu extends React.Component {
     }
 
     /**
+     * Changes active room when menu item is clicked.
+     *
+     * @param {String} roomId - The room id.
+     */
+    _changeRoom(roomId) {
+        const { activeRoom, setUser } = this.props;
+        if (activeRoom === roomId) return;
+        setUser({
+            rooms: { active: roomId }
+        });
+    }
+
+    /**
      * Opens dialog when clicked.
      *
      * @param {String} dialogType - The dialog type.
@@ -139,7 +152,10 @@ export default class SidebarMenu extends React.Component {
                         menuItemStyle
                     );
                     return (
-                        <MenuItem style={style} key={roomId}>
+                        <MenuItem
+                            onClick={() => this._changeRoom(roomId)}
+                            style={style}
+                            key={roomId}>
                             {roomPrefix}
                             {rooms[roomId].name}
                         </MenuItem>
@@ -167,6 +183,7 @@ SidebarMenu.propTypes = {
     roomIds: React.PropTypes.array,
     roomPrefix: React.PropTypes.node,
     rooms: React.PropTypes.object,
+    setUser: React.PropTypes.func,
     title: React.PropTypes.string,
     type: React.PropTypes.string,
     users: React.PropTypes.object
