@@ -39,6 +39,7 @@ class Socket extends React.Component {
     componentDidMount() {
         window.requirejs(['io'], (io) => {
             const {
+                isAuthenticated,
                 removeAll,
                 setRooms,
                 setUser,
@@ -50,7 +51,7 @@ class Socket extends React.Component {
             const socket = io.connect();
             setSocket(socket);
             this.socket = socket;
-            this.events = [];
+            const events = [];
 
             /**
              * Set `user` when client connects.
@@ -60,10 +61,11 @@ class Socket extends React.Component {
                 if (user.isAuthenticated === false) {
                     removeAll();
                     return browserHistory.push('/signin');
+                    socket.disconnect();
                 }
                 setUser(user);
             });
-            this.events.push(USER);
+            events.push(USER);
 
             /**
              * Update `users` when user connects or disconnects.
@@ -71,7 +73,7 @@ class Socket extends React.Component {
             socket.on(USERS, (users) => {
                 setUsers(users);
             });
-            this.events.push(USERS);
+            events.push(USERS);
 
             /**
              * Set `rooms` joined by user.
@@ -79,7 +81,7 @@ class Socket extends React.Component {
             socket.on(ROOMS, (rooms) => {
                 setRooms(rooms);
             });
-            this.events.push(ROOMS);
+            events.push(ROOMS);
 
             /**
              * Listen for chat messages.
@@ -88,7 +90,19 @@ class Socket extends React.Component {
                 const roomId = _.get(messages, '[0]._room');
                 if (roomId) updateMessages(roomId, messages);
             });
-            this.events.push(MESSAGES);
+            events.push(MESSAGES);
+
+            /**
+             * Handle disconnect.
+             */
+            socket.on('disconnect', () => {
+                if (isAuthenticated) return socket.io.reconnect();
+                else removeAll();
+            });
+            events.push('disconnect');
+
+            // cache socket event names
+            this.events = events;
         });
     }
 
@@ -97,24 +111,31 @@ class Socket extends React.Component {
      * This will prevent memory leaks.
      */
     componentWillUnmount() {
-        _.forEach(this.events, (eventName) => {
-            this.socket.off(eventName);
+        const { events, socket } = this;
+        _.forEach(events, (eventName) => {
+            socket.off(eventName);
         });
-        this.socket.disconnect();
+        socket.disconnect();
     }
 
     render() {
+        if (!this.props.isAuthenticated) return null;
         return <Chat />;
     }
 }
 
 Socket.propTypes = {
+    isAuthenticated: React.PropTypes.bool,
     removeAll: React.PropTypes.func,
     setRooms: React.PropTypes.func,
     setSocket: React.PropTypes.func,
     setUser: React.PropTypes.func,
     setUsers: React.PropTypes.func,
     updateMessages: React.PropTypes.func
+};
+
+Socket.defaultProps = {
+    isAuthenticated: false
 };
 
 function mapDispatchToProps(dispatch) {
@@ -140,7 +161,13 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
+function mapStateToProps(state) {
+    return {
+        isAuthenticated: state.user.isAuthenticated
+    };
+}
+
 export default connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
 )(Socket);
