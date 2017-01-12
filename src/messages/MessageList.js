@@ -102,8 +102,11 @@ class MessageList extends React.Component {
             isLoadingMessages: true
         });
 
-        this.props.socket.emit(GET_MESSAGES, {
-            before: _.first(this.props.messages).created
+        const { activeRoom, messages, socket } = this.props;
+
+        socket.emit(GET_MESSAGES, {
+            before: _.get(messages, '[0].created', _.now()),
+            roomId: activeRoom
         });
     }
 
@@ -158,6 +161,7 @@ class MessageList extends React.Component {
 }
 
 MessageList.propTypes = {
+    activeRoom: React.PropTypes.string,
     messages: React.PropTypes.array,
     socket: React.PropTypes.object,
     users: React.PropTypes.object
@@ -169,8 +173,11 @@ MessageList.defaultProps = {
 
 function mapStateToProps(state) {
     const { messages, socket, user, users } = state;
+    const activeRoom = _.get(user, 'rooms.active');
+    const activeMessages = messages[activeRoom];
     return {
-        messages: messages[_.get(user, 'rooms.active')],
+        activeRoom,
+        messages: activeMessages,
         socket,
         users
     };

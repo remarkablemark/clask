@@ -49,11 +49,14 @@ function messages(io, socket) {
      * Client requests older messages.
      */
     socket.on(GET_MESSAGES, (data) => {
-        if (!data && !data.before) return;
+        if (typeof data !== 'object' && !data.before && !data.roomId) return;
 
         // find messages before date
         Message.find({
-            created: { $lt: data.before }
+            _room: data.roomId,
+            created: {
+                $lt: data.before
+            }
         }, messagesProjection, messagesOptions, (error, messages) => {
             if (error || !messages) return debug.db('unable to find messages', error);
             socket.emit(MESSAGES, messages.reverse());
