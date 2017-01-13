@@ -14,16 +14,17 @@ import RaisedButton from 'material-ui/RaisedButton';
 import MenuDialog from './MenuDialog';
 
 // constants
-import { grey300, grey700 } from 'material-ui/styles/colors';
-import {
-    dialogPadding,
-    sidebarMenuItemHeight
-} from '../shared/styles';
 import {
     CREATE_CHANNEL_TYPE,
     CHANNELS_TYPE,
     DIRECT_MESSAGES_TYPE
 }  from './helpers';
+import { UPDATE_USER } from '../../socket.io/events';
+import { grey300, grey700 } from 'material-ui/styles/colors';
+import {
+    dialogPadding,
+    sidebarMenuItemHeight
+} from '../shared/styles';
 
 // styles
 const menuBaseStyle = {
@@ -75,10 +76,21 @@ export default class SidebarMenu extends React.Component {
      * @param {String} roomId - The room id.
      */
     _changeRoom(roomId) {
-        const { activeRoom, setUser } = this.props;
+        const {
+            activeRoom,
+            setUser,
+            socket,
+            userId
+        } = this.props;
+
+        // no-op if room has not changed
         if (activeRoom === roomId) return;
+
         setUser({
             rooms: { active: roomId }
+        });
+        socket.emit(UPDATE_USER, userId, {
+            'rooms.active': roomId
         });
     }
 
@@ -184,7 +196,9 @@ SidebarMenu.propTypes = {
     roomPrefix: React.PropTypes.node,
     rooms: React.PropTypes.object,
     setUser: React.PropTypes.func,
+    socket: React.PropTypes.object,
     title: React.PropTypes.string,
     type: React.PropTypes.string,
+    userId: React.PropTypes.string,
     users: React.PropTypes.object
 };
