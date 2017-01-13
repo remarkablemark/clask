@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 import React from 'react';
+import _ from 'lodash';
 import AutoComplete from 'material-ui/AutoComplete';
 import RaisedButton from 'material-ui/RaisedButton';
 
@@ -11,8 +12,11 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { connect } from 'react-redux';
 import { setUser } from '../actions';
 
-// styles
+// constants
+import { UPDATE_USER } from '../../socket.io/events';
 import { gutter } from '../shared/styles';
+
+// styles
 const autocompleteStyle = {
     marginTop: gutter / 2
 };
@@ -49,13 +53,29 @@ class RoomFinder extends React.Component {
      * @param {Number} index          - The match position.
      */
     _handleNewRequest(selected, index) {
-        if (typeof selected === 'object') {
-            const { onRequestClose, setUser } = this.props;
-            setUser({
-                rooms: { active: selected.value }
-            });
-            onRequestClose();
-        }
+        if (typeof selected !== 'object') return;
+
+        const { value } = selected;
+        const {
+            activeRoom,
+            onRequestClose,
+            setUser,
+            socket,
+            userId
+        } = this.props;
+
+        // close dialog
+        onRequestClose();
+
+        // no-op if room has not changed
+        if (activeRoom === value) return;
+
+        setUser({
+            rooms: { active: selected.value }
+        });
+        socket.emit(UPDATE_USER, userId, {
+            'rooms.active': value
+        });
     }
 
     render() {
@@ -92,15 +112,27 @@ class RoomFinder extends React.Component {
 }
 
 RoomFinder.propTypes = {
+    activeRoom: React.PropTypes.string,
     dataSource: React.PropTypes.array,
     hintText: React.PropTypes.string,
     onRequestClose: React.PropTypes.func,
-    setUser: React.PropTypes.func
+    setUser: React.PropTypes.func,
+    socket: React.PropTypes.object,
+    userId: React.PropTypes.string
 };
 
 RoomFinder.defaultProps = {
     dataSource: []
 };
+
+function mapStateToProps(state) {
+    const { socket, user } = state;
+    return {
+        activeRoom: _.get(user, 'rooms.active'),
+        socket: socket,
+        userId: user._id
+    };
+}
 
 function mapDispatchToProps(dispatch) {
     return {
@@ -111,6 +143,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
 )(RoomFinder);
