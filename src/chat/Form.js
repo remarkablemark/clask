@@ -5,7 +5,6 @@
  */
 import React from 'react';
 import _ from 'lodash';
-import { getTime } from './helpers';
 
 // material-ui
 import Divider from 'material-ui/Divider';
@@ -92,7 +91,7 @@ class Form extends React.Component {
         socket.emit(NEW_MESSAGE, {
             _room: activeRoom,
             _user: userId,
-            created: getTime(),
+            created: _.now(),
             isFirst: hasMessages ? undefined : true,
             text: value
         });
