@@ -14,7 +14,8 @@ const Message = require('../models/message');
 // socket events
 const {
     GET_MESSAGES,
-    MESSAGES
+    MESSAGES,
+    NEW_MESSAGE
 } = require('./events');
 
 // constants
@@ -34,15 +35,15 @@ function messages(io, socket) {
     /**
      * New message from client.
      */
-    socket.on(MESSAGES, (messages) => {
-        messages[0]._id = ObjectId();
-        io.emit(MESSAGES, messages);
+    socket.on(NEW_MESSAGE, (message) => {
+        message._id = ObjectId();
+        io.emit(MESSAGES, [message]);
 
         // save to database
-        new Message(messages[0]).save((error) => {
-            if (error) debug.db('failed to save message', error);
+        new Message(message).save((err) => {
+            if (err) debug.db('failed to save message', err);
         });
-        debug.socket(MESSAGES, messages);
+        debug.socket(NEW_MESSAGE, message);
     });
 
     /**

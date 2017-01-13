@@ -16,7 +16,7 @@ import TextField from 'material-ui/TextField';
 import { connect } from 'react-redux';
 
 // socket
-import { MESSAGES } from '../../socket.io/events';
+import { NEW_MESSAGE } from '../../socket.io/events';
 
 // styles
 import {
@@ -89,13 +89,15 @@ class Form extends React.Component {
             userId
         } = this.props;
 
-        socket.emit(MESSAGES, [{
+        socket.emit(NEW_MESSAGE, {
             _room: activeRoom,
             _user: userId,
             created: getTime(),
             isFirst: hasMessages ? undefined : true,
             text: value
-        }]);
+        });
+
+        // reset input
         this.setState({ value: '' });
     }
 
