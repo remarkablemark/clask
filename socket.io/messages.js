@@ -19,7 +19,7 @@ const {
 } = require('./events');
 
 // constants
-const messagesProjection = { __v: 0 };
+const messagesProjection = { __v: 0, _room: 0 };
 const messagesOptions = {
     limit: require('../config/constants').messagesLimit,
     sort: { created: -1 }

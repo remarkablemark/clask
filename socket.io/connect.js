@@ -24,8 +24,8 @@ const userProjection = {
     rooms: 1,
     username: 1
 };
-const messageProjection = { __v: 0 };
-const messageOptions = {
+const messagesProjection = { __v: 0, _room: 0 };
+const messagesOptions = {
     limit: require('../config/constants').messagesLimit,
     sort: { created: -1 }
 };
@@ -71,7 +71,7 @@ function connect(io, socket) {
          */
         Message.find({
             _room: activeRoom
-        }, messageProjection, messageOptions, (err, messages) => {
+        }, messagesProjection, messagesOptions, (err, messages) => {
             if (err) return debug('unable to find messages', err);
 
             // no messages found
