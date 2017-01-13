@@ -28,6 +28,9 @@ export default function reducer(state = {}, action) {
     switch (type) {
         case UPDATE_MESSAGES: {
             // messages empty
+            if (!_.isArray(messages) || !messages.length) return state;
+
+            // current messages empty
             if (!_.isArray(current)) {
                 return _.assign({}, state, {
                     [roomId]: reformatMessages(messages)

@@ -64,19 +64,21 @@ function connect(io, socket) {
             isAuthenticated: true
         }));
 
+        const activeRoom = user.rooms.active;
+
         /**
          * Find messages.
          */
         Message.find({
-            _room: user.rooms.active
+            _room: activeRoom
         }, messageProjection, messageOptions, (err, messages) => {
             if (err) return debug('unable to find messages', err);
 
             // no messages found
-            if (!messages) return socket.emit(MESSAGES, []);
+            if (!messages) return socket.emit(MESSAGES, activeRoom, []);
 
             // send client latest messages
-            socket.emit(MESSAGES, messages.reverse());
+            socket.emit(MESSAGES, activeRoom, messages.reverse());
         });
 
         /**

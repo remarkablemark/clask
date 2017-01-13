@@ -37,7 +37,7 @@ function messages(io, socket) {
      */
     socket.on(NEW_MESSAGE, (message) => {
         message._id = ObjectId();
-        io.emit(MESSAGES, [message]);
+        io.emit(MESSAGES, message._room, [message]);
 
         // save to database
         new Message(message).save((err) => {
@@ -50,18 +50,21 @@ function messages(io, socket) {
      * Client requests older messages.
      */
     socket.on(GET_MESSAGES, (data) => {
-        if (typeof data !== 'object' && !data.before && !data.roomId) return;
+        if (data.constructor !== Object) return;
+        const { before, roomId } = data;
+        if (!before || !roomId) return;
 
-        // find messages before date
+        // find room messages before date
         Message.find({
-            _room: data.roomId,
+            _room: roomId,
             created: {
-                $lt: data.before
+                $lt: before
             }
-        }, messagesProjection, messagesOptions, (error, messages) => {
-            if (error || !messages) return debug.db('unable to find messages', error);
-            socket.emit(MESSAGES, messages.reverse());
-            debug.socket(MESSAGES, messages);
+        }, messagesProjection, messagesOptions, (err, messages) => {
+            if (err) return debug.db('unable to find messages', err);
+            if (!messages) return;
+
+            socket.emit(MESSAGES, roomId, messages.reverse());
         });
     });
 }

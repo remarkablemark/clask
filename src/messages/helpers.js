@@ -21,6 +21,8 @@ const millisecondsInOneDay = 86400000;
 export function reformatMessages(messages, start = 0, end) {
     end = end || messages.length;
 
+    if (_.isEmpty(messages)) return [];
+
     // make a deep copy of messages to prevent mutations
     const copy = _.cloneDeep(messages);
 

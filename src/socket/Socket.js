@@ -84,9 +84,10 @@ class Socket extends React.Component {
             /**
              * Listen for chat messages.
              */
-            socket.on(MESSAGES, (messages) => {
-                const roomId = _.get(messages, '[0]._room');
-                if (roomId) updateMessages(roomId, messages);
+            socket.on(MESSAGES, (roomId, messages) => {
+                if (roomId && messages) {
+                    updateMessages(roomId, messages);
+                }
             });
             events.push(MESSAGES);
 
