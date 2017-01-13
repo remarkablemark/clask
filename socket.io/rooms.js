@@ -38,6 +38,7 @@ function rooms(io, socket) {
             // reformat before emitting new room to all clients
             io.emit(ROOMS, {
                 [roomId]: {
+                    _users: room._users,
                     name: room.name
                 }
             });

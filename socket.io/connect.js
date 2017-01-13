@@ -29,7 +29,7 @@ const messagesOptions = {
     limit: require('../config/constants').messagesLimit,
     sort: { created: -1 }
 };
-const roomsProjection = { name: 1 };
+const roomsProjection = { _users: 1, name: 1 };
 const emptyQuery = {};
 const usersProjection = { username: 1 };
 
