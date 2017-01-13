@@ -28,9 +28,10 @@ function rooms(io, socket) {
     /**
      * Create new room.
      */
-    socket.on(NEW_ROOM, (data) => {
+    socket.on(NEW_ROOM, (roomData) => {
+
         // save to database
-        new Room(data).save((err, room) => {
+        new Room(roomData).save((err, room) => {
             if (err) return debug.db('failed to save room', err);
             const roomId = room._id;
 

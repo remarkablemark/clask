@@ -107,9 +107,10 @@ class CreateChannel extends React.Component {
         if (errorText) return;
 
         socket.emit(NEW_ROOM, {
-            name,
+            _creator: userId,
+            _users: [userId],
             isPublic,
-            _creator: userId
+            name
         });
     }
 
