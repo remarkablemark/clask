@@ -8,6 +8,7 @@ const MESSAGES = 'MESSAGES';
 const NEW_MESSAGE = 'NEW_MESSAGE';
 const NEW_ROOM = 'NEW_ROOM';
 const ROOMS = 'ROOMS';
+const UPDATE_USER = 'UPDATE_USER';
 const USER = 'USER';
 const USERS = 'USERS';
 
@@ -17,6 +18,7 @@ module.exports = {
     NEW_MESSAGE,
     NEW_ROOM,
     ROOMS,
+    UPDATE_USER,
     USER,
     USERS
 };
