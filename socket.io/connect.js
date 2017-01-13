@@ -64,7 +64,8 @@ function connect(io, socket) {
             isAuthenticated: true
         }));
 
-        const activeRoom = user.rooms.active;
+        const userRooms = user.rooms;
+        const activeRoom = userRooms.active;
 
         /**
          * Find messages.
@@ -81,11 +82,17 @@ function connect(io, socket) {
             socket.emit(MESSAGES, activeRoom, messages.reverse());
         });
 
+        const sidebarRooms = userRooms.sidebar;
+
         /**
-         * Find rooms (joined by user).
+         * Find rooms (shown in sidebar).
          */
         Room.find({
-            _id: { $in: user.rooms.joined }
+            _id: {
+                $in: sidebarRooms.channels.concat(
+                    sidebarRooms.directMessages
+                )
+            }
         }, roomsProjection, (err, rooms) => {
             if (err || !rooms) return debug('unable to find rooms', err);
 
