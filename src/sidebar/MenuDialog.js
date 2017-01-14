@@ -4,16 +4,14 @@
  * Module dependencies.
  */
 import React from 'react';
-import _ from 'lodash';
+
+// components
 import Dialog from 'material-ui/Dialog';
 import CreateChannel from '../rooms/CreateChannel';
 import RoomFinder from '../rooms/RoomFinder';
 
 // constants
-import {
-    CREATE_CHANNEL_TYPE,
-    DIRECT_MESSAGES_TYPE
-} from './helpers';
+import { CREATE_CHANNEL_TYPE } from './helpers';
 
 // styles
 import { dialogPadding } from '../shared/styles'
@@ -35,43 +33,9 @@ export default function MenuDialog(props) {
     const {
         onRequestClose,
         open,
-        rooms,
         title,
         type,
-        users
     } = props;
-
-    const isChannel = type !== DIRECT_MESSAGES_TYPE;
-
-    let dataSource = [];
-    if (isChannel) {
-        dataSource = _.map(rooms, (value, key) => {
-            return {
-                text: rooms[key].name,
-                value: key
-            };
-        });
-    } else {
-        dataSource = _.map(users, (value, key) => {
-            return {
-                text: users[key].username,
-                value: key
-            };
-        });
-    }
-
-    let bodyNode;
-    if (type === CREATE_CHANNEL_TYPE) {
-        bodyNode = <CreateChannel onRequestClose={onRequestClose} />;
-    } else {
-        bodyNode = (
-            <RoomFinder
-                dataSource={dataSource}
-                hintText='Find or start a conversation'
-                onRequestClose={onRequestClose}
-            />
-        );
-    }
 
     return (
         <Dialog
@@ -80,7 +44,17 @@ export default function MenuDialog(props) {
             onRequestClose={onRequestClose}
             titleStyle={titleStyle}
             bodyStyle={bodyStyle}>
-            {bodyNode}
+            {type === CREATE_CHANNEL_TYPE ? (
+                <CreateChannel
+                    onRequestClose={onRequestClose}
+                />
+            ) : (
+                <RoomFinder
+                    hintText='Find or start a conversation'
+                    onRequestClose={onRequestClose}
+                    type={type}
+                />
+            )}
         </Dialog>
     );
 }
@@ -88,8 +62,6 @@ export default function MenuDialog(props) {
 MenuDialog.propTypes = {
     onRequestClose: React.PropTypes.func,
     open: React.PropTypes.bool,
-    rooms: React.PropTypes.object,
     title: React.PropTypes.node,
-    type: React.PropTypes.string,
-    users: React.PropTypes.object
+    type: React.PropTypes.string
 };

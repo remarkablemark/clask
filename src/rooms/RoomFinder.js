@@ -5,6 +5,8 @@
  */
 import React from 'react';
 import _ from 'lodash';
+
+// components
 import AutoComplete from 'material-ui/AutoComplete';
 import RaisedButton from 'material-ui/RaisedButton';
 
@@ -13,8 +15,9 @@ import { connect } from 'react-redux';
 import { setUser } from '../actions';
 
 // constants
-import { UPDATE_USER } from '../../socket.io/events';
 import { gutter } from '../shared/styles';
+import { DIRECT_MESSAGES_TYPE } from '../sidebar/helpers';
+import { UPDATE_USER } from '../../socket.io/events';
 
 // styles
 const autocompleteStyle = {
@@ -125,10 +128,34 @@ RoomFinder.defaultProps = {
     dataSource: []
 };
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
     const { socket, user } = state;
+    let dataSource = [];
+
+    // channel rooms
+    if (ownProps.type !== DIRECT_MESSAGES_TYPE) {
+        const { rooms } = state;
+        dataSource = _.map(rooms, (value, key) => {
+            return {
+                text: rooms[key].name,
+                value: key
+            };
+        });
+
+    // direct message rooms
+    } else {
+        const { users } = state;
+        dataSource = _.map(users, (value, key) => {
+            return {
+                text: users[key].username,
+                value: key
+            };
+        });
+    }
+
     return {
         activeRoom: _.get(user, 'rooms.active'),
+        dataSource,
         socket: socket,
         userId: user._id
     };
