@@ -120,8 +120,7 @@ export default class SidebarMenu extends React.Component {
             roomPrefix,
             rooms,
             title,
-            type,
-            users
+            type
         } = this.props;
 
         const { dialogType, isDialogOpen } = this.state;
@@ -163,6 +162,7 @@ export default class SidebarMenu extends React.Component {
                         activeMenuStyle :
                         menuItemStyle
                     );
+
                     return (
                         <MenuItem
                             onClick={() => this._changeRoom(roomId)}
@@ -181,8 +181,6 @@ export default class SidebarMenu extends React.Component {
                         open={isDialogOpen}
                         onRequestClose={this._closeDialog}
                         type={dialogType}
-                        rooms={rooms}
-                        users={users}
                     />
                 )}
             </Menu>
@@ -199,6 +197,5 @@ SidebarMenu.propTypes = {
     socket: React.PropTypes.object,
     title: React.PropTypes.string,
     type: React.PropTypes.string,
-    userId: React.PropTypes.string,
-    users: React.PropTypes.object
+    userId: React.PropTypes.string
 };
