@@ -18,10 +18,25 @@ function docsToObj(docs, key = '_id') {
     return result;
 }
 
+/**
+ * Finds socket that matches criteria.
+ *
+ * @param  {Object}   sockets - The sockets.
+ * @param  {Function} match   - The match checker.
+ * @return {(Object|undefined)}
+ */
+function findSocket(sockets, match) {
+    for (let socketId in sockets) {
+        const socket = sockets[socketId];
+        if (match(socket)) return socket;
+    }
+}
+
 /** Socket debugger. */
 const debug = require('debug')(process.env.APP_NAME + ':socket');
 
 module.exports = {
     debug,
-    docsToObj
+    docsToObj,
+    findSocket
 };
