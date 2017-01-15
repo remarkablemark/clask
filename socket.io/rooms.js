@@ -13,10 +13,14 @@ const User = require('../models/user');
 
 // constants
 const {
+    FIND_OR_CREATE_ROOM,
     NEW_ROOM,
     ROOMS,
     USER
 }  = require('./events');
+
+const roomProjection = { _users: 1, name: 1 };
+const userOptions = { new: true };
 
 /**
  * Event listeners for rooms.
@@ -56,7 +60,7 @@ function rooms(io, socket) {
                 $set: {
                     'rooms.active': roomId
                 }
-            }, { new: true }, (err, user) => {
+            }, userOptions, (err, user) => {
                 if (err) return debug.db('failed to update user', err);
                 debug.socket('user rooms', user);
 
@@ -66,6 +70,51 @@ function rooms(io, socket) {
                 });
                 debug.socket(USER, user.rooms);
             });
+        });
+    });
+
+    /**
+     * Find or create room.
+     */
+    socket.on(FIND_OR_CREATE_ROOM, (data) => {
+        if (data.constructor !== Object) return;
+        const { _creator, _users } = data;
+        if (!_creator && !_users) return;
+
+        Room.findOne({
+            _users,
+            name: { $exists: false }
+        }, roomProjection, (err, room) => {
+            if (err) return debug.db('unable to find room', err);
+
+            // room found
+            if (room) {
+                const roomId = room._id;
+
+                // send room and have client update its data
+                socket.emit(ROOMS, {
+                    [roomId]: { _users: room._users }
+                });
+                debug.socket(ROOMS, {
+                    [roomId]: { _users: room._users }
+                });
+
+                // update user's sidebar
+                User.findByIdAndUpdate(_creator, {
+                    $set: {
+                        'rooms.active': roomId
+                    },
+                    $push: {
+                        'rooms.sidebar.directMessages': roomId
+                    }
+                }, userOptions, (err, user) => {
+                    if (err) return debug.db('failed to update user', err);
+
+                    // have creator update its user data
+                    socket.emit(USER, { rooms: user.rooms });
+                    debug.socket(USER, { rooms: user.rooms });
+                });
+            }
         });
     });
 }
