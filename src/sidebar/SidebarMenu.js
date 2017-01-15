@@ -120,7 +120,9 @@ export default class SidebarMenu extends React.Component {
             roomPrefix,
             rooms,
             title,
-            type
+            type,
+            userId,
+            users
         } = this.props;
 
         const { dialogType, isDialogOpen } = this.state;
@@ -157,6 +159,25 @@ export default class SidebarMenu extends React.Component {
 
                 {/* rooms */}
                 {_.map(roomIds, (roomId) => {
+                    // channel has name
+                    const room = rooms[roomId];
+                    let roomName = _.get(room, 'name');
+
+                    // direct message shows username(s)
+                    if (type === DIRECT_MESSAGES_TYPE && _.isUndefined(roomName)) {
+                        const usernames = [];
+                        _.forEach(_.get(room, '_users'), (id) => {
+                            // exclude current user
+                            if (id !== userId) {
+                                usernames.push(users[id].username);
+                            }
+                        });
+                        roomName = usernames.join(', ');
+                    }
+
+                    // do not render if there is no room name
+                    if (!roomName) return null;
+
                     const style = (
                         roomId === activeRoom ?
                         activeMenuStyle :
@@ -169,7 +190,7 @@ export default class SidebarMenu extends React.Component {
                             style={style}
                             key={roomId}>
                             {roomPrefix}
-                            {rooms[roomId].name}
+                            {roomName}
                         </MenuItem>
                     );
                 })}
@@ -197,5 +218,6 @@ SidebarMenu.propTypes = {
     socket: React.PropTypes.object,
     title: React.PropTypes.string,
     type: React.PropTypes.string,
+    users: React.PropTypes.object,
     userId: React.PropTypes.string
 };

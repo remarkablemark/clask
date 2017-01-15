@@ -32,7 +32,8 @@ function Sidebar(props) {
         setUser,
         sidebar,
         socket,
-        userId
+        userId,
+        users
     } = props;
 
     if (!activeRoom || _.isEmpty(rooms)) return null;
@@ -62,6 +63,7 @@ function Sidebar(props) {
                 title='DIRECT MESSAGES'
                 type={DIRECT_MESSAGES_TYPE}
                 userId={userId}
+                users={users}
             />
         </Drawer>
     );
@@ -76,7 +78,8 @@ Sidebar.propTypes = {
         directMessages: React.PropTypes.array
     }),
     socket: React.PropTypes.object,
-    userId: React.PropTypes.string
+    userId: React.PropTypes.string,
+    users: React.PropTypes.object
 };
 
 Sidebar.defaultProps = {
@@ -87,7 +90,7 @@ Sidebar.defaultProps = {
 };
 
 function mapStateToProps(state) {
-    const { rooms, socket, user } = state;
+    const { rooms, socket, user, users } = state;
     const activeRoom = _.get(user, 'rooms.active');
     const sidebar = _.get(user, 'rooms.sidebar');
     return {
@@ -95,7 +98,8 @@ function mapStateToProps(state) {
         rooms,
         sidebar,
         socket,
-        userId: user._id
+        userId: user._id,
+        users
     };
 }
 
