@@ -114,7 +114,38 @@ function rooms(io, socket) {
                     socket.emit(USER, { rooms: user.rooms });
                     debug.socket(USER, { rooms: user.rooms });
                 });
+
+                return;
             }
+
+            // room not found so create new room
+            new Room({ _users }).save((err, room) => {
+                if (err) return debug.db('unable to create new room', err);
+                const roomId = room._id;
+                const roomUsers = room._users;
+
+                socket.emit(ROOMS, {
+                    [roomId]: { _users: roomUsers }
+                });
+                debug.socket(ROOMS, {
+                    [roomId]: { _users: roomUsers }
+                });
+
+                User.findByIdAndUpdate(_creator, {
+                    $set: {
+                        'rooms.active': roomId
+                    },
+                    $push: {
+                        'rooms.sidebar.directMessages': roomId
+                    }
+                }, userOptions, (err, user) => {
+                    if (err) return debug.db('unable to update user', err);
+
+                    // emit to creator updated rooms data
+                    socket.emit(USER, { rooms: user.rooms });
+                    debug.socket(USER, { rooms: user.rooms });
+                });
+            });
         });
     });
 }
