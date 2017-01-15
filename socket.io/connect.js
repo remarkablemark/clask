@@ -96,7 +96,7 @@ function connect(io, socket) {
         }, roomsProjection, (err, rooms) => {
             if (err || !rooms) return debug('unable to find rooms', err);
 
-            // send client data of joined rooms
+            // send client sidebar rooms data
             socket.emit(ROOMS, docsToObj(rooms));
             debug(ROOMS, rooms);
         });

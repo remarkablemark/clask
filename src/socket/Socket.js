@@ -74,7 +74,7 @@ class Socket extends React.Component {
             events.push(USERS);
 
             /**
-             * Set `rooms` joined by user.
+             * Update `rooms` that user has access to.
              */
             socket.on(ROOMS, (rooms) => {
                 setRooms(rooms);

@@ -29,8 +29,6 @@ function rooms(io, socket) {
      * Create new room.
      */
     socket.on(NEW_ROOM, (roomData) => {
-
-        // save to database
         new Room(roomData).save((err, room) => {
             if (err) return debug.db('failed to save room', err);
             const roomId = room._id;
@@ -53,7 +51,6 @@ function rooms(io, socket) {
             // update user
             User.findByIdAndUpdate(socket.userId, {
                 $push: {
-                    'rooms.joined': roomId,
                     'rooms.sidebar.channels': roomId
                 },
                 $set: {

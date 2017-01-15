@@ -42,11 +42,6 @@ const userSchema = new mongoose.Schema({
         default: Date.now
     },
     rooms: {
-        joined: {
-            type: Array,
-            ref: 'Room',
-            default: [defaultRoom]
-        },
         sidebar: {
             channels: {
                 type: Array,
