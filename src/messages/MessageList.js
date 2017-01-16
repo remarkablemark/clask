@@ -52,16 +52,13 @@ class MessageList extends React.Component {
         this.state = {
             isLoadingMessages: false
         };
-        this._handleScroll = this._handleScroll.bind(this);
         this._getMessages = this._getMessages.bind(this);
+        this._handleMessages = this._handleMessages.bind(this);
+        this._handleScroll = this._handleScroll.bind(this);
     }
 
     componentDidUpdate(prevProps) {
-        const {
-            activeRoom,
-            isRoomLoaded,
-            messages
-        } = this.props;
+        const { activeRoom, isRoomLoaded } = this.props;
 
         // get messages if switched to a different room
         if (!_.isUndefined(prevProps.activeRoom) &&
@@ -70,9 +67,40 @@ class MessageList extends React.Component {
             return this._getMessages();
         }
 
-        const messagesLenDiff = (
-            messages.length - prevProps.messages.length
-        );
+        this._handleMessages(prevProps);
+    }
+
+    /**
+     * Load messages when:
+     * - room is loaded or changed
+     * - 'Load More' is triggered
+     */
+    _getMessages() {
+        // cache position
+        const contentElement = this.refs.content;
+        this._height = contentElement.clientHeight;
+        this._top = contentElement.parentNode.scrollTop;
+
+        this.setState({
+            isLoadingMessages: true
+        });
+
+        const { activeRoom, messages, socket } = this.props;
+
+        socket.emit(GET_MESSAGES, {
+            before: _.get(messages, '[0].created', _.now()),
+            roomId: activeRoom
+        });
+    }
+
+    /**
+     * Handles appended or prepended message(s).
+     *
+     * @param {Object} prevProps - The previous props.
+     */
+    _handleMessages(prevProps) {
+        const { messages } = this.props;
+        const messagesLenDiff = messages.length - prevProps.messages.length;
 
         // new message
         if (messagesLenDiff === 1) {
@@ -97,24 +125,6 @@ class MessageList extends React.Component {
             this.refs.content.parentNode.scrollTop < loadMoreTopOffset) {
             this._getMessages();
         }
-    }
-
-    _getMessages() {
-        // cache position
-        const contentElement = this.refs.content;
-        this._height = contentElement.clientHeight;
-        this._top = contentElement.parentNode.scrollTop;
-
-        this.setState({
-            isLoadingMessages: true
-        });
-
-        const { activeRoom, messages, socket } = this.props;
-
-        socket.emit(GET_MESSAGES, {
-            before: _.get(messages, '[0].created', _.now()),
-            roomId: activeRoom
-        });
     }
 
     render() {
