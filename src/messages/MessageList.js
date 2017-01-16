@@ -56,31 +56,18 @@ class MessageList extends React.Component {
         this._getMessages = this._getMessages.bind(this);
     }
 
-    componentDidMount() {
-        scrollIntoView(_.get(_.last(this.props.messages), '_id'));
-    }
-
     componentDidUpdate(prevProps) {
         const {
             activeRoom,
             isRoomLoaded,
-            messages,
-            socket
+            messages
         } = this.props;
 
         // get messages if switched to a different room
         if (!_.isUndefined(prevProps.activeRoom) &&
             activeRoom !== prevProps.activeRoom &&
             !isRoomLoaded) {
-            if (typeof socket.emit === 'function') {
-                socket.emit(GET_MESSAGES, {
-                    before: _.get(messages, '[0].created', _.now()),
-                    roomId: activeRoom
-                });
-                this.setState({
-                    isLoadingMessages: true
-                });
-            }
+            return this._getMessages();
         }
 
         const messagesLenDiff = (
