@@ -64,14 +64,14 @@ class MessageList extends React.Component {
     componentDidUpdate(prevProps) {
         const { activeRoom, isRoomLoaded } = this.props;
 
-        // get messages if switched to a different room
-        if (!_.isUndefined(prevProps.activeRoom) &&
-            activeRoom !== prevProps.activeRoom &&
-            !isRoomLoaded) {
-            return this._getMessages();
-        }
+        if (isRoomLoaded) return this._handleMessages(prevProps);
 
-        this._handleMessages(prevProps);
+        // get messages if switched to a different room
+        if (activeRoom &&
+            prevProps.activeRoom &&
+            activeRoom !== prevProps.activeRoom) {
+            this._getMessages();
+        }
     }
 
     /**
@@ -231,7 +231,7 @@ function mapStateToProps(state) {
     const activeMessages = messages[activeRoom];
     return {
         activeRoom,
-        isRoomLoaded: !_.isUndefined(activeMessages),
+        isRoomLoaded: user.isAuthenticated && !_.isUndefined(activeMessages),
         activeMessage: _.get(user, `rooms.history['${activeRoom}']`),
         messages: activeMessages,
         socket,
