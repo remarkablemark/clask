@@ -14,10 +14,14 @@ import Message from './Message';
 
 // redux
 import { connect } from 'react-redux';
+import { setUser } from '../actions';
 
 // constants
 import { messagesLimit } from '../../config/constants';
-import { GET_MESSAGES } from '../../socket.io/events';
+import {
+    GET_MESSAGES,
+    UPDATE_USER
+} from '../../socket.io/events';
 import { formHeight, gutter } from '../shared/styles';
 const loadMoreTopOffset = gutter * 3;
 
@@ -99,24 +103,53 @@ class MessageList extends React.Component {
      * @param {Object} prevProps - The previous props.
      */
     _handleMessages(prevProps) {
-        const { messages } = this.props;
-        const messagesLenDiff = messages.length - prevProps.messages.length;
+        const {
+            activeMessage,
+            activeRoom,
+            messages,
+            setUser,
+            socket,
+            userId
+        } = this.props;
 
-        // new message
+        const prevMessagesLen = prevProps.messages.length;
+        const messagesLenDiff = messages.length - prevMessagesLen;
+
+        // single (new) message
         if (messagesLenDiff === 1) {
-            scrollIntoView(_.get(_.last(messages), '_id'));
+            const lastMessageId = _.get(_.last(messages), '_id');
+            // scroll to last message
+            scrollIntoView(lastMessageId);
+            setUser({
+                rooms: {
+                    history: {
+                        [activeRoom]: lastMessageId
+                    }
+                }
+            });
+            socket.emit(UPDATE_USER, userId, {
+                [`rooms.history.${activeRoom}`]: lastMessageId
+            });
 
-        // multiple messages prepended
+        // multiple messages
         } else if (messagesLenDiff > 1) {
             this.setState({
                 isLoadingMessages: false
             });
 
-            // keep scroll position
-            const contentElement = this.refs.content;
-            contentElement.parentNode.scrollTop = (
-                this._top + contentElement.clientHeight - this._height
-            );
+            // appended (room loaded or changed)
+            if (!prevMessagesLen) {
+                // scroll to last message in user history
+                scrollIntoView(activeMessage);
+
+            // prepended
+            } else {
+                // maintain scroll position
+                const contentElement = this.refs.content;
+                contentElement.parentNode.scrollTop = (
+                    this._top + contentElement.clientHeight - this._height
+                );
+            }
         }
     }
 
@@ -180,8 +213,11 @@ class MessageList extends React.Component {
 MessageList.propTypes = {
     activeRoom: React.PropTypes.string,
     isRoomLoaded: React.PropTypes.bool,
+    activeMessage: React.PropTypes.string,
     messages: React.PropTypes.array,
+    setUser: React.PropTypes.func,
     socket: React.PropTypes.object,
+    userId: React.PropTypes.string,
     users: React.PropTypes.object
 };
 
@@ -196,12 +232,23 @@ function mapStateToProps(state) {
     return {
         activeRoom,
         isRoomLoaded: !_.isUndefined(activeMessages),
+        activeMessage: _.get(user, `rooms.history['${activeRoom}']`),
         messages: activeMessages,
         socket,
+        userId: user._id,
         users
     };
 }
 
+function mapDispatchToProps(dispatch) {
+    return {
+        setUser: (user) => {
+            dispatch(setUser(user));
+        }
+    }
+}
+
 export default connect(
-    mapStateToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(MessageList);
