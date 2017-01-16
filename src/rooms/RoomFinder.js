@@ -15,9 +15,9 @@ import { connect } from 'react-redux';
 import { setUser } from '../actions';
 
 // constants
-import { gutter } from '../shared/styles';
 import { DIRECT_MESSAGES_TYPE } from '../sidebar/helpers';
 import { UPDATE_USER } from '../../socket.io/events';
+import { gutter } from '../shared/styles';
 
 // styles
 const autocompleteStyle = {
@@ -55,17 +55,15 @@ class RoomFinder extends React.Component {
      * @param {String} selected.value - The value.
      * @param {Number} index          - The match position.
      */
-    _handleNewRequest(selected, index) {
-        if (typeof selected !== 'object') return;
-
-        const { value } = selected;
+    _handleNewRequest({ text, value }, index) {
         const {
-            activeRoom,
             onRequestClose,
             setUser,
             socket,
-            userId
+            userId,
+            userRooms
         } = this.props;
+        const activeRoom = userRooms.active;
 
         // close dialog
         onRequestClose();
@@ -74,8 +72,9 @@ class RoomFinder extends React.Component {
         if (activeRoom === value) return;
 
         setUser({
-            rooms: { active: selected.value }
+            rooms: { active: value }
         });
+
         socket.emit(UPDATE_USER, userId, {
             'rooms.active': value
         });
@@ -115,13 +114,13 @@ class RoomFinder extends React.Component {
 }
 
 RoomFinder.propTypes = {
-    activeRoom: React.PropTypes.string,
     dataSource: React.PropTypes.array,
     hintText: React.PropTypes.string,
     onRequestClose: React.PropTypes.func,
     setUser: React.PropTypes.func,
     socket: React.PropTypes.object,
-    userId: React.PropTypes.string
+    userId: React.PropTypes.string,
+    userRooms: React.PropTypes.object
 };
 
 RoomFinder.defaultProps = {
@@ -129,35 +128,37 @@ RoomFinder.defaultProps = {
 };
 
 function mapStateToProps(state, ownProps) {
-    const { socket, user } = state;
+    const { rooms, socket, user } = state;
+    const userId = user._id;
     let dataSource = [];
 
     // channel rooms
     if (ownProps.type !== DIRECT_MESSAGES_TYPE) {
-        const { rooms } = state;
-        dataSource = _.map(rooms, (value, key) => {
-            return {
-                text: rooms[key].name,
-                value: key
-            };
+        _.forEach(rooms, (room, id) => {
+            if (room.name) {
+                dataSource.push({
+                    text: room.name,
+                    value: id
+                });
+            }
         });
 
     // direct message rooms
     } else {
         const { users } = state;
-        dataSource = _.map(users, (value, key) => {
+        dataSource = _.map(users, (user, id) => {
             return {
-                text: users[key].username,
-                value: key
+                text: users[id].username,
+                value: [userId, id]
             };
         });
     }
 
     return {
-        activeRoom: _.get(user, 'rooms.active'),
         dataSource,
-        socket: socket,
-        userId: user._id
+        socket,
+        userId,
+        userRooms: user.rooms || {}
     };
 }
 
