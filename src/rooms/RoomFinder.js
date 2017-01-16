@@ -34,6 +34,7 @@ class RoomFinder extends React.Component {
     constructor() {
         super();
         this.state = { searchText: '' };
+        this._changeRoom = this._changeRoom.bind(this);
         this._handleUpdateInput = this._handleUpdateInput.bind(this);
         this._handleNewRequest = this._handleNewRequest.bind(this);
     }
@@ -58,25 +59,40 @@ class RoomFinder extends React.Component {
     _handleNewRequest({ text, value }, index) {
         const {
             onRequestClose,
-            setUser,
-            socket,
-            userId,
+            rooms,
+            type,
             userRooms
         } = this.props;
         const activeRoom = userRooms.active;
+        onRequestClose(); // close dialog
 
-        // close dialog
-        onRequestClose();
+        // channel
+        if (type !== DIRECT_MESSAGES_TYPE) {
+            if (value !== activeRoom) this._changeRoom(value);
+            return;
+        }
 
-        // no-op if room has not changed
-        if (activeRoom === value) return;
-
-        setUser({
-            rooms: { active: value }
+        // direct message
+        const userIds = _.sortBy(value);
+        // try to find room with no name and contains the same users
+        const roomId = _.findKey(rooms, (room) => {
+            return !room.name && _.isEqual(room._users, userIds);
         });
+        if (roomId !== activeRoom) this._changeRoom(roomId);
+    }
 
+    /**
+     * Changes the active room.
+     *
+     * @param {String} roomId - The room id.
+     */
+    _changeRoom(roomId) {
+        const { setUser, socket, userId } = this.props;
+        setUser({
+            rooms: { active: roomId }
+        });
         socket.emit(UPDATE_USER, userId, {
-            'rooms.active': value
+            'rooms.active': roomId
         });
     }
 
@@ -117,8 +133,10 @@ RoomFinder.propTypes = {
     dataSource: React.PropTypes.array,
     hintText: React.PropTypes.string,
     onRequestClose: React.PropTypes.func,
+    rooms: React.PropTypes.object,
     setUser: React.PropTypes.func,
     socket: React.PropTypes.object,
+    type: React.PropTypes.string,
     userId: React.PropTypes.string,
     userRooms: React.PropTypes.object
 };
@@ -156,6 +174,7 @@ function mapStateToProps(state, ownProps) {
 
     return {
         dataSource,
+        rooms,
         socket,
         userId,
         userRooms: user.rooms || {}
