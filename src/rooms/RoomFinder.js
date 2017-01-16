@@ -16,7 +16,10 @@ import { setUser } from '../actions';
 
 // constants
 import { DIRECT_MESSAGES_TYPE } from '../sidebar/helpers';
-import { UPDATE_USER } from '../../socket.io/events';
+import {
+    FIND_OR_CREATE_ROOM,
+    UPDATE_USER
+} from '../../socket.io/events';
 import { gutter } from '../shared/styles';
 
 // styles
@@ -34,9 +37,14 @@ class RoomFinder extends React.Component {
     constructor() {
         super();
         this.state = { searchText: '' };
-        this._changeRoom = this._changeRoom.bind(this);
-        this._handleUpdateInput = this._handleUpdateInput.bind(this);
-        this._handleNewRequest = this._handleNewRequest.bind(this);
+        _.forEach([
+            '_changeRoom',
+            '_findOrCreateRoom',
+            '_handleUpdateInput',
+            '_handleNewRequest'
+        ], (methodName) => {
+            this[methodName] = this[methodName].bind(this);
+        });
     }
 
     /**
@@ -78,7 +86,8 @@ class RoomFinder extends React.Component {
         const roomId = _.findKey(rooms, (room) => {
             return !room.name && _.isEqual(room._users, userIds);
         });
-        if (roomId !== activeRoom) this._changeRoom(roomId);
+        if (!roomId) this._findOrCreateRoom(userIds);
+        else if (roomId !== activeRoom) this._changeRoom(roomId);
     }
 
     /**
@@ -93,6 +102,19 @@ class RoomFinder extends React.Component {
         });
         socket.emit(UPDATE_USER, userId, {
             'rooms.active': roomId
+        });
+    }
+
+    /**
+     * Find or create new room.
+     *
+     * @param {Array} userIds - The user ids.
+     */
+    _findOrCreateRoom(userIds) {
+        const { socket, userId } = this.props;
+        socket.emit(FIND_OR_CREATE_ROOM, {
+            _creator: userId,
+            _users: userIds
         });
     }
 
