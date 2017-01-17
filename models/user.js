@@ -56,6 +56,14 @@ const userSchema = new mongoose.Schema({
             default: defaultRoom
         },
         history: Object
+        /*
+        {
+            [_room]: {
+                _message: String,
+                mentions: Number
+            }
+        }
+        */
     }
 });
 

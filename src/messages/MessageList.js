@@ -104,7 +104,7 @@ class MessageList extends React.Component {
      */
     _handleMessages(prevProps) {
         const {
-            activeMessage,
+            activeMessageId,
             activeRoom,
             messages,
             setUser,
@@ -128,7 +128,7 @@ class MessageList extends React.Component {
                 }
             });
             socket.emit(UPDATE_USER, userId, {
-                [`rooms.history.${activeRoom}`]: lastMessageId
+                [`rooms.history.${activeRoom}._message`]: lastMessageId
             });
 
         // multiple messages
@@ -140,7 +140,7 @@ class MessageList extends React.Component {
             // appended (room loaded or changed)
             if (!prevMessagesLen) {
                 // scroll to last message in user history
-                scrollIntoView(activeMessage);
+                scrollIntoView(activeMessageId);
 
             // prepended
             } else {
@@ -213,7 +213,7 @@ class MessageList extends React.Component {
 MessageList.propTypes = {
     activeRoom: React.PropTypes.string,
     isRoomLoaded: React.PropTypes.bool,
-    activeMessage: React.PropTypes.string,
+    activeMessageId: React.PropTypes.string,
     messages: React.PropTypes.array,
     setUser: React.PropTypes.func,
     socket: React.PropTypes.object,
@@ -232,7 +232,7 @@ function mapStateToProps(state) {
     return {
         activeRoom,
         isRoomLoaded: user.isAuthenticated && !_.isUndefined(activeMessages),
-        activeMessage: _.get(user, `rooms.history['${activeRoom}']`),
+        activeMessageId: _.get(user, `rooms.history.${activeRoom}._message`),
         messages: activeMessages,
         socket,
         userId: user._id,
