@@ -62,14 +62,14 @@ class MessageList extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        const { activeRoom, isRoomLoaded } = this.props;
+        const { activeRoomId, isRoomLoaded } = this.props;
 
         if (isRoomLoaded) return this._handleMessages(prevProps);
 
         // get messages if switched to a different room
-        if (activeRoom &&
-            prevProps.activeRoom &&
-            activeRoom !== prevProps.activeRoom) {
+        if (activeRoomId &&
+            prevProps.activeRoomId &&
+            activeRoomId !== prevProps.activeRoomId) {
             this._getMessages();
         }
     }
@@ -89,11 +89,11 @@ class MessageList extends React.Component {
             isLoadingMessages: true
         });
 
-        const { activeRoom, messages, socket } = this.props;
+        const { activeRoomId, messages, socket } = this.props;
 
         socket.emit(GET_MESSAGES, {
             before: _.get(messages, '[0].created', _.now()),
-            roomId: activeRoom
+            roomId: activeRoomId
         });
     }
 
@@ -105,7 +105,7 @@ class MessageList extends React.Component {
     _handleMessages(prevProps) {
         const {
             activeMessageId,
-            activeRoom,
+            activeRoomId,
             messages,
             setUser,
             socket,
@@ -123,12 +123,12 @@ class MessageList extends React.Component {
             setUser({
                 rooms: {
                     history: {
-                        [activeRoom]: lastMessageId
+                        [activeRoomId]: lastMessageId
                     }
                 }
             });
             socket.emit(UPDATE_USER, userId, {
-                [`rooms.history.${activeRoom}._message`]: lastMessageId
+                [`rooms.history.${activeRoomId}._message`]: lastMessageId
             });
 
         // multiple messages
@@ -211,7 +211,7 @@ class MessageList extends React.Component {
 }
 
 MessageList.propTypes = {
-    activeRoom: React.PropTypes.string,
+    activeRoomId: React.PropTypes.string,
     isRoomLoaded: React.PropTypes.bool,
     activeMessageId: React.PropTypes.string,
     messages: React.PropTypes.array,
@@ -227,12 +227,12 @@ MessageList.defaultProps = {
 
 function mapStateToProps(state) {
     const { messages, socket, user, users } = state;
-    const activeRoom = _.get(user, 'rooms.active');
-    const activeMessages = messages[activeRoom];
+    const activeRoomId = _.get(user, 'rooms.active');
+    const activeMessages = messages[activeRoomId];
     return {
-        activeRoom,
+        activeRoomId,
         isRoomLoaded: user.isAuthenticated && !_.isUndefined(activeMessages),
-        activeMessageId: _.get(user, `rooms.history.${activeRoom}._message`),
+        activeMessageId: _.get(user, `rooms.history.${activeRoomId}._message`),
         messages: activeMessages,
         socket,
         userId: user._id,
