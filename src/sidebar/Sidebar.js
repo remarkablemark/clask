@@ -27,7 +27,7 @@ import { defaultRoom } from '../../config/constants';
  */
 function Sidebar(props) {
     const {
-        activeRoom,
+        activeRoomId,
         rooms,
         setUser,
         sidebar,
@@ -36,13 +36,13 @@ function Sidebar(props) {
         users
     } = props;
 
-    if (!activeRoom || _.isEmpty(rooms)) return null;
+    if (!activeRoomId || _.isEmpty(rooms)) return null;
 
     return (
         <Drawer open={true} width={sidebarWidth}>
             {/* channels */}
             <SidebarMenu
-                activeRoom={activeRoom}
+                activeRoomId={activeRoomId}
                 roomIds={sidebar[CHANNELS_TYPE]}
                 roomPrefix='# '
                 rooms={rooms}
@@ -55,7 +55,7 @@ function Sidebar(props) {
 
             {/* direct messages */}
             <SidebarMenu
-                activeRoom={activeRoom}
+                activeRoomId={activeRoomId}
                 roomIds={sidebar[DIRECT_MESSAGES_TYPE]}
                 rooms={rooms}
                 setUser={setUser}
@@ -70,7 +70,7 @@ function Sidebar(props) {
 }
 
 Sidebar.propTypes = {
-    activeRoom: React.PropTypes.string,
+    activeRoomId: React.PropTypes.string,
     rooms: React.PropTypes.object,
     setUser: React.PropTypes.func,
     sidebar: React.PropTypes.shape({
@@ -91,10 +91,10 @@ Sidebar.defaultProps = {
 
 function mapStateToProps(state) {
     const { rooms, socket, user, users } = state;
-    const activeRoom = _.get(user, 'rooms.active');
+    const activeRoomId = _.get(user, 'rooms.active');
     const sidebar = _.get(user, 'rooms.sidebar');
     return {
-        activeRoom,
+        activeRoomId,
         rooms,
         sidebar,
         socket,

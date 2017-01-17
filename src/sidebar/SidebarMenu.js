@@ -77,14 +77,14 @@ export default class SidebarMenu extends React.Component {
      */
     _changeRoom(roomId) {
         const {
-            activeRoom,
+            activeRoomId,
             setUser,
             socket,
             userId
         } = this.props;
 
         // no-op if room has not changed
-        if (activeRoom === roomId) return;
+        if (activeRoomId === roomId) return;
 
         setUser({
             rooms: { active: roomId }
@@ -115,7 +115,7 @@ export default class SidebarMenu extends React.Component {
 
     render() {
         const {
-            activeRoom,
+            activeRoomId,
             roomIds,
             roomPrefix,
             rooms,
@@ -179,7 +179,7 @@ export default class SidebarMenu extends React.Component {
                     if (!roomName) return null;
 
                     const style = (
-                        roomId === activeRoom ?
+                        roomId === activeRoomId ?
                         activeMenuStyle :
                         menuItemStyle
                     );
@@ -210,7 +210,7 @@ export default class SidebarMenu extends React.Component {
 }
 
 SidebarMenu.propTypes = {
-    activeRoom: React.PropTypes.string,
+    activeRoomId: React.PropTypes.string,
     roomIds: React.PropTypes.array,
     roomPrefix: React.PropTypes.node,
     rooms: React.PropTypes.object,
