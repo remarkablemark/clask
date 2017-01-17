@@ -82,14 +82,14 @@ class Form extends React.Component {
         if (!_.trim(value)) return;
 
         const {
-            activeRoom,
+            activeRoomId,
             hasMessages,
             socket,
             userId
         } = this.props;
 
         socket.emit(NEW_MESSAGE, {
-            _room: activeRoom,
+            _room: activeRoomId,
             _user: userId,
             created: _.now(),
             isFirst: hasMessages ? undefined : true,
@@ -101,8 +101,8 @@ class Form extends React.Component {
     }
 
     render() {
-        const { activeRoom, userId }  = this.props;
-        if (!activeRoom || !userId) return null;
+        const { activeRoomId, userId }  = this.props;
+        if (!activeRoomId || !userId) return null;
 
         return (
             <form onSubmit={this._handleSubmit} style={formStyle}>
@@ -134,7 +134,7 @@ class Form extends React.Component {
 }
 
 Form.propTypes = {
-    activeRoom: React.PropTypes.string,
+    activeRoomId: React.PropTypes.string,
     hasMessages: React.PropTypes.bool,
     socket: React.PropTypes.object,
     userId: React.PropTypes.string
@@ -143,11 +143,11 @@ Form.propTypes = {
 function mapStateToProps(state) {
     const { messages, socket, user } = state;
     const userRooms = _.get(user, 'rooms', {});
-    const activeRoom = userRooms.active;
+    const activeRoomId = userRooms.active;
 
     return {
-        activeRoom,
-        hasMessages: _.get(messages, activeRoom, []).length !== 0,
+        activeRoomId,
+        hasMessages: _.get(messages, activeRoomId, []).length !== 0,
         socket: socket,
         userId: user._id
     };
