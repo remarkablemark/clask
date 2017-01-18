@@ -36,8 +36,9 @@ function messages(io, socket) {
      * New message from client.
      */
     socket.on(NEW_MESSAGE, (message) => {
+        // send message to room
         message._id = ObjectId();
-        io.emit(MESSAGES, message._room, [message]);
+        io.to(message._room).emit(MESSAGES, message._room, [message]);
 
         // save to database
         new Message(message).save((err) => {

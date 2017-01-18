@@ -64,22 +64,26 @@ function connect(io, socket) {
             isAuthenticated: true
         }));
 
+        /**
+         * Join room.
+         */
         const userRooms = user.rooms;
-        const activeRoom = userRooms.active;
+        const activeRoomId = userRooms.active;
+        socket.join(activeRoomId);
 
         /**
          * Find messages.
          */
         Message.find({
-            _room: activeRoom
+            _room: activeRoomId
         }, messagesProjection, messagesOptions, (err, messages) => {
             if (err) return debug('unable to find messages', err);
 
             // no messages found
-            if (!messages) return socket.emit(MESSAGES, activeRoom, []);
+            if (!messages) return socket.emit(MESSAGES, activeRoomId, []);
 
             // send client latest messages
-            socket.emit(MESSAGES, activeRoom, messages.reverse());
+            socket.emit(MESSAGES, activeRoomId, messages.reverse());
         });
 
         const sidebarRooms = userRooms.sidebar;
@@ -98,7 +102,6 @@ function connect(io, socket) {
 
             // send client sidebar rooms data
             socket.emit(ROOMS, docsToObj(rooms));
-            debug(ROOMS, rooms);
         });
     });
 

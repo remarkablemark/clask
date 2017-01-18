@@ -24,6 +24,12 @@ function user(io, socket) {
     socket.on(UPDATE_USER, (userId, userData) => {
         if (!userId || userData.constructor !== Object) return;
 
+        // join room
+        if (userData['rooms.active']) {
+            socket.join(userData['rooms.active']);
+        }
+
+        // update user
         User.findByIdAndUpdate(userId, { $set: userData }, (err) => {
             if (err) debug('failed to update user', err);
         });
