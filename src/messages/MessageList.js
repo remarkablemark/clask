@@ -130,18 +130,23 @@ class MessageList extends React.Component {
         // single (new) message
         if (messagesLenDiff === 1) {
             const lastMessageId = _.get(_.last(messages), '_id');
+            // set active message id
+            if (lastMessageId !== activeMessageId) {
+                setUser({
+                    rooms: {
+                        history: {
+                            [activeRoomId]: {
+                                _message: lastMessageId
+                            }
+                        }
+                    }
+                });
+                socket.emit(UPDATE_USER, userId, {
+                    [`rooms.history.${activeRoomId}._message`]: lastMessageId
+                });
+            }
             // scroll to last message
             scrollIntoView(lastMessageId);
-            setUser({
-                rooms: {
-                    history: {
-                        [activeRoomId]: lastMessageId
-                    }
-                }
-            });
-            socket.emit(UPDATE_USER, userId, {
-                [`rooms.history.${activeRoomId}._message`]: lastMessageId
-            });
 
         // multiple messages
         } else if (messagesLenDiff > 1) {
