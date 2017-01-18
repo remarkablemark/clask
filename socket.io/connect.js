@@ -7,13 +7,11 @@ const debug = require('../db/helpers').debug;
 const { docsToObj } = require('./helpers');
 
 // models
-const Message = require('../models/message');
 const Room = require('../models/room');
 const User = require('../models/user');
 
 // constants
 const {
-    MESSAGES,
     ROOMS,
     USER,
     USERS
@@ -23,11 +21,6 @@ const userProjection = {
     name: 1,
     rooms: 1,
     username: 1
-};
-const messagesProjection = { __v: 0, _room: 0 };
-const messagesOptions = {
-    limit: require('../config/constants').messagesLimit,
-    sort: { created: -1 }
 };
 const roomsProjection = { _users: 1, name: 1 };
 const emptyQuery = {};
@@ -69,24 +62,8 @@ function connect(io, socket) {
          */
         const userRooms = user.rooms;
         const activeRoomId = userRooms.active;
-        socket.join(activeRoomId);
-
-        /**
-         * Find messages.
-         */
-        Message.find({
-            _room: activeRoomId
-        }, messagesProjection, messagesOptions, (err, messages) => {
-            if (err) return debug('unable to find messages', err);
-
-            // no messages found
-            if (!messages) return socket.emit(MESSAGES, activeRoomId, []);
-
-            // send client latest messages
-            socket.emit(MESSAGES, activeRoomId, messages.reverse());
-        });
-
         const sidebarRooms = userRooms.sidebar;
+        socket.join(activeRoomId);
 
         /**
          * Find rooms (shown in sidebar).

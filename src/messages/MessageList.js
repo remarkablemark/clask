@@ -62,16 +62,13 @@ class MessageList extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        const { activeRoomId, isRoomLoaded } = this.props;
+        const {
+            activeRoomId,
+            isRoomLoaded
+        } = this.props;
 
-        if (isRoomLoaded) return this._handleMessages(prevProps);
-
-        // get messages if switched to a different room
-        if (activeRoomId &&
-            prevProps.activeRoomId &&
-            activeRoomId !== prevProps.activeRoomId) {
-            this._getMessages();
-        }
+        if (isRoomLoaded) this._handleMessages(prevProps);
+        else if (activeRoomId) this._getMessages();
     }
 
     /**
@@ -80,19 +77,28 @@ class MessageList extends React.Component {
      * - 'Load More' is triggered
      */
     _getMessages() {
-        // cache position
-        const contentElement = this.refs.content;
-        this._height = contentElement.clientHeight;
-        this._top = contentElement.parentNode.scrollTop;
+        const {
+            activeMessageId,
+            activeRoomId,
+            isRoomLoaded,
+            messages,
+            socket
+        } = this.props;
 
-        this.setState({
-            isLoadingMessages: true
-        });
+        if (isRoomLoaded) {
+            // cache scroll position
+            const contentElement = this.refs.content;
+            this._height = contentElement.clientHeight;
+            this._top = contentElement.parentNode.scrollTop;
 
-        const { activeRoomId, messages, socket } = this.props;
+            this.setState({
+                isLoadingMessages: true
+            });
+        }
 
         socket.emit(GET_MESSAGES, {
             before: _.get(messages, '[0].created', _.now()),
+            messageId: isRoomLoaded ? undefined : activeMessageId,
             roomId: activeRoomId
         });
     }
@@ -114,6 +120,12 @@ class MessageList extends React.Component {
 
         const prevMessagesLen = prevProps.messages.length;
         const messagesLenDiff = messages.length - prevMessagesLen;
+
+        // scroll to last message in user history if room has changed
+        if (prevProps.activeRoomId && activeRoomId &&
+            prevProps.activeRoomId !== activeRoomId) {
+            return scrollIntoView(activeMessageId);
+        }
 
         // single (new) message
         if (messagesLenDiff === 1) {

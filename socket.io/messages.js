@@ -6,9 +6,9 @@
 const debug = {};
 debug.db = require('../db/helpers').debug;
 debug.socket = require('./helpers').debug;
-
-// mongoose
 const ObjectId = require('mongoose').Types.ObjectId;
+
+// models
 const Message = require('../models/message');
 
 // socket events
@@ -21,9 +21,11 @@ const {
 // constants
 const messagesProjection = { __v: 0, _room: 0 };
 const messagesOptions = {
-    limit: require('../config/constants').messagesLimit,
     sort: { created: -1 }
 };
+const messagesOptionsWithLimit = Object.assign({
+    limit: require('../config/constants').messagesLimit
+}, messagesOptions);
 
 /**
  * Event listeners for messages.
@@ -51,21 +53,55 @@ function messages(io, socket) {
      * Client requests older messages.
      */
     socket.on(GET_MESSAGES, (data) => {
-        if (data.constructor !== Object) return;
-        const { before, roomId } = data;
-        if (!before || !roomId) return;
+        if (!data || data.constructor !== Object) return;
+        const { before, messageId, roomId } = data;
+        if (!roomId || !before) return;
 
-        // find room messages before date
-        Message.find({
-            _room: roomId,
-            created: {
+        const query = { _room: roomId };
+        let options = messagesOptions;
+
+        // load messages in changed room
+        if (messageId) {
+            query._id = {
+                $gte: ObjectId(messageId)
+            };
+
+        // otherwise, load previous messages
+        } else {
+            query.created = {
                 $lt: before
-            }
-        }, messagesProjection, messagesOptions, (err, messages) => {
-            if (err) return debug.db('unable to find messages', err);
-            if (!messages) return;
+            };
+            options = messagesOptionsWithLimit;
+        }
 
-            socket.emit(MESSAGES, roomId, messages.reverse());
+        Message.find(query, messagesProjection, options, (err, messages) => {
+            if (err) return debug.db('unable to find messages', err);
+
+            // no messages found
+            if (!messages || !messages.length) {
+                return socket.emit(MESSAGES, roomId, []);
+            }
+
+            // send messages
+            messages.reverse();
+            if (!messageId) {
+                return socket.emit(MESSAGES, roomId, messages);
+            }
+
+            // get more messages (if applicable)
+            Message.find({
+                _room: roomId,
+                _id: { $lt: messages[0]._id }
+            }, messagesProjection, messagesOptionsWithLimit, (err, moreMessages) => {
+                if (err) return debug.db('unable to find messages', err);
+
+                // no more messages found
+                if (!moreMessages) return socket.emit(MESSAGES, roomId, messages);
+
+                // send prepended messages
+                moreMessages.reverse();
+                socket.emit(MESSAGES, roomId, moreMessages.concat(messages))
+            });
         });
     });
 }
