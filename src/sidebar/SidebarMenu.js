@@ -5,6 +5,7 @@
  */
 import React from 'react';
 import _ from 'lodash';
+import { changeRoom } from '../rooms/helpers';
 
 // components
 import FontIcon from 'material-ui/FontIcon';
@@ -20,12 +21,13 @@ import {
     CHANNELS_TYPE,
     DIRECT_MESSAGES_TYPE
 }  from './helpers';
-import { UPDATE_USER } from '../../socket.io/events';
+
 import {
     grey300,
     grey700,
     red500
 } from 'material-ui/styles/colors';
+
 import {
     dialogPadding,
     sidebarMenuItemHeight
@@ -85,30 +87,6 @@ export default class SidebarMenu extends React.Component {
             isDialogOpen: false
         };
         this._closeDialog = this._closeDialog.bind(this);
-    }
-
-    /**
-     * Changes active room when menu item is clicked.
-     *
-     * @param {String} roomId - The room id.
-     */
-    _changeRoom(roomId) {
-        const {
-            activeRoomId,
-            setUser,
-            socket,
-            userId
-        } = this.props;
-
-        // no-op if room has not changed
-        if (activeRoomId === roomId) return;
-
-        setUser({
-            rooms: { active: roomId }
-        });
-        socket.emit(UPDATE_USER, userId, {
-            'rooms.active': roomId
-        });
     }
 
     /**
@@ -208,7 +186,7 @@ export default class SidebarMenu extends React.Component {
 
                     return (
                         <MenuItem
-                            onClick={() => this._changeRoom(roomId)}
+                            onClick={changeRoom.bind(this, roomId)}
                             rightIcon={mentionsIcon}
                             style={isActive ? activeMenuStyle : menuItemStyle}
                             key={roomId}>

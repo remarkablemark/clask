@@ -5,6 +5,7 @@
  */
 import React from 'react';
 import _ from 'lodash';
+import { changeRoom } from './helpers';
 
 // components
 import AutoComplete from 'material-ui/AutoComplete';
@@ -16,10 +17,7 @@ import { setUser } from '../actions';
 
 // constants
 import { DIRECT_MESSAGES_TYPE } from '../sidebar/helpers';
-import {
-    FIND_OR_CREATE_ROOM,
-    UPDATE_USER
-} from '../../socket.io/events';
+import { FIND_OR_CREATE_ROOM } from '../../socket.io/events';
 import { gutter } from '../shared/styles';
 
 // styles
@@ -37,8 +35,8 @@ class RoomFinder extends React.Component {
     constructor() {
         super();
         this.state = { searchText: '' };
+        this._changeRoom = changeRoom.bind(this);
         _.forEach([
-            '_changeRoom',
             '_findOrCreateRoom',
             '_handleUpdateInput',
             '_handleNewRequest'
@@ -88,21 +86,6 @@ class RoomFinder extends React.Component {
         });
         if (!roomId) this._findOrCreateRoom(userIds);
         else if (roomId !== activeRoom) this._changeRoom(roomId);
-    }
-
-    /**
-     * Changes the active room.
-     *
-     * @param {String} roomId - The room id.
-     */
-    _changeRoom(roomId) {
-        const { setUser, socket, userId } = this.props;
-        setUser({
-            rooms: { active: roomId }
-        });
-        socket.emit(UPDATE_USER, userId, {
-            'rooms.active': roomId
-        });
     }
 
     /**
