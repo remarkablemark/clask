@@ -10,6 +10,7 @@ import _ from 'lodash';
 import FontIcon from 'material-ui/FontIcon';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
+import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import MenuDialog from './MenuDialog';
 
@@ -20,7 +21,11 @@ import {
     DIRECT_MESSAGES_TYPE
 }  from './helpers';
 import { UPDATE_USER } from '../../socket.io/events';
-import { grey300, grey700 } from 'material-ui/styles/colors';
+import {
+    grey300,
+    grey700,
+    red500
+} from 'material-ui/styles/colors';
 import {
     dialogPadding,
     sidebarMenuItemHeight
@@ -32,14 +37,26 @@ const menuBaseStyle = {
     lineHeight: sidebarMenuItemHeight
 };
 
+// e.g., CHANNELS
 const menuHeaderStyle = _.assign({
     color: grey700,
     fontWeight: 'bold'
 }, menuBaseStyle);
 
+// e.g., #general
 const menuItemStyle = _.assign({
     padding: '0 0.5em'
 }, menuBaseStyle);
+
+// mentions number
+const iconStyle = {
+    backgroundColor: red500,
+    color: '#fff',
+    lineHeight: '26px',
+    margin: 0,
+    textAlign: 'center',
+    top: 5
+};
 
 const activeMenuStyle = _.assign({
     backgroundColor: grey300
@@ -116,6 +133,7 @@ export default class SidebarMenu extends React.Component {
     render() {
         const {
             activeRoomId,
+            history,
             roomIds,
             roomPrefix,
             rooms,
@@ -178,16 +196,21 @@ export default class SidebarMenu extends React.Component {
                     // do not render if there is no room name
                     if (!roomName) return null;
 
-                    const style = (
-                        roomId === activeRoomId ?
-                        activeMenuStyle :
-                        menuItemStyle
-                    );
+                    const isActive = roomId === activeRoomId;
+
+                    // mentions icon
+                    const mentions = _.get(history, `${roomId}.mentions`);
+                    const mentionsIcon = mentions > 0 ? (
+                        <Paper circle={true} style={iconStyle}>
+                            {mentions}
+                        </Paper>
+                    ) : undefined;
 
                     return (
                         <MenuItem
                             onClick={() => this._changeRoom(roomId)}
-                            style={style}
+                            rightIcon={mentionsIcon}
+                            style={isActive ? activeMenuStyle : menuItemStyle}
                             key={roomId}>
                             {roomPrefix}
                             {roomName}
@@ -211,6 +234,7 @@ export default class SidebarMenu extends React.Component {
 
 SidebarMenu.propTypes = {
     activeRoomId: React.PropTypes.string,
+    history: React.PropTypes.object,
     roomIds: React.PropTypes.array,
     roomPrefix: React.PropTypes.node,
     rooms: React.PropTypes.object,
