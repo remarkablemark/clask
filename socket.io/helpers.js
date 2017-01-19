@@ -1,6 +1,79 @@
 'use strict';
 
 /**
+ * User-socket id pair.
+ * @namespace
+ */
+let users = {};
+
+/**
+ * Connected user ids.
+ * @namespace
+ */
+let connectedUsers = [];
+
+/**
+ * Room-users id pair.
+ * @namespace
+ */
+let rooms = {};
+
+/**
+ * Saves user-socket id pair.
+ *
+ * @param {String} userId   - The user id.
+ * @param {String} socketId - The socket id.
+ */
+function setUserSocket(userId, socketId) {
+    users[userId] = socketId;
+    connectedUsers.push(userId);
+}
+
+/**
+ * Removes user-socket id pair.
+ *
+ * @param {String} userId - The user id.
+ */
+function unsetUserSocket(userId) {
+    delete users[userId];
+    const index = connectedUsers.indexOf(userId);
+    if (index !== -1) {
+        connectedUsers.splice(index, 1);
+    }
+}
+
+/**
+ * Adds user id to room.
+ *
+ * @param {String} roomId - The user id.
+ * @param {String} userId - The socket id.
+ */
+function setRoomUser(roomId, userId) {
+    const roomValue = rooms[roomId];
+    if (!roomValue || roomValue.constructor !== Array) {
+        rooms[roomId] = [];
+    }
+    rooms[roomId].push(userId);
+}
+
+/**
+ * Removes user id from room.
+ *
+ * @param {String} userId - The user id.
+ */
+function unsetRoomUser(roomId, userId) {
+    const roomValue = rooms[roomId];
+    if (!roomValue || roomValue.constructor !== Array) {
+        rooms[roomId] = [];
+        return;
+    }
+    const index = rooms[roomId].indexOf(userId);
+    if (index !== -1) {
+        rooms[roomId].splice(index, 1);
+    }
+}
+
+/**
  * Reformats documents to a key-based object.
  *
  * @param  {Array}  docs  - The docs.
@@ -19,24 +92,21 @@ function docsToObj(docs, key = '_id') {
 }
 
 /**
- * Finds socket that matches criteria.
- *
- * @param  {Object}   sockets - The sockets.
- * @param  {Function} match   - The match checker.
- * @return {(Object|undefined)}
+ * Export helpers.
  */
-function findSocket(sockets, match) {
-    for (let socketId in sockets) {
-        const socket = sockets[socketId];
-        if (match(socket)) return socket;
-    }
-}
-
-/** Socket debugger. */
-const debug = require('debug')(process.env.APP_NAME + ':socket');
-
 module.exports = {
-    debug,
+    // socket debugger
+    debug: require('debug')(process.env.APP_NAME + ':socket'),
+
+    // reformat data
     docsToObj,
-    findSocket
+
+    // socket helpers
+    users,
+    connectedUsers,
+    rooms,
+    setUserSocket,
+    unsetUserSocket,
+    setRoomUser,
+    unsetRoomUser
 };
