@@ -21,11 +21,20 @@ export function changeRoom(roomId) {
     // no-op if room has not changed
     if (activeRoomId === roomId) return;
 
+    // update active room and reset mentions
     socket.emit(UPDATE_USER, userId, {
-        'rooms.active': roomId
+        'rooms.active': roomId,
+        [`rooms.history.${roomId}.mentions`]: 0
     });
 
     setUser({
-        rooms: { active: roomId }
+        rooms: {
+            active: roomId,
+            history: {
+                [roomId]: {
+                    mentions: 0
+                }
+            }
+        }
     });
 }
