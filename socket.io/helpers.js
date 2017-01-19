@@ -1,75 +1,86 @@
 'use strict';
 
 /**
- * User-socket id pair.
+ * Users.
  * @namespace
  */
-let users = {};
+let users = {
+    // [userId]: {
+    //     socket: String,
+    //     rooms: Array
+    // }
+};
 
 /**
- * Connected user ids.
- * @namespace
+ * Gets users.
+ *
+ * @return {Object}
  */
-let connectedUsers = [];
+function getUsers() {
+    return users;
+}
 
 /**
- * Room-users id pair.
- * @namespace
+ * Gets user from users.
+ *
+ * @param  {String} userId - The user id.
+ * @return {Object}
  */
-let rooms = {};
+function getUser(userId) {
+    return users[userId];
+}
 
 /**
- * Saves user-socket id pair.
+ * Deletes user from users.
+ *
+ * @param {String} userId - The user id.
+ */
+function removeUser(userId) {
+    delete users[userId];
+}
+
+/**
+ * Sets socket id in users.
  *
  * @param {String} userId   - The user id.
  * @param {String} socketId - The socket id.
  */
 function setUserSocket(userId, socketId) {
-    users[userId] = socketId;
-    connectedUsers.push(userId);
+    let user = getUser(userId);
+    if (!user) {
+        user = { rooms: [] };
+        users[userId] = user;
+    }
+    user.socket = socketId;
 }
 
 /**
- * Removes user-socket id pair.
+ * Adds room id to users.
  *
  * @param {String} userId - The user id.
+ * @param {String} roomId - The room id.
  */
-function unsetUserSocket(userId) {
-    delete users[userId];
-    const index = connectedUsers.indexOf(userId);
-    if (index !== -1) {
-        connectedUsers.splice(index, 1);
+function addUserRoom(userId, roomId) {
+    let user = getUser(userId);
+    if (!user) {
+        user = { rooms: [] };
+        users[userId] = user;
     }
+    user.rooms.push(userId);
 }
 
 /**
- * Adds user id to room.
- *
- * @param {String} roomId - The user id.
- * @param {String} userId - The socket id.
- */
-function setRoomUser(roomId, userId) {
-    const roomValue = rooms[roomId];
-    if (!roomValue || roomValue.constructor !== Array) {
-        rooms[roomId] = [];
-    }
-    rooms[roomId].push(userId);
-}
-
-/**
- * Removes user id from room.
+ * Removes room id from users.
  *
  * @param {String} userId - The user id.
+ * @param {String} roomId - The room id.
  */
-function unsetRoomUser(roomId, userId) {
-    const roomValue = rooms[roomId];
-    if (!roomValue || roomValue.constructor !== Array) {
-        rooms[roomId] = [];
-        return;
-    }
-    const index = rooms[roomId].indexOf(userId);
+function removeUserRoom(userId, roomId) {
+    let user = getUser(userId);
+    if (!user || !user.rooms) return;
+    const index = user.rooms.indexOf(roomId);
     if (index !== -1) {
-        rooms[roomId].splice(index, 1);
+        user.rooms.splice(index, 1);
     }
 }
 
@@ -102,11 +113,10 @@ module.exports = {
     docsToObj,
 
     // socket helpers
-    users,
-    connectedUsers,
-    rooms,
+    getUsers,
+    getUser,
     setUserSocket,
-    unsetUserSocket,
-    setRoomUser,
-    unsetRoomUser
+    addUserRoom,
+    removeUserRoom,
+    removeUser
 };
