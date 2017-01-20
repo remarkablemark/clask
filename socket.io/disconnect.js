@@ -3,7 +3,10 @@
 /**
  * Module dependencies.
  */
-const { debug } = require('./helpers');
+const {
+    debug,
+    removeUser
+} = require('./helpers');
 const { USERS } = require('./events');
 
 /**
@@ -12,13 +15,16 @@ const { USERS } = require('./events');
  * @param {Object} socket - The socket.
  */
 function disconnect(socket) {
+    const { userId } = socket;
+
     socket.on('disconnect', () => {
         // broadcast to other clients that user has disconnected
         socket.broadcast.emit(USERS, {
-            [socket.userId]: {
+            [userId]: {
                 isConnected: false
             }
         });
+        removeUser(userId);
 
         // remove all socket event listeners
         Object.keys(socket._events).forEach((eventName) => {

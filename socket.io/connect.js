@@ -4,11 +4,18 @@
  * Module dependencies.
  */
 const debug = require('../db/helpers').debug;
-const { docsToObj } = require('./helpers');
 
 // models
 const Room = require('../models/room');
 const User = require('../models/user');
+
+// helpers
+const {
+    docsToObj,
+    getUsers,
+    setUserSocket,
+    addUserRoom
+} = require('./helpers');
 
 // constants
 const {
@@ -34,6 +41,7 @@ const usersProjection = { username: 1 };
  */
 function connect(io, socket) {
     const { userId } = socket;
+    setUserSocket(userId, socket.id);
 
     // broadcast to other clients that user has connected
     socket.broadcast.emit(USERS, {
@@ -64,6 +72,7 @@ function connect(io, socket) {
         const activeRoomId = userRooms.active;
         const sidebarRooms = userRooms.sidebar;
         socket.join(activeRoomId);
+        addUserRoom(userId, activeRoomId);
 
         /**
          * Find rooms (shown in sidebar).
@@ -90,8 +99,8 @@ function connect(io, socket) {
 
         // mark connected user
         let usersData = docsToObj(users);
-        Object.keys(io.sockets.connected).map((socketId) => {
-            usersData[io.sockets.connected[socketId].userId].isConnected = true;
+        Object.keys(getUsers()).forEach((userId) => {
+            usersData[userId].isConnected = true;
         });
 
         // send client data of all users

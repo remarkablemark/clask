@@ -3,9 +3,12 @@
 /**
  * Module dependencies.
  */
-const debug = {};
-debug.db = require('../db/helpers').debug;
-debug.socket = require('./helpers').debug;
+const helpers = require('./helpers');
+const { addUserRoom } = helpers;
+const debug = {
+    db: require('../db/helpers').debug,
+    socket: helpers.debug
+};
 
 // mongoose
 const Room = require('../models/room');
@@ -39,6 +42,7 @@ function rooms(io, socket) {
 
             // join room
             socket.join(roomId);
+            addUserRoom(roomData._creator, roomId);
 
             // reformat before emitting new room to all clients
             io.emit(ROOMS, {
@@ -80,7 +84,7 @@ function rooms(io, socket) {
      * Find or create room.
      */
     socket.on(FIND_OR_CREATE_ROOM, (data) => {
-        if (data.constructor !== Object) return;
+        if (!data || data.constructor !== Object) return;
         const { _creator, _users } = data;
         if (!_creator && !_users) return;
 
@@ -96,6 +100,7 @@ function rooms(io, socket) {
 
                 // join room
                 socket.join(roomId);
+                addUserRoom(_creator, roomId);
 
                 // send room and have client update its data
                 socket.emit(ROOMS, {
@@ -133,7 +138,9 @@ function rooms(io, socket) {
 
                 // join room
                 socket.join(roomId);
+                addUserRoom(_creator, roomId);
 
+                // send new room data to client
                 socket.emit(ROOMS, {
                     [roomId]: { _users: roomUsers }
                 });
