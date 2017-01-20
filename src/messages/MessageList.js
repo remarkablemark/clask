@@ -17,7 +17,6 @@ import { connect } from 'react-redux';
 import { setUser } from '../actions';
 
 // constants
-import { messagesLimit } from '../../config/constants';
 import {
     GET_MESSAGES,
     UPDATE_USER
@@ -56,9 +55,13 @@ class MessageList extends React.Component {
         this.state = {
             isLoadingMessages: false
         };
-        this._getMessages = this._getMessages.bind(this);
-        this._handleMessages = this._handleMessages.bind(this);
-        this._handleScroll = this._handleScroll.bind(this);
+        _.forEach([
+            '_getMessages',
+            '_handleMessages',
+            '_handleScroll'
+        ], (methodName) => {
+            this[methodName] = this[methodName].bind(this);
+        });
     }
 
     componentDidUpdate(prevProps) {
@@ -150,9 +153,11 @@ class MessageList extends React.Component {
 
         // multiple messages
         } else if (messagesLenDiff > 1) {
-            this.setState({
-                isLoadingMessages: false
-            });
+            if (this.state.isLoadingMessages) {
+                this.setState({
+                    isLoadingMessages: false
+                });
+            }
 
             // appended (room loaded or changed)
             if (!prevMessagesLen) {
@@ -181,20 +186,16 @@ class MessageList extends React.Component {
         const { messages, users } = this.props;
         if (!messages || _.isEmpty(users)) return null;
 
-        const hasMore = (
-            !_.isEmpty(messages) &&
-            !_.first(messages).isFirst &&
-            messages.length >= messagesLimit
-        );
-
         return (
             <List style={containerStyle} onScroll={_.debounce(this._handleScroll, 250)}>
                 <div ref='content'>
-                    <LoadMore
-                        hasMore={hasMore}
-                        isLoading={this.state.isLoadingMessages}
-                        onClick={this._getMessages}
-                    />
+                    {!_.isEmpty(messages) && (
+                        <LoadMore
+                            hasMore={!_.get(messages, '[0].isFirst')}
+                            isLoading={this.state.isLoadingMessages}
+                            onClick={this._getMessages}
+                        />
+                    )}
 
                     {_.map(messages, (message) => {
                         const {
