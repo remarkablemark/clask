@@ -23,6 +23,7 @@ import {
 }  from './helpers';
 
 import {
+    green500,
     grey300,
     grey700,
     red500
@@ -50,8 +51,27 @@ const menuItemStyle = _.assign({
     padding: '0 0.5em'
 }, menuBaseStyle);
 
-// mentions number
-const iconStyle = {
+const innerDivStyle = {
+    paddingLeft: 30
+};
+
+// left icon (mentions)
+const activeLeftIconStyle = {
+    backgroundColor: green500,
+    width: 10,
+    height: 10,
+    margin: 0,
+    top: 12,
+    left: 14
+};
+
+const leftIconStyle = _.assign({}, activeLeftIconStyle, {
+    backgroundColor: '#fff',
+    boxShadow: '0px 1px 4px #888'
+});
+
+// right icon (mentions)
+const rightIconStyle = {
     backgroundColor: red500,
     color: '#fff',
     lineHeight: '26px',
@@ -158,17 +178,41 @@ export default class SidebarMenu extends React.Component {
                     // channel has name
                     const room = rooms[roomId];
                     let roomName = _.get(room, 'name');
+                    const isDirectMessage = type === DIRECT_MESSAGES_TYPE;
+
+                    // left icon (user connection status)
+                    let leftIcon;
 
                     // direct message shows username(s)
-                    if (type === DIRECT_MESSAGES_TYPE && _.isUndefined(roomName)) {
+                    if (isDirectMessage && !roomName) {
                         const usernames = [];
+                        let isConnected = true;
+
                         _.forEach(_.get(room, '_users'), (id) => {
                             // exclude current user
                             if (id !== userId) {
-                                usernames.push(users[id].username);
+                                const user = users[id];
+                                usernames.push(user.username);
+                                if (!user.isConnected) {
+                                    isConnected = false;
+                                }
                             }
                         });
+
+                        // room name is username
                         roomName = usernames.join(', ');
+
+                        // show user connection status
+                        leftIcon = (
+                            <Paper
+                                circle={true}
+                                style={
+                                    isConnected ?
+                                    activeLeftIconStyle :
+                                    leftIconStyle
+                                }
+                            />
+                        );
                     }
 
                     // do not render if there is no room name
@@ -176,10 +220,10 @@ export default class SidebarMenu extends React.Component {
 
                     const isActive = roomId === activeRoomId;
 
-                    // mentions icon
+                    // right icon (mentions)
                     const mentions = _.get(history, `${roomId}.mentions`);
-                    const mentionsIcon = mentions > 0 ? (
-                        <Paper circle={true} style={iconStyle}>
+                    const rightIcon = mentions > 0 ? (
+                        <Paper circle={true} style={rightIconStyle}>
                             {mentions}
                         </Paper>
                     ) : undefined;
@@ -187,8 +231,10 @@ export default class SidebarMenu extends React.Component {
                     return (
                         <MenuItem
                             onClick={changeRoom.bind(this, roomId)}
-                            rightIcon={mentionsIcon}
+                            leftIcon={leftIcon}
+                            rightIcon={rightIcon}
                             style={isActive ? activeMenuStyle : menuItemStyle}
+                            innerDivStyle={isDirectMessage ? innerDivStyle : null}
                             key={roomId}>
                             {roomPrefix}
                             {roomName}
