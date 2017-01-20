@@ -37,6 +37,9 @@ function rooms(io, socket) {
             if (err) return debug.db('failed to save room', err);
             const roomId = room._id;
 
+            // join room
+            socket.join(roomId);
+
             // reformat before emitting new room to all clients
             io.emit(ROOMS, {
                 [roomId]: {
@@ -91,6 +94,9 @@ function rooms(io, socket) {
             if (room) {
                 const roomId = room._id;
 
+                // join room
+                socket.join(roomId);
+
                 // send room and have client update its data
                 socket.emit(ROOMS, {
                     [roomId]: { _users: room._users }
@@ -121,8 +127,12 @@ function rooms(io, socket) {
             // room not found so create new room
             new Room({ _users }).save((err, room) => {
                 if (err) return debug.db('unable to create new room', err);
+
                 const roomId = room._id;
                 const roomUsers = room._users;
+
+                // join room
+                socket.join(roomId);
 
                 socket.emit(ROOMS, {
                     [roomId]: { _users: roomUsers }
