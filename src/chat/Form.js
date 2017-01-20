@@ -14,10 +14,9 @@ import TextField from 'material-ui/TextField';
 // redux
 import { connect } from 'react-redux';
 
-// socket
+// constants
 import { NEW_MESSAGE } from '../../socket.io/events';
 
-// styles
 import {
     buttonWidth,
     formHeight,
@@ -25,6 +24,7 @@ import {
     sidebarWidth
 } from '../shared/styles';
 
+// styles
 const formStyle = {
     position: 'fixed',
     right: 0,
@@ -64,16 +64,37 @@ class Form extends React.Component {
         this.state = {
             value: ''
         };
-        this._handleChange = this._handleChange.bind(this);
-        this._handleSubmit = this._handleSubmit.bind(this);
-    }
-
-    _handleChange(event) {
-        this.setState({
-            value: event.target.value
+        _.forEach([
+            '_handleChange',
+            '_handleSubmit'
+        ], (methodName) => {
+            this[methodName] = this[methodName].bind(this);
         });
     }
 
+    componentDidUpdate(prevProps) {
+        const { input } = this.refs;
+        // when room has changed, refocus on input
+        if (input && prevProps.activeRoomId !== this.props.activeRoomId) {
+            input.focus();
+        }
+    }
+
+    /**
+     * Handles input changes.
+     *
+     * @param {Object} event - The event.
+     * @param {String} value - The input value.
+     */
+    _handleChange(event, value) {
+        this.setState({ value });
+    }
+
+    /**
+     * Handles form submission.
+     *
+     * @param {Object} event - The event.
+     */
     _handleSubmit(event) {
         event.preventDefault();
 
@@ -115,8 +136,11 @@ class Form extends React.Component {
                             add
                         </IconButton>
                     </div>
+
+                    {/* input */}
                     <div style={inputStyle}>
                         <TextField
+                            ref='input'
                             autoComplete='off'
                             autoCorrect='off'
                             fullWidth={true}
@@ -142,13 +166,11 @@ Form.propTypes = {
 
 function mapStateToProps(state) {
     const { messages, socket, user } = state;
-    const userRooms = _.get(user, 'rooms', {});
-    const activeRoomId = userRooms.active;
-
+    const activeRoomId = _.get(user, 'rooms.active');
     return {
         activeRoomId,
-        hasMessages: _.get(messages, activeRoomId, []).length !== 0,
-        socket: socket,
+        hasMessages: !_.isEmpty(messages[activeRoomId]),
+        socket,
         userId: user._id
     };
 }
