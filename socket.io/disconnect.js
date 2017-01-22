@@ -5,7 +5,7 @@
  */
 const {
     debug,
-    removeUser
+    delUser
 } = require('./helpers');
 const { USERS } = require('./events');
 
@@ -24,7 +24,7 @@ function disconnect(socket) {
                 isConnected: false
             }
         });
-        removeUser(userId);
+        delUser(userId);
 
         // remove all socket event listeners
         Object.keys(socket._events).forEach((eventName) => {

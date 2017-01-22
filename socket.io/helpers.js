@@ -35,7 +35,7 @@ function getUser(userId) {
  *
  * @param {String} userId - The user id.
  */
-function removeUser(userId) {
+function delUser(userId) {
     delete users[userId];
 }
 
@@ -118,5 +118,5 @@ module.exports = {
     setUserSocket,
     addUserRoom,
     removeUserRoom,
-    removeUser
+    delUser
 };
