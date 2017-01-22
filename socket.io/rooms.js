@@ -4,7 +4,10 @@
  * Module dependencies.
  */
 const helpers = require('./helpers');
-const { addUserRoom } = helpers;
+const {
+    setUser,
+    USER_KEY_ROOM
+} = helpers;
 const debug = {
     db: require('../db/helpers').debug,
     socket: helpers.debug
@@ -42,7 +45,9 @@ function rooms(io, socket) {
 
             // join room
             socket.join(roomId);
-            addUserRoom(roomData._creator, roomId);
+            setUser(roomData._creator, {
+                [USER_KEY_ROOM]: roomId
+            });
 
             // reformat before emitting new room to all clients
             io.emit(ROOMS, {
@@ -100,7 +105,9 @@ function rooms(io, socket) {
 
                 // join room
                 socket.join(roomId);
-                addUserRoom(_creator, roomId);
+                setUser(_creator, {
+                    [USER_KEY_ROOM]: roomId
+                });
 
                 // send room and have client update its data
                 socket.emit(ROOMS, {
@@ -138,7 +145,9 @@ function rooms(io, socket) {
 
                 // join room
                 socket.join(roomId);
-                addUserRoom(_creator, roomId);
+                setUser(_creator, {
+                    [USER_KEY_ROOM]: roomId
+                });
 
                 // send new room data to client
                 socket.emit(ROOMS, {

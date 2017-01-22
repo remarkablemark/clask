@@ -1,13 +1,17 @@
 'use strict';
 
+/** User key constants. */
+const USER_KEY_SOCKET = 'socketId';
+const USER_KEY_ROOM = 'activeRoomId';
+
 /**
  * Users.
  * @namespace
  */
 let users = {
     // [userId]: {
-    //     socket: String,
-    //     rooms: Array
+    //     socketId: String,
+    //     activeRoomId: String
     // }
 };
 
@@ -40,48 +44,17 @@ function delUser(userId) {
 }
 
 /**
- * Sets socket id in users.
+ * Sets properties to user.
  *
  * @param {String} userId   - The user id.
- * @param {String} socketId - The socket id.
+ * @param {Object} property - The property.
  */
-function setUserSocket(userId, socketId) {
+function setUser(userId, property = {}) {
     let user = getUser(userId);
     if (!user) {
-        user = { rooms: [] };
-        users[userId] = user;
+        users[userId] = user = {};
     }
-    user.socket = socketId;
-}
-
-/**
- * Adds room id to users.
- *
- * @param {String} userId - The user id.
- * @param {String} roomId - The room id.
- */
-function addUserRoom(userId, roomId) {
-    let user = getUser(userId);
-    if (!user) {
-        user = { rooms: [] };
-        users[userId] = user;
-    }
-    user.rooms.push(userId);
-}
-
-/**
- * Removes room id from users.
- *
- * @param {String} userId - The user id.
- * @param {String} roomId - The room id.
- */
-function removeUserRoom(userId, roomId) {
-    let user = getUser(userId);
-    if (!user || !user.rooms) return;
-    const index = user.rooms.indexOf(roomId);
-    if (index !== -1) {
-        user.rooms.splice(index, 1);
-    }
+    Object.assign(user, property);
 }
 
 /**
@@ -112,11 +85,13 @@ module.exports = {
     // reformat data
     docsToObj,
 
+    // constants
+    USER_KEY_SOCKET,
+    USER_KEY_ROOM,
+
     // socket helpers
     getUsers,
     getUser,
-    setUserSocket,
-    addUserRoom,
-    removeUserRoom,
+    setUser,
     delUser
 };

@@ -13,9 +13,11 @@ const User = require('../models/user');
 const {
     docsToObj,
     getUsers,
-    setUserSocket,
-    addUserRoom
+    setUser,
+    USER_KEY_SOCKET,
+    USER_KEY_ROOM
 } = require('./helpers');
+const usersRef = getUsers();
 
 // constants
 const {
@@ -41,7 +43,9 @@ const usersProjection = { username: 1 };
  */
 function connect(io, socket) {
     const { userId } = socket;
-    setUserSocket(userId, socket.id);
+    setUser(userId, {
+        [USER_KEY_SOCKET]: socket.id
+    });
 
     // broadcast to other clients that user has connected
     socket.broadcast.emit(USERS, {
@@ -72,7 +76,9 @@ function connect(io, socket) {
         const activeRoomId = userRooms.active;
         const sidebarRooms = userRooms.sidebar;
         socket.join(activeRoomId);
-        addUserRoom(userId, activeRoomId);
+        setUser(userId, {
+            [USER_KEY_ROOM]: activeRoomId
+        });
 
         /**
          * Find rooms (shown in sidebar).
@@ -99,7 +105,7 @@ function connect(io, socket) {
 
         // mark connected user
         let usersData = docsToObj(users);
-        Object.keys(getUsers()).forEach((userId) => {
+        Object.keys(usersRef).forEach((userId) => {
             usersData[userId].isConnected = true;
         });
 
