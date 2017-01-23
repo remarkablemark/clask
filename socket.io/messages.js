@@ -3,22 +3,32 @@
 /**
  * Module dependencies.
  */
-const debug = {};
-debug.db = require('../db/helpers').debug;
-debug.socket = require('./helpers').debug;
 const ObjectId = require('mongoose').Types.ObjectId;
+const helpers = require('./helpers');
+const usersRef = helpers.getUsers();
+const {
+    USER_KEY_SOCKET,
+    USER_KEY_ROOM
+} = helpers;
+const debug = {
+    db: require('../db/helpers').debug,
+    socket: helpers.debug
+};
 
 // models
 const Message = require('../models/message');
+const User = require('../models/user');
 
 // socket events
 const {
     GET_MESSAGES,
     MESSAGES,
-    NEW_MESSAGE
+    NEW_MESSAGE,
+    USER
 } = require('./events');
 
 // constants
+const userOptions = { new: true };
 const messagesProjection = { __v: 0, _room: 0 };
 const messagesOptions = {
     sort: { created: -1 }
@@ -37,16 +47,58 @@ function messages(io, socket) {
     /**
      * New message from client.
      */
-    socket.on(NEW_MESSAGE, (message) => {
-        // send message to room
+    socket.on(NEW_MESSAGE, (message = {}, users = []) => {
+        if (!message.text) return;
         message._id = ObjectId();
-        io.to(message._room).emit(MESSAGES, message._room, [message]);
+        const roomId = message._room;
 
-        // save to database
+        // send message to room
+        io.to(roomId).emit(MESSAGES, roomId, [message]);
+
+        // save message to database
         new Message(message).save((err) => {
             if (err) debug.db('failed to save message', err);
         });
-        debug.socket(NEW_MESSAGE, message);
+
+        // direct message
+        if (!message.name) {
+            // get all users except creator
+            const creatorId = message._user;
+            const otherUsers = users.filter(userId => userId !== creatorId);
+
+            otherUsers.forEach((userId) => {
+                const userRef = usersRef[userId];
+
+                // no-op if the other user is in the same active room
+                if (userRef && userRef[USER_KEY_ROOM] === roomId) return;
+
+                // otherwise update user history with mention
+                User.findByIdAndUpdate(userId, {
+                    $addToSet: {
+                        'rooms.sidebar.directMessages': roomId
+                    },
+                    $inc: {
+                        [`rooms.history.${roomId}.mentions`]: 1
+                    }
+                }, userOptions, (err, user) => {
+                    if (err) return debug.db('unable to update user', err);
+
+                    // send other user updated room info if connected
+                    if (userRef && userRef[USER_KEY_SOCKET]) {
+                        io.to(userRef[USER_KEY_SOCKET]).emit(USER, {
+                            rooms: {
+                                sidebar: {
+                                    directMessages: user.rooms.sidebar.directMessages
+                                },
+                                history: {
+                                    [roomId]: user.rooms.history[roomId]
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        }
     });
 
     /**
