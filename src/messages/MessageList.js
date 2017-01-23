@@ -58,6 +58,7 @@ class MessageList extends React.Component {
         _.forEach([
             '_getMessages',
             '_handleMessages',
+            '_handleMentions',
             '_handleScroll'
         ], (methodName) => {
             this[methodName] = this[methodName].bind(this);
@@ -67,11 +68,14 @@ class MessageList extends React.Component {
     componentDidUpdate(prevProps) {
         const {
             activeRoomId,
+            hasMentions,
             isRoomLoaded
         } = this.props;
 
-        if (isRoomLoaded) this._handleMessages(prevProps);
-        else if (activeRoomId) this._getMessages();
+        if (isRoomLoaded) {
+            this._handleMessages(prevProps);
+            if (hasMentions) this._handleMentions();
+        } else if (activeRoomId) this._getMessages();
     }
 
     /**
@@ -175,7 +179,31 @@ class MessageList extends React.Component {
         }
     }
 
+    _handleMentions() {
+        const {
+            activeRoomId,
+            setUser,
+            socket,
+            userId
+        } = this.props;
+
+        // reset mentions
+        setUser({
+            rooms: {
+                history: {
+                    [activeRoomId]: {
+                        mentions: 0
+                    }
+                }
+            }
+        });
+        socket.emit(UPDATE_USER, userId, {
+            [`rooms.history.${activeRoomId}.mentions`]: 0
+        });
+    }
+
     _handleScroll() {
+        // get messages if load more is reached
         if (!this.state.isLoadingMessages &&
             this.refs.content.parentNode.scrollTop < loadMoreTopOffset) {
             this._getMessages();
@@ -230,8 +258,9 @@ class MessageList extends React.Component {
 
 MessageList.propTypes = {
     activeRoomId: React.PropTypes.string,
-    isRoomLoaded: React.PropTypes.bool,
     activeMessageId: React.PropTypes.string,
+    isRoomLoaded: React.PropTypes.bool,
+    hasMentions: React.PropTypes.bool,
     messages: React.PropTypes.array,
     setUser: React.PropTypes.func,
     socket: React.PropTypes.object,
@@ -245,12 +274,15 @@ MessageList.defaultProps = {
 
 function mapStateToProps(state) {
     const { messages, socket, user, users } = state;
-    const activeRoomId = _.get(user, 'rooms.active');
+    const userRooms = _.get(user, 'rooms', {});
+    const activeRoomId = userRooms.active;
     const activeMessages = messages[activeRoomId];
+    const activeRoomHistory = _.get(userRooms, `history.${activeRoomId}`, {});
     return {
         activeRoomId,
-        isRoomLoaded: user.isAuthenticated && !_.isUndefined(activeMessages),
-        activeMessageId: _.get(user, `rooms.history.${activeRoomId}._message`),
+        activeMessageId: activeRoomHistory._message,
+        isRoomLoaded: user.isAuthenticated && _.isArray(activeMessages),
+        hasMentions: activeRoomHistory.mentions > 0,
         messages: activeMessages,
         socket,
         userId: user._id,
