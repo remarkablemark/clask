@@ -104,6 +104,7 @@ class Form extends React.Component {
 
         const {
             activeRoomId,
+            activeRoomUsers,
             hasMessages,
             socket,
             userId
@@ -115,7 +116,7 @@ class Form extends React.Component {
             created: _.now(),
             isFirst: hasMessages ? undefined : true,
             text: value
-        });
+        }, activeRoomUsers);
 
         // reset input
         this.setState({ value: '' });
@@ -159,16 +160,18 @@ class Form extends React.Component {
 
 Form.propTypes = {
     activeRoomId: React.PropTypes.string,
+    activeRoomUsers: React.PropTypes.array,
     hasMessages: React.PropTypes.bool,
     socket: React.PropTypes.object,
     userId: React.PropTypes.string
 };
 
 function mapStateToProps(state) {
-    const { messages, socket, user } = state;
+    const { rooms, messages, socket, user } = state;
     const activeRoomId = _.get(user, 'rooms.active');
     return {
         activeRoomId,
+        activeRoomUsers: _.get(rooms, `${activeRoomId}._users`, []),
         hasMessages: !_.isEmpty(messages[activeRoomId]),
         socket,
         userId: user._id
