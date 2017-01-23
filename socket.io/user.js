@@ -4,8 +4,12 @@
  * Module dependencies.
  */
 const { debug } = require('../db/helpers');
+const {
+    setUser,
+    USER_KEY_ROOM
+} = require('./helpers');
 
-// mongoose
+// models
 const User = require('../models/user');
 
 // constants
@@ -21,16 +25,20 @@ function user(io, socket) {
     /**
      * Update user.
      */
-    socket.on(UPDATE_USER, (userId, userData) => {
-        if (!userId || userData.constructor !== Object) return;
+    socket.on(UPDATE_USER, (userId, data = {}) => {
+        if (!userId || !data || data.constructor !== Object) return;
 
-        // join room
-        if (userData['rooms.active']) {
-            socket.join(userData['rooms.active']);
+        // change active room
+        const activeRoomId = data['rooms.active'];
+        if (activeRoomId) {
+            socket.join(activeRoomId);
+            setUser(userId, {
+                [USER_KEY_ROOM]: activeRoomId
+            });
         }
 
         // update user
-        User.findByIdAndUpdate(userId, { $set: userData }, (err) => {
+        User.findByIdAndUpdate(userId, { $set: data }, (err) => {
             if (err) debug('failed to update user', err);
         });
     });
