@@ -5,15 +5,18 @@
  */
 const ObjectId = require('mongoose').Types.ObjectId;
 const helpers = require('./helpers');
-const usersRef = helpers.getUsers();
-const {
-    USER_KEY_SOCKET,
-    USER_KEY_ROOM
-} = helpers;
+const { getUser } = helpers;
 const debug = {
     db: require('../db/helpers').debug,
     socket: helpers.debug
 };
+
+// constants
+const {
+    USER_KEY_SOCKET,
+    USER_KEY_ROOM
+} = helpers;
+const { directMessages } = require('../config/constants');
 
 // models
 const Message = require('../models/message');
@@ -47,7 +50,7 @@ function messages(io, socket) {
     /**
      * New message from client.
      */
-    socket.on(NEW_MESSAGE, (message = {}, users = []) => {
+    socket.on(NEW_MESSAGE, (message = {}, users = [], type) => {
         if (!message.text) return;
         message._id = ObjectId();
         const roomId = message._room;
@@ -60,14 +63,14 @@ function messages(io, socket) {
             if (err) debug.db('failed to save message', err);
         });
 
-        // direct message
-        if (!message.name) {
+        // direct message type
+        if (type === directMessages) {
             // get all users except creator
             const creatorId = message._user;
             const otherUsers = users.filter(userId => userId !== creatorId);
 
             otherUsers.forEach((userId) => {
-                const userRef = usersRef[userId];
+                const userRef = getUser(userId);
 
                 // no-op if the other user is in the same active room
                 if (userRef && userRef[USER_KEY_ROOM] === roomId) return;
