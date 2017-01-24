@@ -23,19 +23,15 @@ router.get('/signout', (req, res, next) => {
  * GET: *
  */
 router.get('*', (req, res, next) => {
-    // denote authentication so a refresh
-    // does not force the user to sign in again
+    // include authentication boolean in data so
+    // user will not need to login again if page is refreshed
     let { _public } = req.app.locals;
     if (req.session && req.session.isAuthenticated) {
-        _public = Object.assign({}, _public, {
+        _public = Object.assign({
             user: { isAuthenticated: true }
-        });
+        }, _public);
     }
-
-    res.render('index.html', {
-        title: 'Express-Template',
-        _public
-    });
+    res.render('index.html', { _public, title: _public.appName });
 });
 
 /**
