@@ -15,6 +15,10 @@ import TextField from 'material-ui/TextField';
 import { connect } from 'react-redux';
 
 // constants
+import {
+    CHANNELS_TYPE,
+    DIRECT_MESSAGES_TYPE
+} from '../sidebar/helpers';
 import { NEW_MESSAGE } from '../../socket.io/events';
 
 import {
@@ -107,6 +111,7 @@ class Form extends React.Component {
             activeRoomUsers,
             hasMessages,
             socket,
+            type,
             userId
         } = this.props;
 
@@ -116,7 +121,7 @@ class Form extends React.Component {
             created: _.now(),
             isFirst: hasMessages ? undefined : true,
             text: value
-        }, activeRoomUsers);
+        }, activeRoomUsers, type);
 
         // reset input
         this.setState({ value: '' });
@@ -163,17 +168,20 @@ Form.propTypes = {
     activeRoomUsers: React.PropTypes.array,
     hasMessages: React.PropTypes.bool,
     socket: React.PropTypes.object,
+    type: React.PropTypes.string,
     userId: React.PropTypes.string
 };
 
 function mapStateToProps(state) {
     const { rooms, messages, socket, user } = state;
     const activeRoomId = _.get(user, 'rooms.active');
+    const activeRoom = _.get(rooms, `${activeRoomId}`, {});
     return {
         activeRoomId,
-        activeRoomUsers: _.get(rooms, `${activeRoomId}._users`, []),
+        activeRoomUsers: activeRoom._users || [],
         hasMessages: !_.isEmpty(messages[activeRoomId]),
         socket,
+        type: activeRoom.name ? CHANNELS_TYPE : DIRECT_MESSAGES_TYPE,
         userId: user._id
     };
 }
