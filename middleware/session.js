@@ -5,6 +5,8 @@
  */
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
+const mongooseConnection = require('../db/connection');
+const { isProduction, sessionSecret } = require('../config/');
 
 /**
  * Export session middleware.
@@ -13,10 +15,13 @@ const MongoStore = require('connect-mongo')(session);
  */
 module.exports = session({
     name: 'sid',
-    secret: require('../config/').sessionSecret,
+    secret: sessionSecret,
+    cookie: {
+        secure: isProduction,
+        httpOnly: true
+    },
     resave: false,
-    saveUninitialized: true,
-    store: new MongoStore({
-        mongooseConnection: require('../db/connection')
-    })
+    saveUninitialized: false,
+    store: new MongoStore({ mongooseConnection }),
+    unset: 'destroy'
 });
