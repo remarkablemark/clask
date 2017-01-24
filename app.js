@@ -8,6 +8,7 @@ const express = require('express');
 const logger = require('morgan');
 const path = require('path');
 
+// constants
 const { dependencies } = require('./package');
 const config = require('./config/');
 const isProduction = config.isProduction;
@@ -24,7 +25,7 @@ app.set('views', path.join(__dirname, 'views'));
 require('nunjucks').configure('views', {
     autoescape: true,
     express: app,
-    noCache: !isProduction ? true : false
+    noCache: isProduction ? false : true
 });
 
 /**
@@ -35,7 +36,7 @@ app.use(require('helmet')());
 app.use(require('compression')());
 
 // uncomment after placing your favicon in /build
-//app.use(require('serve-favicon')(path.join(__dirname, 'build', 'favicon.ico')));
+//app.use(require('serve-favicon')(path.join(__dirname, 'build/favicon.ico')));
 
 // logger
 app.use(logger('dev'));
@@ -48,6 +49,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(require('cookie-parser')());
 
 // session
+app.enable('trust proxy');
 app.use(require('./middleware/session'));
 
 // static
@@ -57,8 +59,11 @@ app.use(express.static(path.join(__dirname, 'build')));
  * App locals.
  */
 app.locals._public = {
-    isProduction: isProduction,
-    publicPath: isProduction ? '' : require('./webpack/development.config').output.publicPath,
+    isProduction,
+    publicPath: (
+        isProduction ?
+        '' : require('./webpack/development.config').output.publicPath
+    ),
     versions: {
         'lodash': dependencies['lodash'],
         'react-router': dependencies['react-router'],
