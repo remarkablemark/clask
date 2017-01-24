@@ -1,28 +1,33 @@
 'use strict';
 
 /**
- * Module dependencies.
+ * Environment variables.
  */
-if (typeof process.env.APP_NAME !== 'string') {
-    require('dotenv').load();
-}
+if (!process.env.APP_NAME) require('dotenv').load();
+const {
+    APP_NAME,
+    MONGODB_CONNECTION_URI,
+    NODE_ENV,
+    SESSION_SECRET
+} = process.env;
 
 /**
  * Configuration.
  */
 const config = {
-    isProduction: process.env.NODE_ENV === 'production',
+    // fallback to package name if environment variable is blank
+    appName: APP_NAME ? APP_NAME : require('../package').name,
+
+    isProduction: NODE_ENV === 'production',
 
     // MongoDB connection string uri
     // https://docs.mongodb.com/manual/reference/connection-string/
     mongodbConnectionUri: (
-        process.env.MONGODB_CONNECTION_URI ||
-        `mongodb://localhost/${process.env.APP_NAME}`
+        MONGODB_CONNECTION_URI || `mongodb://localhost/${APP_NAME}`
     ),
 
     sessionSecret: (
-        process.env.SESSION_SECRET ||
-        require('crypto').randomBytes(32).toString('hex')
+        SESSION_SECRET || require('crypto').randomBytes(32).toString('hex')
     )
 };
 

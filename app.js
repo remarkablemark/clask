@@ -10,8 +10,7 @@ const path = require('path');
 
 // constants
 const { dependencies } = require('./package');
-const config = require('./config/');
-const isProduction = config.isProduction;
+const { appName, isProduction } = require('./config/');
 
 /**
  * Express app.
@@ -59,6 +58,7 @@ app.use(express.static(path.join(__dirname, 'build')));
  * App locals.
  */
 app.locals._public = {
+    appName,
     isProduction,
     publicPath: (
         isProduction ?
