@@ -147,13 +147,13 @@ class Form extends React.Component {
                     <div style={inputStyle}>
                         <TextField
                             ref='input'
-                            autoComplete='off'
-                            autoCorrect='off'
                             fullWidth={true}
                             hintText='Message'
                             onChange={this._handleChange}
-                            spellCheck='true'
                             value={this.state.value}
+                            autoComplete={false}
+                            autoCorrect={false}
+                            spellCheck={true}
                             autoFocus
                         />
                     </div>

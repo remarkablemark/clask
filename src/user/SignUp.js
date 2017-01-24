@@ -176,9 +176,9 @@ export default class SignUp extends React.Component {
                         onChange={this._handleChange.bind(this, 'name')}
                         errorText={nameError}
                         disabled={isFormDisabled}
-                        autoFocus
                         autoCorrect={false}
                         spellCheck={false}
+                        autoFocus
                     />
                     <br />
 
@@ -191,6 +191,7 @@ export default class SignUp extends React.Component {
                         errorText={usernameError}
                         disabled={isFormDisabled}
                         autoCorrect={false}
+                        autoCapitalize={false}
                         spellCheck={false}
                     />
                     <br />
