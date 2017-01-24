@@ -1,7 +1,7 @@
 {
-  "name": "express-template",
+  "name": "clask",
   "version": "0.0.0",
-  "description": "An Express web application template.",
+  "description": "Clask is a Slack clone.",
   "author": "Mark <mark@remarkablemark.org>",
   "private": true,
   "scripts": {
@@ -15,15 +15,11 @@
   "main": "bin/www",
   "repository": {
     "type": "git",
-    "url": "https://github.com/remarkablemark/express-template"
+    "url": "https://github.com/remarkablemark/clask"
   },
   "bugs": {
-    "url": "https://github.com/remarkablemark/express-template/issues"
+    "url": "https://github.com/remarkablemark/clask/issues"
   },
-  "keywords": [
-    "express",
-    "template"
-  ],
   "dependencies": {
     "babel-core": "6.18.2",
     "babel-loader": "6.2.9",

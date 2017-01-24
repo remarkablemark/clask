@@ -1,25 +1,35 @@
-# express-template
+# clask
 
-A [Node.js](https://nodejs.org) web application with the following stack:
-- [Express](http://expressjs.com) as the web framework,
-- [Nunjucks](https://mozilla.github.io/nunjucks/) as the view engine,
-- [Socket.IO](http://socket.io) as the real-time bidirectional event-based communication.
+Clask is a [Slack](https://slack.com) clone built with MERNS:
 
-### Install
+- [MongoDB](https://www.mongodb.com) and [Mongoose](http://mongoosejs.com); [Material-UI](http://www.material-ui.com)
+- [Express](http://expressjs.com)
+- [React](https://facebook.github.io/react/), [Redux](http://redux.js.org), [ReactRouter](https://github.com/ReactTraining/react-router), etc.
+- [Node.js](https://nodejs.org)
+- [Socket.IO](http://socket.io)
+
+## Install
 
 ```sh
-$ git clone https://github.com/remarkablemark/express-template.git
-$ cd express-template
+$ git clone https://github.com/remarkablemark/clask.git
+$ cd clask
 $ npm install
 ```
 
-### Run
+## Run
+
+Production
 
 ```sh
-$ npm start   # production
-$ npm run dev # development
+$ npm start
 ```
 
-### License
+Development
 
-[MIT](https://github.com/remarkablemark/express-template/blob/master/LICENSE)
+```sh
+$ npm run dev
+```
+
+## License
+
+[MIT](https://github.com/remarkablemark/clask/blob/master/README.md)
