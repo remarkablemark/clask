@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import { setUser } from '../actions';
 
 // constants
-import { DIRECT_MESSAGES_TYPE } from '../sidebar/helpers';
+import { DIRECT_MESSAGES_TYPE } from '../shared/constants';
 import { FIND_OR_CREATE_ROOM } from '../../socket.io/events';
 import { gutter } from '../shared/styles';
 

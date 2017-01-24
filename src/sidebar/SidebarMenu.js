@@ -20,7 +20,7 @@ import {
     CREATE_CHANNEL_TYPE,
     CHANNELS_TYPE,
     DIRECT_MESSAGES_TYPE
-}  from './helpers';
+}  from '../shared/constants';
 
 import {
     green500,

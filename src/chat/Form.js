@@ -18,7 +18,7 @@ import { connect } from 'react-redux';
 import {
     CHANNELS_TYPE,
     DIRECT_MESSAGES_TYPE
-} from '../sidebar/helpers';
+} from '../shared/constants';
 import { NEW_MESSAGE } from '../../socket.io/events';
 
 import {

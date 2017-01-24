@@ -11,7 +11,7 @@ import CreateChannel from '../rooms/CreateChannel';
 import RoomFinder from '../rooms/RoomFinder';
 
 // constants
-import { CREATE_CHANNEL_TYPE } from './helpers';
+import { CREATE_CHANNEL_TYPE } from '../shared/constants';
 
 // styles
 import { dialogPadding } from '../shared/styles'

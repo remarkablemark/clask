@@ -19,7 +19,7 @@ import { sidebarWidth } from '../shared/styles';
 import {
     CHANNELS_TYPE,
     DIRECT_MESSAGES_TYPE
-} from './helpers';
+} from '../shared/constants';
 import { defaultRoom } from '../../config/constants';
 
 /**
