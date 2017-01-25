@@ -6,7 +6,7 @@
 const {
     isProduction,
     versions
-} = window.__EXPRESS_TEMPLATE__;
+} = window[`__${process.env.APP_NAME}__`];
 const { define, requirejs } = window;
 
 /**

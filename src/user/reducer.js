@@ -11,7 +11,9 @@ import { REMOVE_ALL } from '../shared/actions';
 
 // state
 const unauthenticatedState = { isAuthenticated: false };
-const initialState = window.__EXPRESS_TEMPLATE__.user || unauthenticatedState;
+const initialState = (
+    window[`__${process.env.APP_NAME}__`].user || unauthenticatedState
+);
 
 /**
  * User reducer.
