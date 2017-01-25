@@ -46,7 +46,12 @@ module.exports = {
     plugins: [
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin()
+        new webpack.NoErrorsPlugin(),
+        new webpack.DefinePlugin({
+            'process.env': {
+                APP_NAME: JSON.stringify(require('../config/').appName)
+            }
+        })
     ],
 
     devServer: {
