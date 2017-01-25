@@ -41,6 +41,10 @@ if (requirejs) {
  * Load app.
  */
 if (isProduction) {
+    // disable React Developer Tools in production
+    // https://github.com/facebook/react-devtools/issues/191
+    window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = () => {};
+
     // bundle `react` and `react-dom` in production build
     // because `react-tap-event-plugin` modifies `react-dom`
     define('react', require('react'));
