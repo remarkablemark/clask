@@ -27,6 +27,7 @@ const {
     GET_MESSAGES,
     MESSAGES,
     NEW_MESSAGE,
+    ROOMS,
     USER
 } = require('./events');
 
@@ -72,7 +73,7 @@ function messages(io, socket) {
             otherUsers.forEach((userId) => {
                 const userRef = getUser(userId);
 
-                // no-op if the other user is in the same active room
+                // no-op if other user is in the same active room
                 if (userRef && userRef[USER_KEY_ROOM] === roomId) return;
 
                 // otherwise update user history with mention
@@ -86,19 +87,21 @@ function messages(io, socket) {
                 }, userOptions, (err, user) => {
                     if (err) return debug.db('unable to update user', err);
 
-                    // send other user updated room info if connected
-                    if (userRef && userRef[USER_KEY_SOCKET]) {
-                        io.to(userRef[USER_KEY_SOCKET]).emit(USER, {
-                            rooms: {
-                                sidebar: {
-                                    directMessages: user.rooms.sidebar.directMessages
-                                },
-                                history: {
-                                    [roomId]: user.rooms.history[roomId]
-                                }
-                            }
-                        });
-                    }
+                    // check if other user is connected
+                    const socketId = (
+                        typeof userRef === 'object' && userRef[USER_KEY_SOCKET]
+                    );
+                    if (!socketId) return;
+
+                    // send updated room info if other user is connected
+                    io.to(socketId).emit(ROOMS, {
+                        [roomId]: {
+                            _users: users
+                        }
+                    });
+                    io.to(socketId).emit(USER, {
+                        rooms: user.rooms
+                    });
                 });
             });
         }
