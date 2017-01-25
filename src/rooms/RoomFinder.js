@@ -17,7 +17,7 @@ import { setUser } from '../actions';
 
 // constants
 import { DIRECT_MESSAGES_TYPE } from '../shared/constants';
-import { FIND_OR_CREATE_ROOM } from '../../socket.io/events';
+import { DIRECT_MESSAGE_ROOM } from '../../socket.io/events';
 import { gutter } from '../shared/styles';
 
 // styles
@@ -89,16 +89,12 @@ class RoomFinder extends React.Component {
     }
 
     /**
-     * Find or create new room.
+     * Finds or creates new room for direct message.
      *
      * @param {Array} userIds - The user ids.
      */
     _findOrCreateRoom(userIds) {
-        const { socket, userId } = this.props;
-        socket.emit(FIND_OR_CREATE_ROOM, {
-            _creator: userId,
-            _users: userIds
-        });
+        this.props.socket.emit(DIRECT_MESSAGE_ROOM, userIds);
     }
 
     render() {

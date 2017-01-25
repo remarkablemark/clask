@@ -13,13 +13,13 @@ const debug = {
     socket: helpers.debug
 };
 
-// mongoose
+// models
 const Room = require('../models/room');
 const User = require('../models/user');
 
 // constants
 const {
-    FIND_OR_CREATE_ROOM,
+    DIRECT_MESSAGE_ROOM,
     NEW_ROOM,
     ROOMS,
     USER
@@ -27,6 +27,7 @@ const {
 
 const roomProjection = { _users: 1, name: 1 };
 const userOptions = { new: true };
+const roomNameFieldOperator = { $exists: false };
 
 /**
  * Event listeners for rooms.
@@ -35,6 +36,8 @@ const userOptions = { new: true };
  * @param {Object} socket - The socket.
  */
 function rooms(io, socket) {
+    const socketUserId = socket.userId;
+
     /**
      * Create new room.
      */
@@ -65,7 +68,7 @@ function rooms(io, socket) {
             });
 
             // update user
-            User.findByIdAndUpdate(socket.userId, {
+            User.findByIdAndUpdate(socketUserId, {
                 $push: {
                     'rooms.sidebar.channels': roomId
                 },
@@ -86,16 +89,14 @@ function rooms(io, socket) {
     });
 
     /**
-     * Find or create room.
+     * Find or create room for direct message.
      */
-    socket.on(FIND_OR_CREATE_ROOM, (data) => {
-        if (!data || data.constructor !== Object) return;
-        const { _creator, _users } = data;
-        if (!_creator && !_users) return;
+    socket.on(DIRECT_MESSAGE_ROOM, (userIds) => {
+        if (!userIds) return;
 
         Room.findOne({
-            _users,
-            name: { $exists: false }
+            _users: userIds,
+            name: roomNameFieldOperator
         }, roomProjection, (err, room) => {
             if (err) return debug.db('unable to find room', err);
 
@@ -105,7 +106,7 @@ function rooms(io, socket) {
 
                 // join room
                 socket.join(roomId);
-                setUser(_creator, {
+                setUser(socketUserId, {
                     [USER_KEY_ROOM]: roomId
                 });
 
@@ -118,7 +119,7 @@ function rooms(io, socket) {
                 });
 
                 // update user's sidebar
-                User.findByIdAndUpdate(_creator, {
+                User.findByIdAndUpdate(socketUserId, {
                     $set: {
                         'rooms.active': roomId
                     },
@@ -132,12 +133,11 @@ function rooms(io, socket) {
                     socket.emit(USER, { rooms: user.rooms });
                     debug.socket(USER, { rooms: user.rooms });
                 });
-
                 return;
             }
 
             // room not found so create new room
-            new Room({ _users }).save((err, room) => {
+            new Room({ _users: userIds }).save((err, room) => {
                 if (err) return debug.db('unable to create new room', err);
 
                 const roomId = room._id;
@@ -145,7 +145,7 @@ function rooms(io, socket) {
 
                 // join room
                 socket.join(roomId);
-                setUser(_creator, {
+                setUser(socketUserId, {
                     [USER_KEY_ROOM]: roomId
                 });
 
@@ -157,7 +157,7 @@ function rooms(io, socket) {
                     [roomId]: { _users: roomUsers }
                 });
 
-                User.findByIdAndUpdate(_creator, {
+                User.findByIdAndUpdate(socketUserId, {
                     $set: {
                         'rooms.active': roomId
                     },

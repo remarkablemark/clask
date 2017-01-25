@@ -3,7 +3,7 @@
 /**
  * Socket events.
  */
-const FIND_OR_CREATE_ROOM = 'FIND_OR_CREATE_ROOM';
+const DIRECT_MESSAGE_ROOM = 'DIRECT_MESSAGE_ROOM';
 const GET_MESSAGES = 'GET_MESSAGES';
 const MESSAGES = 'MESSAGES';
 const NEW_MESSAGE = 'NEW_MESSAGE';
@@ -14,8 +14,8 @@ const USER = 'USER';
 const USERS = 'USERS';
 
 module.exports = {
+    DIRECT_MESSAGE_ROOM,
     GET_MESSAGES,
-    FIND_OR_CREATE_ROOM,
     MESSAGES,
     NEW_MESSAGE,
     NEW_ROOM,
