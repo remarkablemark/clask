@@ -52,13 +52,19 @@ app.enable('trust proxy');
 app.use(require('./middleware/session'));
 
 // static
-app.use(express.static(path.join(__dirname, 'build')));
+app.use(
+    express.static(path.join(__dirname, 'build'), {
+        // set `Cache-Control: max-age` to 1 year in production
+        maxAge: isProduction ? 31536000 : 0
+    })
+);
 
 /**
  * App locals.
  */
 app.locals._public = {
     appName,
+    cachebust: require('shortid').generate(),
     isProduction,
     publicPath: (
         isProduction ?
