@@ -16,6 +16,7 @@ router.get('/logout', (req, res, next) => {
  * GET: /signout
  */
 router.get('/signout', (req, res, next) => {
+    if (!req.session.isAuthenticated) return next();
     req.session.regenerate(() => next());
 });
 
@@ -25,8 +26,8 @@ router.get('/signout', (req, res, next) => {
 router.get('*', (req, res, next) => {
     // include authentication boolean in data so
     // user will not need to login again if page is refreshed
-    let { _public } = req.app.locals;
-    if (req.session && req.session.isAuthenticated) {
+    let _public = req.app.locals._public || {};
+    if (req.session.isAuthenticated) {
         _public = Object.assign({
             user: { isAuthenticated: true }
         }, _public);
