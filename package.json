@@ -10,6 +10,7 @@
     "dev": "npm-run-all --parallel development:*",
     "development:server": "source .env && DEBUG=\"$APP_NAME:*\" nodemon --ignore src --ignore build bin/www",
     "development:wds": "webpack-dev-server --config webpack/development.config.js",
+    "test": "mocha \"./{,!(node_modules)/**/}*.spec.js\"",
     "lint": "eslint --ignore-path .gitignore ."
   },
   "main": "bin/www",
