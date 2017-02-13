@@ -18,15 +18,19 @@ mongoose.Promise = global.Promise;
  * Connection listeners.
  */
 mongoose.connection.on('connected', () => {
-    debug('connected to database');
-});
-
-mongoose.connection.on('error', () => {
-    debug('failed to connect to database');
+    debug('MongoDB connected');
 });
 
 mongoose.connection.on('disconnected', () => {
-    debug('disconnected from database');
+    debug('MongoDB disconnected');
+});
+
+mongoose.connection.on('reconnected', () => {
+    debug('MongoDB reconnected');
+});
+
+mongoose.connection.on('error', (err) => {
+    debug('MongoDB error', err);
 });
 
 /**
@@ -34,7 +38,7 @@ mongoose.connection.on('disconnected', () => {
  */
 function closeConnection() {
     mongoose.connection.close(() => {
-        debug('closed database connection due to process termination');
+        debug('MongoDB connection closed due to process termination');
         process.exit(0);
     });
 }
@@ -45,8 +49,12 @@ process.on('SIGINT', closeConnection);
 process.on('SIGTERM', closeConnection);
 
 // attempt to connect to database
-debug('connecting to database...');
-mongoose.connect(config.mongodbConnectionUri);
+debug('MongoDB connecting...');
+mongoose
+    .connect(config.mongodbConnectionUri)
+    .catch((err) => {
+        debug('MongoDB connect error', err);
+    });
 
 /**
  * Export mongoose connection.
