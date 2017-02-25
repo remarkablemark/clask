@@ -18,7 +18,7 @@ module.exports = session({
     secret: sessionSecret,
     cookie: {
         secure: isProduction,
-        httpOnly: true
+        httpOnly: isProduction
     },
     resave: false,
     saveUninitialized: false,
