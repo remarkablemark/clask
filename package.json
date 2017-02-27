@@ -5,10 +5,10 @@
   "author": "Mark <mark@remarkablemark.org>",
   "private": true,
   "scripts": {
-    "start": "npm run build && NODE_ENV=production node bin/www",
+    "start": "export NODE_ENV=production; npm run build && node bin/www",
     "build": "webpack --config webpack/production.config.js",
     "dev": "npm-run-all --parallel development:*",
-    "development:server": "source .env && DEBUG=\"$APP_NAME:*\" nodemon --ignore src --ignore build bin/www",
+    "development:server": "source .env && DEBUG=\"$APP_NAME:*\" nodemon bin/www --ignore src/ --ignore build/ --ignore test/",
     "development:wds": "webpack-dev-server --config webpack/development.config.js",
     "test": "mocha \"./{,!(node_modules)/**/}*.spec.js\"",
     "lint": "eslint --ignore-path .gitignore ."
