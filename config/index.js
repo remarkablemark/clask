@@ -3,7 +3,10 @@
 /**
  * Environment variables.
  */
-if (!process.env.APP_NAME) require('dotenv').load();
+if (!process.env.APP_NAME) {
+    require('dotenv').config();
+}
+
 const {
     APP_NAME,
     MONGODB_CONNECTION_URI,
@@ -17,8 +20,8 @@ const {
 const config = {
     // fallback to package name if environment variable is blank
     appName: APP_NAME ? APP_NAME : require('../package').name,
-
     isProduction: NODE_ENV === 'production',
+    nodeEnv: NODE_ENV || 'production',
 
     // MongoDB connection string uri
     // https://docs.mongodb.com/manual/reference/connection-string/
