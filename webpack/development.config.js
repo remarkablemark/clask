@@ -3,9 +3,9 @@
 /**
  * Module dependencies.
  */
-require('dotenv').config();
 const path = require('path');
 const webpack = require('webpack');
+const { appName } = require('../config/');
 
 const port = process.env.WDS_PORT;
 const host = process.env.IP || 'localhost';
@@ -49,7 +49,8 @@ module.exports = {
         new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
             'process.env': {
-                APP_NAME: JSON.stringify(require('../config/').appName)
+                APP_NAME: JSON.stringify(appName),
+                NODE_ENV: JSON.stringify(process.env.NODE_ENV)
             }
         })
     ],

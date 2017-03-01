@@ -5,6 +5,7 @@
  */
 const path = require('path');
 const webpack = require('webpack');
+const { appName, nodeEnv } = require('../config/');
 
 /**
  * Production webpack.
@@ -42,16 +43,16 @@ module.exports = {
         }),
         new webpack.DefinePlugin({
             'process.env': {
-                NODE_ENV: '"production"',
-                APP_NAME: JSON.stringify(require('../config/').appName)
+                APP_NAME: JSON.stringify(appName),
+                NODE_ENV: JSON.stringify(nodeEnv)
             }
         })
     ],
 
     externals: {
+        'lodash': '_',
         'react-router': 'ReactRouter',
         'react-redux': 'ReactRedux',
-        'redux': 'Redux',
-        'lodash': '_'
+        'redux': 'Redux'
     }
 };
