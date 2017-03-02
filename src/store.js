@@ -3,7 +3,13 @@
 /**
  * Module dependencies.
  */
-import { combineReducers, createStore } from 'redux';
+import {
+    applyMiddleware,
+    combineReducers,
+    createStore
+} from 'redux';
+
+// reducers
 import messages from './messages/reducer';
 import rooms from './rooms/reducer';
 import socket from './socket/reducer';
@@ -22,6 +28,14 @@ const reducer = combineReducers({
 });
 
 /**
- * Export store.
+ * Middleware.
  */
-export default createStore(reducer);
+let middleware;
+if (process.env.NODE_ENV === 'development') {
+    middleware = applyMiddleware(require('redux-logger')());
+}
+
+/**
+ * Store.
+ */
+export default createStore(reducer, middleware);
